@@ -27,4 +27,11 @@ public final class JsonSchema {
     // --- Llaves permitidas dentro del 'payload' ---
     public static final String PAYLOAD_USERNAME = "username";
     public static final String PAYLOAD_REASON = "reason";
+
+    // --- Acciones P2P Inter-Servidor ---
+    public static final String ACTION_PEER_HEARTBEAT = "PEER_HEARTBEAT";
+    public static final String ACTION_PEER_SYNC = "PEER_SYNC";
+    public static final String ACTION_PEER_REPLICATE = "PEER_REPLICATE";
+    public static final String ACTION_PEER_ROUTE = "PEER_ROUTE";
+    public static final String ACTION_PEER_HEALTH = "PEER_HEALTH";
 }

@@ -20,12 +20,29 @@ import ch.qos.logback.classic.LoggerContext;
 import pool.ConnectionPoolManager;
 import protocolSelector.ProtocolSelector;
 
+// Imports del módulo Cluster P2P
+import communication.PeerConnectionPool;
+import communication.PeerMessageHandler;
+import communication.PeerServer;
+import discovery.GossipProtocol;
+import discovery.MembershipList;
+import events.NetworkEventBus;
+import health.ClusterHealthService;
+import identity.NodeIdentity;
+import replication.ReplicationManager;
+import topology.RoutingTable;
+
+import java.util.Arrays;
+
 /**
  * Punto de entrada de la aplicación.
  * Actúa como Composition Root: instancia y conecta todas las dependencias.
  *
  * Principio aplicado: DIP — las dependencias se inyectan via constructor.
  * Las abstracciones (interfaces) se resuelven aquí en el borde del sistema.
+ *
+ * Extensión P2P: cuando cluster.enabled=true, inicializa los componentes
+ * de descubrimiento (Gossip), replicación, routing y monitoreo distribuido.
  */
 public class ServerApplication {
 
@@ -77,9 +94,71 @@ public class ServerApplication {
                     documentManager,
                     logManager);
 
-            // 7. Interfaces Expuestas y Consola Administrativa
+            // 7. Módulo Cluster P2P (solo si está habilitado)
+            ClusterHealthService healthService = null;
+            RoutingTable routingTable = null;
+
+            if (config.isClusterEnabled()) {
+                logger.info("═══════════════════════════════════════════════════");
+                logger.info("  MODO CLUSTER P2P HABILITADO");
+                logger.info("═══════════════════════════════════════════════════");
+
+                // 7a. Identidad del nodo
+                NodeIdentity identity = new NodeIdentity(
+                        config.getNodeId(), config.getHost(),
+                        config.getPort(), config.getClusterPort());
+                logger.info("Identidad del nodo: {}", identity);
+
+                // 7b. Componentes de membresía y eventos
+                NetworkEventBus eventBus = new NetworkEventBus();
+                MembershipList membership = new MembershipList();
+
+                // 7c. Tabla de enrutamiento
+                routingTable = new RoutingTable(identity.getNodeId());
+
+                // 7d. Pool de conexiones a peers
+                PeerConnectionPool peerPool = new PeerConnectionPool();
+
+                // 7e. Gestor de replicación
+                ReplicationManager replicator = new ReplicationManager(
+                        identity.getNodeId(), membership, peerPool);
+
+                // 7f. Servicio de salud del cluster
+                healthService = new ClusterHealthService(identity, membership, peerPool);
+
+                // 7g. Suscribir observers al bus de eventos
+                eventBus.subscribe(peerPool);       // Abre/cierra conexiones TCP a peers
+                eventBus.subscribe(replicator);      // Reacciona a cambios de membresía
+                eventBus.subscribe(routingTable);     // Limpia clientes de nodos caídos
+
+                // 7h. Hook de broadcast federado (OCP: extiende BroadcastManager sin modificarlo)
+                broadcastManager.setFederatedHook(peerPool::broadcastToPeers);
+
+                // 7i. Handler de mensajes entrantes de peers
+                PeerMessageHandler peerHandler = new PeerMessageHandler(replicator, routingTable);
+
+                // 7j. Iniciar Gossip Protocol (descubrimiento por UDP)
+                GossipProtocol gossip = new GossipProtocol(
+                        identity, membership, eventBus,
+                        Arrays.asList(config.getSeedNodes()),
+                        config.getHeartbeatIntervalMs(),
+                        config.getFailureTimeoutMs());
+                new Thread(gossip, "Thread-GossipProtocol").start();
+
+                // 7k. Iniciar PeerServer TCP (recibe conexiones de otros servidores)
+                PeerServer peerServer = new PeerServer(config.getClusterPort(), peerHandler);
+                new Thread(peerServer, "Thread-PeerServer").start();
+
+                logger.info("Cluster P2P inicializado. Gossip UDP:{}, Peers TCP:{}",
+                        config.getClusterPort(), config.getClusterPort());
+            } else {
+                logger.info("Modo standalone (cluster deshabilitado).");
+            }
+
+            // 8. Interfaces Expuestas y Consola Administrativa
             ServerAdminAPI adminAPI = new ServerAdminAPI(dao, dao);  // IUserRepository + IDocumentRepository
-            InteractiveConsole console = new InteractiveConsole(adminAPI, networkServer);
+            InteractiveConsole console = new InteractiveConsole(
+                    adminAPI, networkServer, healthService, routingTable);
 
             // Arrancamos la consola en el hilo principal
             console.run();

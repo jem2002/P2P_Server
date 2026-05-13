@@ -26,4 +26,21 @@ public class ServerConfig {
     public int getPort() { return Integer.parseInt(properties.getProperty("server.port", "8080")); }
     public String getProtocol() { return properties.getProperty("server.protocol", "TCP"); }
     public int getMaxConnections() { return Integer.parseInt(properties.getProperty("server.maxConnections", "100")); }
+    public String getHost() { return properties.getProperty("server.host", "localhost"); }
+
+    // --- Configuración del Cluster P2P ---
+    public boolean isClusterEnabled() { return Boolean.parseBoolean(properties.getProperty("cluster.enabled", "false")); }
+    public String getNodeId() { return properties.getProperty("cluster.nodeId", "auto"); }
+    public int getClusterPort() { return Integer.parseInt(properties.getProperty("cluster.port", "9090")); }
+    public long getHeartbeatIntervalMs() { return Long.parseLong(properties.getProperty("cluster.heartbeatIntervalMs", "2000")); }
+    public long getFailureTimeoutMs() { return Long.parseLong(properties.getProperty("cluster.failureTimeoutMs", "10000")); }
+
+    /**
+     * Retorna la lista de seed nodes como array de Strings ("host:port").
+     */
+    public String[] getSeedNodes() {
+        String seeds = properties.getProperty("cluster.seedNodes", "");
+        if (seeds.isEmpty()) return new String[0];
+        return seeds.split(",");
+    }
 }
