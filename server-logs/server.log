@@ -1,0 +1,223 @@
+2026-04-24 00:16:28 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-04-24 00:16:28 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-04-24 00:16:29 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-04-24 00:16:32 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-04-24 00:16:32 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-04-24 00:16:33 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 10 conexiones.
+2026-04-24 00:16:33 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 10 hilos.
+2026-04-24 00:16:33 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-04-24 00:16:33 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - tcpsocketserver.TCPSocketServer escuchando en el puerto TCP: 8080
+2026-04-24 00:16:37 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:64908
+2026-04-24 00:16:37 [pool-2-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:64908
+2026-04-24 00:20:55 [pool-2-thread-1] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:64908
+2026-04-24 00:20:55 [pool-2-thread-1] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:64908 (User ID: 1)
+2026-04-24 00:21:10 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:49890
+2026-04-24 00:21:10 [pool-2-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:49890
+2026-04-24 00:22:03 [pool-2-thread-2] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:49890
+2026-04-24 00:22:03 [pool-2-thread-2] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:49890 (User ID: 1)
+2026-04-24 00:23:07 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:54009
+2026-04-24 00:23:07 [pool-2-thread-3] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:54009
+2026-04-24 00:25:48 [pool-2-thread-3] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:54009
+2026-04-24 00:25:48 [pool-2-thread-3] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:54009 (User ID: 1)
+2026-04-24 00:26:02 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:63289
+2026-04-24 00:26:02 [pool-2-thread-4] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:63289
+2026-04-24 00:26:18 [pool-2-thread-4] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:63289 (User ID: 1)
+2026-04-24 00:26:44 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:63314
+2026-04-24 00:26:44 [pool-2-thread-5] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:63314
+2026-04-24 00:26:53 [pool-2-thread-5] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:63314
+2026-04-24 00:26:53 [pool-2-thread-5] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:63314 (User ID: 1)
+2026-04-24 00:27:39 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:56903
+2026-04-24 00:27:39 [pool-2-thread-6] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:56903
+2026-04-24 00:28:09 [pool-2-thread-6] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-04-24 00:28:09 [pool-2-thread-6] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-04-24 00:28:09 [pool-2-thread-6] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\danie\Documents\messaging_project\messaging-server\.\storage\original\7ee5f674-9dff-4df0-8da8-efb3fa683be8.txt
+2026-04-24 00:28:09 [pool-2-thread-6] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-04-24 00:28:10 [pool-2-thread-6] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-04-24 00:28:31 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: ef566d68-cdd6-4533-b0c8-150b41872dcc) desde /192.168.1.4:56916
+2026-04-24 00:28:31 [FileTransfer-ef566d68] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: ef566d68-cdd6-4533-b0c8-150b41872dcc
+2026-04-24 00:28:31 [FileTransfer-ef566d68] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-04-24 00:28:31 [FileTransfer-ef566d68] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-04-24 00:28:31 [FileTransfer-ef566d68] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\danie\Documents\messaging_project\messaging-server\.\storage\original\b2743ae2-a18b-476d-a331-3029af3f8706.pdf
+2026-04-24 00:28:31 [FileTransfer-ef566d68] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-04-24 00:28:31 [FileTransfer-ef566d68] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 2
+2026-04-24 00:28:36 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-870269a1-c778-4b64-ba10-8afa81c3ed17) desde /192.168.1.4:56917
+2026-04-24 00:28:36 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-870269a1-c778-4b64-ba10-8afa81c3ed17
+2026-04-24 00:28:37 [FileTransfer-DWN-ORG-] ERROR MySqlRepository.MySqlDao - Error al registrar log en auditoría: DOWNLOAD_COMPLETE - Detalles: Descarga finalizada en modo: ORIGINAL
+java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`messaging_system`.`logs`, CONSTRAINT `fk_log_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:612)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1467)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at MySqlRepository.MySqlDao.registrarLog(MySqlDao.java:146)
+	at LogService.LogManager.registrarAccion(LogManager.java:13)
+	at handler.FileTransferHandler.run(FileTransferHandler.java:82)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-04-24 00:29:14 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:56927
+2026-04-24 00:29:14 [pool-2-thread-7] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:56927
+2026-04-24 00:29:28 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-HSH-1d873f76-3ead-4bbe-b4e0-f049cd9c18dd) desde /192.168.1.4:56929
+2026-04-24 00:29:28 [FileTransfer-DWN-HSH-] INFO  handler.FileTransferHandler - Enviando HASH. Token: DWN-HSH-1d873f76-3ead-4bbe-b4e0-f049cd9c18dd
+2026-04-24 00:29:28 [FileTransfer-DWN-HSH-] ERROR MySqlRepository.MySqlDao - Error al registrar log en auditoría: DOWNLOAD_COMPLETE - Detalles: Descarga finalizada en modo: HASH
+java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`messaging_system`.`logs`, CONSTRAINT `fk_log_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:612)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1467)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at MySqlRepository.MySqlDao.registrarLog(MySqlDao.java:146)
+	at LogService.LogManager.registrarAccion(LogManager.java:13)
+	at handler.FileTransferHandler.run(FileTransferHandler.java:82)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-04-24 00:29:38 [pool-2-thread-7] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:56927
+2026-04-24 00:29:38 [pool-2-thread-7] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:56927 (User ID: 2)
+2026-04-24 00:29:40 [pool-2-thread-6] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:56903
+2026-04-24 00:29:40 [pool-2-thread-6] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:56903 (User ID: 1)
+2026-04-24 00:29:52 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:55520
+2026-04-24 00:29:52 [pool-2-thread-8] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:55520
+2026-04-24 00:30:07 [pool-2-thread-8] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:55520
+2026-04-24 00:30:07 [pool-2-thread-8] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:55520 (User ID: 1)
+2026-04-24 00:33:01 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-04-24 00:33:01 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-04-24 00:33:02 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-04-24 00:33:06 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-04-24 00:33:06 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-04-24 00:33:07 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 10 conexiones.
+2026-04-24 00:33:07 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 10 hilos.
+2026-04-24 00:33:07 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-04-24 00:33:07 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - tcpsocketserver.TCPSocketServer escuchando en el puerto TCP: 8080
+2026-04-24 00:33:21 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:58523
+2026-04-24 00:33:21 [pool-1-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:58523
+2026-04-24 00:34:11 [pool-1-thread-1] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:58523
+2026-04-24 00:34:11 [pool-1-thread-1] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:58523 (User ID: 1)
+2026-04-24 00:34:24 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:58567
+2026-04-24 00:34:24 [pool-1-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:58567
+2026-04-24 00:35:15 [pool-1-thread-2] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:58567
+2026-04-24 00:35:15 [pool-1-thread-2] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:58567 (User ID: 1)
+2026-04-24 00:35:22 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:64343
+2026-04-24 00:35:22 [pool-1-thread-3] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:64343
+2026-04-24 00:36:08 [pool-1-thread-3] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:64343 (User ID: 1)
+2026-04-24 00:40:04 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:52042
+2026-04-24 00:40:04 [pool-1-thread-4] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:52042
+2026-04-24 00:40:39 [pool-1-thread-4] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:52042
+2026-04-24 00:40:39 [pool-1-thread-4] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:52042 (User ID: 1)
+2026-04-24 00:40:56 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:50684
+2026-04-24 00:40:56 [pool-1-thread-5] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:50684
+2026-04-24 00:42:10 [pool-1-thread-5] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:50684
+2026-04-24 00:42:10 [pool-1-thread-5] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:50684 (User ID: 1)
+2026-04-24 00:42:21 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:60429
+2026-04-24 00:42:21 [pool-1-thread-6] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:60429
+2026-04-24 00:42:47 [pool-1-thread-6] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:60429
+2026-04-24 00:42:47 [pool-1-thread-6] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:60429 (User ID: 1)
+2026-04-24 00:42:59 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:60446
+2026-04-24 00:42:59 [pool-1-thread-7] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:60446
+2026-04-24 00:43:47 [pool-1-thread-7] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:60446
+2026-04-24 00:43:47 [pool-1-thread-7] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:60446 (User ID: 1)
+2026-04-24 00:44:02 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:60463
+2026-04-24 00:44:02 [pool-1-thread-8] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:60463
+2026-04-24 00:44:20 [pool-1-thread-8] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-04-24 00:44:20 [pool-1-thread-8] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-04-24 00:44:20 [pool-1-thread-8] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\danie\Documents\messaging_project\messaging-server\.\storage\original\471c434c-2107-481b-b849-bd24eed7edf1.txt
+2026-04-24 00:44:20 [pool-1-thread-8] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-04-24 00:44:20 [pool-1-thread-8] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-04-24 00:45:33 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: b7a626f7-8268-41d4-9f6d-bf520b297e57) desde /192.168.1.4:61489
+2026-04-24 00:45:33 [FileTransfer-b7a626f7] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: b7a626f7-8268-41d4-9f6d-bf520b297e57
+2026-04-24 00:45:33 [FileTransfer-b7a626f7] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-04-24 00:45:33 [FileTransfer-b7a626f7] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-04-24 00:45:33 [FileTransfer-b7a626f7] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\danie\Documents\messaging_project\messaging-server\.\storage\original\ba07d76e-8025-4d4e-bdb6-71fa67706cf1.pdf
+2026-04-24 00:45:33 [FileTransfer-b7a626f7] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-04-24 00:45:33 [FileTransfer-b7a626f7] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 2
+2026-04-24 00:45:54 [pool-1-thread-8] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:60463
+2026-04-24 00:45:54 [pool-1-thread-8] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:60463 (User ID: 1)
+2026-04-24 00:48:22 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:62813
+2026-04-24 00:48:22 [pool-1-thread-9] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:62813
+2026-04-24 00:48:48 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 2f7132b3-7438-41c6-9ae0-9eb959039957) desde /192.168.1.4:51640
+2026-04-24 00:48:48 [FileTransfer-2f7132b3] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 2f7132b3-7438-41c6-9ae0-9eb959039957
+2026-04-24 00:48:48 [FileTransfer-2f7132b3] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-04-24 00:48:48 [FileTransfer-2f7132b3] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-04-24 00:48:48 [FileTransfer-2f7132b3] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\danie\Documents\messaging_project\messaging-server\.\storage\original\497db3e0-4354-463b-b769-c2f874c34df8.pdf
+2026-04-24 00:48:48 [FileTransfer-2f7132b3] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-04-24 00:48:48 [FileTransfer-2f7132b3] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 3
+2026-04-24 00:48:53 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-29baebba-0a14-4bba-8a11-8ff536c03fee) desde /192.168.1.4:51641
+2026-04-24 00:48:53 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-29baebba-0a14-4bba-8a11-8ff536c03fee
+2026-04-24 00:48:54 [FileTransfer-DWN-ORG-] ERROR MySqlRepository.MySqlDao - Error al registrar log en auditoría: DOWNLOAD_COMPLETE - Detalles: Descarga finalizada en modo: ORIGINAL
+java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`messaging_system`.`logs`, CONSTRAINT `fk_log_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:612)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1467)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at MySqlRepository.MySqlDao.registrarLog(MySqlDao.java:146)
+	at LogService.LogManager.registrarAccion(LogManager.java:13)
+	at handler.FileTransferHandler.run(FileTransferHandler.java:82)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-04-24 00:49:09 [pool-1-thread-9] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:62813
+2026-04-24 00:49:09 [pool-1-thread-9] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:62813 (User ID: 1)
+2026-04-24 00:49:22 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:53370
+2026-04-24 00:49:22 [pool-1-thread-10] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:53370
+2026-04-24 00:49:32 [pool-1-thread-10] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:53370
+2026-04-24 00:49:32 [pool-1-thread-10] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:53370 (User ID: 2)
+2026-04-24 00:49:55 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:53389
+2026-04-24 00:49:55 [pool-1-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:53389
+2026-04-24 00:50:31 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:53400
+2026-04-24 00:50:31 [pool-1-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:53400
+2026-04-24 00:53:24 [pool-1-thread-2] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:53400
+2026-04-24 00:53:24 [pool-1-thread-2] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:53400 (User ID: 2)
+2026-04-24 00:53:24 [pool-1-thread-1] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:53389
+2026-04-24 00:53:24 [pool-1-thread-1] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:53389 (User ID: 1)
+2026-04-24 00:54:19 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:52498
+2026-04-24 00:54:19 [pool-1-thread-3] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:52498
+2026-04-24 00:54:24 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:52503
+2026-04-24 00:54:24 [pool-1-thread-4] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:52503
+2026-04-24 00:54:30 [pool-1-thread-4] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:52503
+2026-04-24 00:54:30 [pool-1-thread-4] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:52503 (User ID: 1)
+2026-04-24 00:54:35 [pool-1-thread-3] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:52498
+2026-04-24 00:54:35 [pool-1-thread-3] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:52498 (User ID: 1)
+2026-04-24 00:54:47 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:52546
+2026-04-24 00:54:47 [pool-1-thread-5] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:52546
+2026-04-24 00:54:55 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.4:52556
+2026-04-24 00:54:55 [pool-1-thread-6] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.4:52556
+2026-04-24 00:55:17 [pool-1-thread-5] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:52546
+2026-04-24 00:55:17 [pool-1-thread-5] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:52546 (User ID: 1)
+2026-04-24 00:55:19 [pool-1-thread-6] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.4:52556
+2026-04-24 00:55:19 [pool-1-thread-6] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.4:52556 (User ID: 2)
+2026-04-24 08:59:07 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-04-24 08:59:07 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-04-24 08:59:07 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-04-24 08:59:08 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-04-24 08:59:08 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-04-24 08:59:08 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 2 conexiones.
+2026-04-24 08:59:08 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 2 hilos.
+2026-04-24 08:59:08 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-04-24 08:59:08 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - tcpsocketserver.TCPSocketServer escuchando en el puerto TCP: 8080
+2026-04-24 08:59:13 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /172.16.201.187:53159
+2026-04-24 08:59:13 [pool-1-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /172.16.201.187:53159
+2026-04-24 08:59:34 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /172.16.201.190:54529
+2026-04-24 08:59:34 [pool-1-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /172.16.201.190:54529
+2026-04-24 08:59:48 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /172.16.201.189:51602
+2026-04-24 08:59:48 [Thread-TCPServer] WARN  pool.ConnectionPoolManager - ¡Pool de conexiones agotado!
+2026-04-24 08:59:48 [Thread-TCPServer] WARN  tcpsocketserver.TCPSocketServer - Rechazando conexión de control: Pool agotado.
+2026-04-24 09:00:27 [pool-1-thread-1] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 172.16.201.187:53159 (User ID: 1)
+2026-04-24 09:00:47 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /172.16.201.189:51622
+2026-04-24 09:00:47 [pool-1-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /172.16.201.189:51622
+2026-04-24 09:02:27 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 88dabb77-9b26-4a06-8515-6fc43caf4e77) desde /172.16.201.189:51628
+2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 88dabb77-9b26-4a06-8515-6fc43caf4e77
+2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\Estudiante\Downloads\messaging_project (2)\messaging_project\messaging-server\.\storage\original\60abdea0-4edf-47c9-ada5-0320ea9ead27.pptx
+2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
