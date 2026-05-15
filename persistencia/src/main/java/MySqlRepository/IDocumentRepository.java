@@ -30,5 +30,8 @@ public interface IDocumentRepository {
 
     List<DocumentInfo> listarMensajesDisponibles() throws Exception;
 
+    /** Filtra mensajes visibles para el usuario solicitante (broadcasts + sus privados). */
+    List<DocumentInfo> listarMensajesDisponibles(String requestingUsername) throws Exception;
+
     List<DocumentInfo> listarDocumentosDisponibles() throws Exception;
 }

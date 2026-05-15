@@ -126,7 +126,9 @@ public class GossipProtocol implements Runnable {
     }
 
     /**
-     * Envía el heartbeat a seeds + miembros conocidos.
+     * Envía el heartbeat a seeds + todos los miembros no-DOWN.
+     * Se sondean también nodos JOINING y SUSPECTED para que puedan
+     * responder con su propio heartbeat directo y así transitar a ALIVE.
      */
     private void sendHeartbeats() {
         String heartbeat = buildHeartbeatMessage();
@@ -137,8 +139,8 @@ public class GossipProtocol implements Runnable {
             sendUdpPacket(data, seedAddress);
         }
 
-        // Miembros conocidos
-        for (NodeInfo node : membershipList.getAliveNodes()) {
+        // Todos los miembros conocidos que no están caídos
+        for (NodeInfo node : membershipList.getNonDownNodes()) {
             sendUdpPacket(data, node.getAddress());
         }
     }
@@ -197,7 +199,10 @@ public class GossipProtocol implements Runnable {
             }
 
             // ── 2. Procesar miembros incluidos en el heartbeat ────────────
-            //    Formato de cada miembro: "memberId:memberHost:memberPort"
+            //    IMPORTANTE: usar addIfAbsent (NO addOrUpdate) para los miembros
+            //    propagados via gossip. Solo el heartbeat DIRECTO de un nodo
+            //    renueva su timer; un nodo muerto no debe quedar "vivo" porque
+            //    otro nodo lo mencione en su lista de miembros.
             for (int i = 4; i < parts.length; i++) {
                 String[] m = parts[i].split(":");
                 if (m.length < 3) continue;
@@ -211,7 +216,7 @@ public class GossipProtocol implements Runnable {
                 if (mId.equals(self.getNodeId())) continue;
 
                 NodeInfo memberNode = new NodeInfo(mId, mHost, mPort);
-                boolean isNewMember = membershipList.addOrUpdate(memberNode);
+                boolean isNewMember = membershipList.addIfAbsent(memberNode);
                 if (isNewMember) {
                     logger.info("Nodo descubierto (via gossip de '{}'): {}", nodeId, memberNode);
                     eventBus.publish(ClusterEvent.NODE_JOINED, memberNode);
@@ -229,12 +234,16 @@ public class GossipProtocol implements Runnable {
         for (MemberEntry entry : membershipList.getAllEntries()) {
             long elapsed = entry.getTimeSinceLastHeartbeatMs();
             NodeInfo nodeInfo = entry.getNodeInfo();
+            NodeState state = entry.getState();
 
-            if (elapsed > failureTimeoutMs && entry.getState() != NodeState.DOWN) {
+            if (elapsed > failureTimeoutMs && state != NodeState.DOWN) {
+                // ALIVE / JOINING / SUSPECTED  → DOWN
                 if (membershipList.markDown(nodeInfo.getNodeId())) {
                     eventBus.publish(ClusterEvent.NODE_LEFT, nodeInfo);
                 }
-            } else if (elapsed > suspectTimeoutMs && entry.getState() == NodeState.ALIVE) {
+            } else if (elapsed > suspectTimeoutMs
+                    && (state == NodeState.ALIVE || state == NodeState.JOINING)) {
+                // ALIVE / JOINING  → SUSPECTED
                 if (membershipList.markSuspected(nodeInfo.getNodeId())) {
                     eventBus.publish(ClusterEvent.NODE_SUSPECTED, nodeInfo);
                 }

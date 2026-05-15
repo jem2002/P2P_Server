@@ -85,7 +85,7 @@ CREATE TABLE documents (
     size_bytes      BIGINT        NOT NULL,                    -- BIGINT: soporta archivos > 1 GB
     extension       VARCHAR(20),
     mime_type       VARCHAR(100),
-    doc_type        ENUM('MESSAGE','FILE') NOT NULL,
+    doc_type        VARCHAR(50)   NOT NULL,
     original_path   VARCHAR(1000),                             -- Ruta en filesystem
     owner_user_id   BIGINT        NOT NULL,
     owner_ip        VARCHAR(45),                               -- IP del cliente emisor
@@ -93,7 +93,7 @@ CREATE TABLE documents (
 
     -- Índices de rendimiento
     INDEX idx_doc_owner (owner_user_id),
-    INDEX idx_doc_type  (doc_type),
+    INDEX idx_doc_type  (doc_type(20)),
 
     -- Llave foránea explícita
     CONSTRAINT fk_doc_owner

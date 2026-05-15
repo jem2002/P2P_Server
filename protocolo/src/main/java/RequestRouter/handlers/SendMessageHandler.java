@@ -88,11 +88,19 @@ public class SendMessageHandler implements ActionHandler {
 
         long userId = userManager.obtenerIdUsuario(fromUser);
 
-        // ── Persistencia del mensaje (SIEMPRE, independiente del modo) ──────────
-        InputStream textStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-        String nombreArchivo   = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
-        documentManager.procesarRecepcionDocumento(
-                textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, clientIp, "MESSAGE");
+        boolean isBroadcast = (targetUsername == null || targetUsername.isEmpty() || targetUsername.equals("ALL"));
+
+        // ── Persistencia (broadcasts Y privados, con docType diferenciado) ─────────
+        // Broadcasts  → docType = "MESSAGE"           (visible a todos)
+        // Privados    → docType = "PRIVATE_TO:{user}" (filtrado por MySqlDao por quién solicita)
+        {
+            String docType = isBroadcast ? "MESSAGE" : "PRIVATE_TO:" + targetUsername;
+            InputStream textStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+            String nombreArchivo   = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
+            documentManager.procesarRecepcionDocumento(
+                    textStream, nombreArchivo, content.length(), ".txt", "text/plain",
+                    userId, clientIp, docType);
+        }
 
         // ── Log de auditoría ─────────────────────────────────────────────────────
         String logDetail = targetUsername != null && !targetUsername.equals("ALL")
@@ -119,7 +127,7 @@ public class SendMessageHandler implements ActionHandler {
                         ReplicationEvent.newMessage(localNodeId, fromUser, content));
             }
 
-            // Broadcast de logs actualizados
+            // Log actualizado a todos (broadcast es esperado en modo ALL)
             broadcastManager.broadcast(listLogsHandler.handle(null, clientIp));
 
             return serializer.buildSuccessResponse(JsonSchema.ACTION_SEND_MESSAGE,
@@ -127,6 +135,11 @@ public class SendMessageHandler implements ActionHandler {
         }
 
         // ── Modo B: Mensaje dirigido ─────────────────────────────────────────────
+        //
+        // IMPORTANTE: En modo dirigido NO se usa broadcastManager.broadcast() para
+        // la actualización de logs, porque el FederatedHook enviaría el log a TODOS
+        // los clientes de TODOS los servidores, revelando el contenido del mensaje
+        // privado. Solo el remitente y el destinatario deben enterarse.
         boolean delivered = false;
 
         if (routingTable != null) {
@@ -139,26 +152,42 @@ public class SendMessageHandler implements ActionHandler {
             }
 
             if (localNodeId != null && localNodeId.equals(nodeId)) {
-                // Cliente LOCAL: entrega directa
+                // Cliente LOCAL: entrega directa solo al destinatario
                 if (localClientRegistry != null) {
                     delivered = localClientRegistry.deliver(targetUsername, mensajeRealTime);
                 }
             } else {
                 // Cliente REMOTO: reenviar al servidor peer via PEER_ROUTE
+                // El peer entrega solo al socket del destinatario (handleRoute → localClientRegistry.deliver)
                 if (remoteDelivery != null) {
                     remoteDelivery.deliver(mensajeRealTime, targetUsername);
                     delivered = true;
                 }
             }
         } else {
-            // Sin cluster: intentar entrega local directa
+            // Sin cluster: entrega local directa
             if (localClientRegistry != null) {
                 delivered = localClientRegistry.deliver(targetUsername, mensajeRealTime);
             }
         }
 
-        // Notificar al remitente el resultado
-        broadcastManager.broadcast(listLogsHandler.handle(null, clientIp));
+        // ── Log de resultado: solo al remitente (local) ──────────────────────────
+        // Se usa broadcastLocalOnly en lugar de broadcast para no filtrar el
+        // contenido del mensaje privado a clientes de otros servidores.
+        // Si el remitente es local, se entrega directamente a su socket.
+        try {
+            String logUpdate = listLogsHandler.handle(null, clientIp);
+            if (localClientRegistry != null) {
+                // Intentar entrega directa al remitente
+                boolean senderNotified = localClientRegistry.deliver(fromUser, logUpdate);
+                if (!senderNotified) {
+                    // Si el remitente no tiene socket local (ej. desconectado), usar broadcast local
+                    broadcastManager.broadcastLocalOnly(logUpdate);
+                }
+            } else {
+                broadcastManager.broadcastLocalOnly(logUpdate);
+            }
+        } catch (Exception ignored) {}
 
         if (delivered) {
             return serializer.buildSuccessResponse(JsonSchema.ACTION_SEND_MESSAGE,

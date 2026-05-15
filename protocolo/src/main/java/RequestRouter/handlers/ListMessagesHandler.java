@@ -24,7 +24,10 @@ public class ListMessagesHandler implements ActionHandler {
 
     @Override
     public String handle(JsonNode payload, String clientIp) throws Exception {
-        List<Map<String, String>> msgs = documentManager.obtenerMensajesDisponibles();
+        // El cliente envía su username para que el servidor filtre solo sus mensajes
+        String requestingUser = (payload != null && payload.has("username"))
+                ? payload.get("username").asText() : null;
+        List<Map<String, String>> msgs = documentManager.obtenerMensajesDisponibles(requestingUser);
         return serializer.buildListResponse(JsonSchema.ACTION_LIST_MESSAGES, msgs, "mensajes");
     }
 }

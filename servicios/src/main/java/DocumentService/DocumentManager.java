@@ -110,16 +110,36 @@ public class DocumentManager {
     }
 
     public List<Map<String, String>> obtenerMensajesDisponibles() {
+        return obtenerMensajesDisponibles(null);
+    }
+
+    /**
+     * Retorna mensajes visibles para el usuario solicitante:
+     *  - Todos los broadcasts (doc_type = 'MESSAGE')
+     *  - Sus mensajes privados enviados y recibidos (doc_type = 'PRIVATE_TO:X')
+     */
+    public List<Map<String, String>> obtenerMensajesDisponibles(String requestingUsername) {
         try {
-            List<DocumentInfo> crudo = documentRepository.listarMensajesDisponibles();
+            List<DocumentInfo> crudo = (requestingUsername != null && !requestingUsername.isBlank())
+                    ? documentRepository.listarMensajesDisponibles(requestingUsername)
+                    : documentRepository.listarMensajesDisponibles();
+
             List<Map<String, String>> mensajesFinales = new ArrayList<>();
 
             for (DocumentInfo item : crudo) {
+                // Verificar que el archivo exista en ESTE servidor antes de intentar leerlo.
+                // En un cluster con MySQL compartido, la BD puede tener referencias a archivos
+                // que solo existen en el sistema de archivos de otro nodo.
+                String pathStr = item.getRutaOriginal();
+                if (pathStr == null || !java.nio.file.Files.exists(java.nio.file.Paths.get(pathStr))) {
+                    logger.debug("Mensaje omitido (archivo en otro nodo): {}", pathStr);
+                    continue;
+                }
+
                 Map<String, String> msg = new HashMap<>();
                 msg.put("id", String.valueOf(item.getId()));
                 msg.put("propietario", item.getPropietario());
-
-                String contenido = leerContenidoMensaje(item.getRutaOriginal());
+                String contenido = leerContenidoMensaje(pathStr);
                 msg.put("contenido", contenido);
                 mensajesFinales.add(msg);
             }
@@ -133,13 +153,16 @@ public class DocumentManager {
 
     /**
      * Extrae el contenido de texto de un archivo de mensaje.
-     * Método extraído para cumplir SRP (separar lectura de archivo del loop de mapeo).
+     * Si el archivo no existe (pertenece a otro nodo), retorna un placeholder.
      */
     private String leerContenidoMensaje(String pathStr) {
         try {
-            return Files.readString(Paths.get(pathStr));
+            return java.nio.file.Files.readString(java.nio.file.Paths.get(pathStr));
+        } catch (java.nio.file.NoSuchFileException e) {
+            // Archivo en otro nodo — no es un error
+            return "[Mensaje en otro servidor]";
         } catch (Exception e) {
-            logger.error("No se pudo leer el archivo .txt en {}", pathStr, e);
+            logger.warn("No se pudo leer el archivo de mensaje: {}", pathStr);
             return "[Error al leer el contenido del mensaje]";
         }
     }

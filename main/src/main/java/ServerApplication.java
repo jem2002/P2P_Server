@@ -265,6 +265,7 @@ public class ServerApplication {
                 // Inyectar broadcast local (para PEER_BROADCAST)
                 peerHandler.setLocalBroadcast(broadcastManager::broadcast);
 
+
                 // 7m. Estrategia de entrega remota
                 RemoteDeliveryStrategy remoteDelivery = new RemoteDeliveryStrategy(
                         peerPool, finalRoutingTable);

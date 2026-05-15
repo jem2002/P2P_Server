@@ -50,6 +50,13 @@ public class PeerMessageHandler {
     /** Callback que se invoca al recibir PEER_LOGS_RESPONSE, con (nodeId, logsJson). */
     private volatile java.util.function.BiConsumer<String, String> peerLogsReceiver;
 
+    /**
+     * Callback que se invoca cuando un PEER_ROUTE es entregado exitosamente al cliente local.
+     * Recibe (targetUsername, messageText) para que el servidor receptor pueda persistir
+     * una copia local del mensaje (visible en LIST_MESSAGES del receptor).
+     */
+    private volatile java.util.function.BiConsumer<String, String> onRouteDelivered;
+
     public PeerMessageHandler(ReplicationManager replicationManager, RoutingTable routingTable,
                                LocalClientRegistry localClientRegistry) {
         this.replicationManager = replicationManager;
@@ -70,6 +77,11 @@ public class PeerMessageHandler {
     /** Inyecta el receptor de logs remotos (para LIST_PEER_LOGS). */
     public void setPeerLogsReceiver(java.util.function.BiConsumer<String, String> receiver) {
         this.peerLogsReceiver = receiver;
+    }
+
+    /** Inyecta el callback de persistencia para mensajes enrutados (PEER_ROUTE). */
+    public void setOnRouteDelivered(java.util.function.BiConsumer<String, String> callback) {
+        this.onRouteDelivered = callback;
     }
 
     /**
@@ -179,16 +191,31 @@ public class PeerMessageHandler {
     /**
      * PEER_ROUTE: entrega un mensaje directamente al socket del cliente local destino.
      * Si el cliente no está en este servidor, descarta (ya no debería llegar aquí).
+     * Si la entrega es exitosa, invoca onRouteDelivered para persistir copia local.
      */
     private void handleRoute(JsonNode payload) {
         if (payload == null) return;
         try {
-            String targetUsername = payload.get("targetUsername").asText();
+            String targetUsername  = payload.get("targetUsername").asText();
             String originalMessage = payload.get("originalMessage").asText();
 
             boolean delivered = localClientRegistry.deliver(targetUsername, originalMessage);
             if (!delivered) {
                 logger.warn("PEER_ROUTE: cliente '{}' no encontrado localmente", targetUsername);
+                return;
+            }
+
+            // Persistir copia local en el servidor receptor para que aparezca en LIST_MESSAGES
+            if (onRouteDelivered != null) {
+                try {
+                    JsonNode msgNode = mapper.readTree(originalMessage);
+                    String messageText = msgNode.path("payload").path("message").asText("");
+                    if (!messageText.isBlank()) {
+                        onRouteDelivered.accept(targetUsername, messageText);
+                    }
+                } catch (Exception e) {
+                    logger.warn("No se pudo persistir copia local del mensaje enrutado: {}", e.getMessage());
+                }
             }
         } catch (Exception e) {
             logger.error("Error procesando PEER_ROUTE", e);

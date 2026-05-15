@@ -22,7 +22,7 @@ public class MembershipList {
     private final ConcurrentHashMap<String, MemberEntry> members = new ConcurrentHashMap<>();
 
     /**
-     * Añade o actualiza la entrada de un nodo. Si ya existe, refresca su heartbeat.
+     * Añade o actualiza la entrada de un nodo. Refresca el heartbeat (heartbeat DIRECTO).
      *
      * @return true si el nodo es nuevo (recién descubierto), false si ya existía.
      */
@@ -45,6 +45,24 @@ public class MembershipList {
         newEntry.refreshHeartbeat();
         members.put(nodeInfo.getNodeId(), newEntry);
         logger.info("Nuevo nodo descubierto: {}", nodeInfo);
+        return true;
+    }
+
+    /**
+     * Registra un nodo SOLO si no se conocía previamente (gossip indirecto).
+     * NO refresca el heartbeat si el nodo ya existe: su timer sigue corriendo
+     * y será marcado SUSPECTED/DOWN si no manda heartbeats directos.
+     *
+     * @return true si el nodo era completamente desconocido.
+     */
+    public boolean addIfAbsent(NodeInfo nodeInfo) {
+        if (members.containsKey(nodeInfo.getNodeId())) {
+            return false; // ya lo conocemos — no tocar su timer
+        }
+        MemberEntry newEntry = new MemberEntry(nodeInfo);
+        // Iniciar su timer desde ahora para darle tiempo de mandar su propio heartbeat
+        members.put(nodeInfo.getNodeId(), newEntry);
+        logger.info("Nodo descubierto via gossip (indirecto): {}", nodeInfo);
         return true;
     }
 
@@ -96,6 +114,22 @@ public class MembershipList {
             }
         }
         return Collections.unmodifiableList(alive);
+    }
+
+    /**
+     * Retorna todos los nodos que no están caídos (ALIVE + JOINING + SUSPECTED).
+     * Se usa en sendHeartbeats para seguir sondeando nodos en estados intermedios
+     * y darles la oportunidad de responder con su propio heartbeat directo,
+     * lo que los promovería a ALIVE.
+     */
+    public List<NodeInfo> getNonDownNodes() {
+        List<NodeInfo> reachable = new ArrayList<>();
+        for (MemberEntry entry : members.values()) {
+            if (entry.getState() != NodeState.DOWN) {
+                reachable.add(entry.getNodeInfo());
+            }
+        }
+        return Collections.unmodifiableList(reachable);
     }
 
     /**
