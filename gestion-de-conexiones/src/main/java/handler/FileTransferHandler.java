@@ -113,9 +113,15 @@ public class FileTransferHandler implements Runnable {
      */
     private void procesarSubida(TransferTicket ticket, InputStream in, OutputStream out) throws Exception {
         logger.info("Recibiendo archivo pesado. Token: {}", token);
+        
+        String docType = "FILE";
+        if (ticket.getTargetUsername() != null && !ticket.getTargetUsername().trim().isEmpty()) {
+            docType = "PRIVATE_TO:" + ticket.getTargetUsername().trim();
+        }
+        
         boolean exito = documentManager.procesarRecepcionDocumento(
                 in, ticket.getFilename(), ticket.getSizeBytes(), ticket.getExtension(),
-                ticket.getMimeType(), ticket.getOwnerUserId(), ticket.getOwnerIp(), "FILE");
+                ticket.getMimeType(), ticket.getOwnerUserId(), ticket.getOwnerIp(), docType);
 
         if (exito) {
             broadcastManager.broadcast(router.handleListDocuments());

@@ -40,11 +40,19 @@ public class UploadInitHandler implements ActionHandler {
         String extension = payload.get("extension").asText();
         String mimeType = payload.get("mimeType").asText();
         String username = payload.get("username").asText();
+        
+        String targetUsername = null;
+        if (payload.has("targetUsername") && !payload.get("targetUsername").isNull()) {
+            String target = payload.get("targetUsername").asText().trim();
+            if (!target.isEmpty() && !target.equals("— Todos —")) {
+                targetUsername = target;
+            }
+        }
 
         long userId = userManager.obtenerIdUsuario(username);
 
         String token = java.util.UUID.randomUUID().toString();
-        TransferTicket ticket = new TransferTicket(token, filename, size, extension, mimeType, userId, clientIp);
+        TransferTicket ticket = new TransferTicket(token, filename, size, extension, mimeType, userId, clientIp, targetUsername);
         transferManager.registrarTicket(ticket);
 
         logManager.registrarAccion(null, userId, "UPLOAD_INIT", "SUCCESS",

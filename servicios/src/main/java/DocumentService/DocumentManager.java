@@ -101,8 +101,14 @@ public class DocumentManager {
     }
 
     public List<DocumentInfo> obtenerArchivosDisponibles() {
+        return obtenerArchivosDisponibles(null);
+    }
+
+    public List<DocumentInfo> obtenerArchivosDisponibles(String requestingUsername) {
         try {
-            return documentRepository.listarArchivosDisponibles();
+            return (requestingUsername != null && !requestingUsername.isBlank())
+                    ? documentRepository.listarDocumentosDisponibles(requestingUsername)
+                    : documentRepository.listarDocumentosDisponibles();
         } catch (Exception e) {
             logger.error("Error al obtener la lista de archivos de la BD", e);
             return new ArrayList<>();

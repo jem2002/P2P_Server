@@ -344,25 +344,51 @@ public class MySqlDao implements IUserRepository, IDocumentRepository, ISessionR
 
     @Override
     public List<DocumentInfo> listarDocumentosDisponibles() throws Exception {
+        return listarDocumentosDisponibles(null);
+    }
+
+    @Override
+    public List<DocumentInfo> listarDocumentosDisponibles(String requestingUsername) throws Exception {
         List<DocumentInfo> documentos = new ArrayList<>();
-        String sql = "SELECT d.id, d.name, d.size_bytes, d.extension, u.username, u.ip_address " +
-                "FROM documents d " +
-                "JOIN users u ON d.owner_user_id = u.id " +
-                "ORDER BY d.id DESC";
+        String sql;
+        boolean filterByUser = (requestingUsername != null && !requestingUsername.trim().isEmpty());
+
+        if (filterByUser) {
+            sql = "SELECT d.id, d.name, d.size_bytes, d.extension, u.username, u.ip_address " +
+                  "FROM documents d " +
+                  "JOIN users u ON d.owner_user_id = u.id " +
+                  "WHERE d.doc_type = 'FILE' " +
+                  "   OR d.doc_type = ? " +
+                  "   OR (d.doc_type LIKE 'PRIVATE_TO:%' AND d.owner_user_id = (SELECT id FROM users WHERE username = ?)) " +
+                  "ORDER BY d.id DESC";
+        } else {
+            sql = "SELECT d.id, d.name, d.size_bytes, d.extension, u.username, u.ip_address " +
+                  "FROM documents d " +
+                  "JOIN users u ON d.owner_user_id = u.id " +
+                  "WHERE d.doc_type = 'FILE' " +
+                  "ORDER BY d.id DESC";
+        }
 
         try (Connection conn = dbManager.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                String propietario = rs.getString("username") + " (" + rs.getString("ip_address") + ")";
-                documentos.add(new DocumentInfo(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getLong("size_bytes"),
-                        rs.getString("extension"),
-                        null,
-                        propietario
-                ));
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            if (filterByUser) {
+                stmt.setString(1, "PRIVATE_TO:" + requestingUsername);
+                stmt.setString(2, requestingUsername);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String propietario = rs.getString("username") + " (" + rs.getString("ip_address") + ")";
+                    documentos.add(new DocumentInfo(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getLong("size_bytes"),
+                            rs.getString("extension"),
+                            null,
+                            propietario
+                    ));
+                }
             }
         }
         return documentos;

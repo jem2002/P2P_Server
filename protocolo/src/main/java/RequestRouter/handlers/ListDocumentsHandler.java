@@ -27,7 +27,12 @@ public class ListDocumentsHandler implements ActionHandler {
 
     @Override
     public String handle(JsonNode payload, String clientIp) throws Exception {
-        List<DocumentInfo> docs = documentManager.obtenerArchivosDisponibles();
+        String username = null;
+        if (payload != null && payload.has("username") && !payload.get("username").isNull()) {
+            username = payload.get("username").asText();
+        }
+
+        List<DocumentInfo> docs = documentManager.obtenerArchivosDisponibles(username);
         List<Map<String, String>> mapped = new ArrayList<>();
         for (DocumentInfo d : docs) {
             Map<String, String> item = new HashMap<>();
