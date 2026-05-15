@@ -10,6 +10,7 @@ import RequestRouter.MainRouter;
 import RequestRouter.TransferManager;
 import UserService.UserManager;
 import api.ServerAdminAPI;
+import config.NodeSetupWizard;
 import config.ServerConfig;
 import console.InteractiveConsole;
 import executor.ThreadPoolManager;
@@ -19,6 +20,9 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import pool.ConnectionPoolManager;
 import protocolSelector.ProtocolSelector;
+import registry.LocalClientRegistry;
+import replication.ReplicationEvent;
+import routing.RemoteDeliveryStrategy;
 
 // Imports del módulo Cluster P2P
 import communication.PeerConnectionPool;
@@ -26,6 +30,7 @@ import communication.PeerMessageHandler;
 import communication.PeerServer;
 import discovery.GossipProtocol;
 import discovery.MembershipList;
+import events.ClusterNotifier;
 import events.NetworkEventBus;
 import health.ClusterHealthService;
 import identity.NodeIdentity;
@@ -35,14 +40,27 @@ import topology.RoutingTable;
 import java.util.Arrays;
 
 /**
- * Punto de entrada de la aplicación.
- * Actúa como Composition Root: instancia y conecta todas las dependencias.
+ * Punto de entrada de la aplicación — Composition Root.
+ * Instancia y conecta todas las dependencias.
  *
- * Principio aplicado: DIP — las dependencias se inyectan via constructor.
- * Las abstracciones (interfaces) se resuelven aquí en el borde del sistema.
+ * Principio aplicado: DIP — las dependencias se inyectan via constructor/setter.
  *
- * Extensión P2P: cuando cluster.enabled=true, inicializa los componentes
- * de descubrimiento (Gossip), replicación, routing y monitoreo distribuido.
+ * Extensión P2P: cuando cluster.enabled=true inicializa los componentes distribuidos:
+ *   - GossipProtocol (descubrimiento por UDP heartbeats)
+ *   - PeerServer (acepta conexiones TCP de otros servidores)
+ *   - LocalClientRegistry (entrega directa de mensajes a clientes locales)
+ *   - RoutingTable (mapea cliente→nodo)
+ *   - ReplicationManager (propaga y recibe eventos de mutación entre servidores)
+ *   - ClusterNotifier (notifica a clientes locales cuando un servidor entra/sale)
+ *   - ClusterHealthService (monitoreo del estado de la red)
+ *
+ * Requerimientos cubiertos:
+ *   ✓ Detección de servidores amigos (Gossip + MembershipList)
+ *   ✓ Cada servidor posee copia de mensajes y archivos de demás servidores (ReplicationManager)
+ *   ✓ Notificación de join/leave de servidores (ClusterNotifier → BroadcastManager)
+ *   ✓ Lista federada de clientes (ListClientsHandler + RoutingTable)
+ *   ✓ Mensajes a cliente específico o a todos (SendMessageHandler con targetUsername)
+ *   ✓ Info y logs de otros servidores (ListPeerInfoHandler + ListPeerLogsHandler)
  */
 public class ServerApplication {
 
@@ -54,21 +72,34 @@ public class ServerApplication {
         logger.info("Arrancando Messaging Server...");
 
         try {
-            // 1. Configuración
+            // 1. Configuración base (desde config.properties)
             ServerConfig config = new ServerConfig();
 
-            // 2. Módulo Persistencia (Composition Root resuelve las abstracciones)
+            // 1b. Asistente interactivo: permite personalizar los parámetros de red
+            //     en terminal antes de arrancar. Pregunta si es el primer nodo y,
+            //     si no lo es, solicita server.port, cluster.nodeId, cluster.port y seedNodes.
+            NodeSetupWizard.run(config);
+
+            // 1c. Confirmar en log los valores reales que usará el servidor
+            logger.info("╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════");
+            logger.info("║  server.port       = {}", config.getPort());
+            logger.info("║  cluster.nodeId    = {}", config.getNodeId());
+            logger.info("║  cluster.port      = {}", config.getClusterPort());
+            logger.info("║  cluster.seedNodes = {}", String.join(",", config.getSeedNodes()));
+            logger.info("╚═══════════════════════════════════════════════════════");
+
+            // 2. Módulo Persistencia
             MySqlDao dao = new MySqlDao();
             dao.limpiarConexionesMuertas();
 
-            // 3. Módulo Servicios (inyección de interfaces segregadas)
-            UserManager userManager = new UserManager(dao, dao);    // IUserRepository + ISessionRepository
+            // 3. Módulo Servicios
+            UserManager userManager = new UserManager(dao, dao);
             LocalFileManager fileManager = new LocalFileManager();
             IEncryptionUtils encryptionUtils = new EncryptionUtils();
             CryptoManager cryptoManager = new CryptoManager(encryptionUtils);
-            LogManager logManager = new LogManager(dao);            // IAuditLogRepository
+            LogManager logManager = new LogManager(dao);
             DocumentManager documentManager = new DocumentManager(
-                    fileManager, cryptoManager, dao, dao, logManager); // IDocumentRepository + IUserRepository
+                    fileManager, cryptoManager, dao, dao, logManager);
             BroadcastManager broadcastManager = new BroadcastManager();
             TransferManager transferManager = new TransferManager();
 
@@ -97,6 +128,7 @@ public class ServerApplication {
             // 7. Módulo Cluster P2P (solo si está habilitado)
             ClusterHealthService healthService = null;
             RoutingTable routingTable = null;
+            MembershipList membership = null;
 
             if (config.isClusterEnabled()) {
                 logger.info("═══════════════════════════════════════════════════");
@@ -111,33 +143,144 @@ public class ServerApplication {
 
                 // 7b. Componentes de membresía y eventos
                 NetworkEventBus eventBus = new NetworkEventBus();
-                MembershipList membership = new MembershipList();
+                membership = new MembershipList();
 
-                // 7c. Tabla de enrutamiento
+                // 7c. Tabla de enrutamiento (cliente → nodeId)
                 routingTable = new RoutingTable(identity.getNodeId());
 
-                // 7d. Pool de conexiones a peers
+                // 7d. Registro local de streams (username → OutputStream)
+                LocalClientRegistry localClientRegistry = new LocalClientRegistry();
+
+                // 7e. Pool de conexiones TCP a peers
                 PeerConnectionPool peerPool = new PeerConnectionPool();
 
-                // 7e. Gestor de replicación
+                // 7f. Gestor de replicación
                 ReplicationManager replicator = new ReplicationManager(
                         identity.getNodeId(), membership, peerPool);
 
-                // 7f. Servicio de salud del cluster
+                // 7g. Servicio de salud del cluster
                 healthService = new ClusterHealthService(identity, membership, peerPool);
 
-                // 7g. Suscribir observers al bus de eventos
-                eventBus.subscribe(peerPool);       // Abre/cierra conexiones TCP a peers
-                eventBus.subscribe(replicator);      // Reacciona a cambios de membresía
-                eventBus.subscribe(routingTable);     // Limpia clientes de nodos caídos
+                // 7h. Suscribir observers al bus de eventos
+                final RoutingTable finalRoutingTable = routingTable;
+                eventBus.subscribe(peerPool);         // Abre/cierra conexiones TCP a peers
+                eventBus.subscribe(replicator);        // Reacciona a cambios de membresía
+                eventBus.subscribe(finalRoutingTable); // Limpia clientes de nodos caídos
 
-                // 7h. Hook de broadcast federado (OCP: extiende BroadcastManager sin modificarlo)
+                // 7i. Notificador de eventos del cluster hacia clientes locales
+                //     Requerimiento: "Los servidores deberán informar cuando se une o desconecta un servidor"
+                ClusterNotifier clusterNotifier = new ClusterNotifier(broadcastManager::broadcast);
+                eventBus.subscribe(clusterNotifier);
+
+                // 7i-b. Bootstrap sync: cuando un nuevo nodo se une, enviarle nuestra
+                //       RoutingTable completa para que conozca a todos los clientes existentes.
+                //       Sin esto, node-3 (que llega tarde) nunca recibe los CLIENT_CONNECTED
+                //       de los nodos que ya estaban activos.
+                final String finalNodeId = identity.getNodeId();
+                eventBus.subscribe(new events.NetworkEventListener() {
+                    @Override
+                    public void onNodeJoined(events.NodeInfo node) {
+                        // Esperamos en un hilo aparte para que PeerConnectionPool
+                        // haya tenido tiempo de abrir la conexión TCP primero.
+                        new Thread(() -> {
+                            try {
+                                Thread.sleep(800); // dar tiempo a PeerConnectionPool.onNodeJoined
+                                String syncMsg = communication.InterServerProtocol
+                                        .buildSyncMessage(finalNodeId, finalRoutingTable);
+                                peerPool.sendToPeer(node.getNodeId(), syncMsg);
+                                logger.info("RoutingTable enviada a nuevo nodo '{}' (bootstrap sync)",
+                                        node.getNodeId());
+                            } catch (Exception e) {
+                                logger.warn("No se pudo enviar bootstrap sync a '{}': {}",
+                                        node.getNodeId(), e.getMessage());
+                            }
+                        }, "BootstrapSync-" + node.getNodeId()).start();
+                    }
+                    @Override
+                    public void onNodeLeft(events.NodeInfo node) { /* no-op */ }
+                });
+
+                // 7j. Hook de broadcast federado (OCP: extiende BroadcastManager sin modificarlo)
                 broadcastManager.setFederatedHook(peerPool::broadcastToPeers);
 
-                // 7i. Handler de mensajes entrantes de peers
-                PeerMessageHandler peerHandler = new PeerMessageHandler(replicator, routingTable);
+                // 7k. Conectar ReplicationManager al dominio local:
+                //     Cuando un evento replicado llega de un peer, aplicarlo aquí
+                final MembershipList finalMembership = membership;
+                final LocalClientRegistry finalRegistry = localClientRegistry;
+                final MainRouter finalRouter = router;
+                replicator.setEventHandler(event -> {
+                    String type = event.getEventType();
+                    switch (type) {
+                        case "CLIENT_CONNECTED": {
+                            // Un cliente se conectó a otro servidor → registrar en RoutingTable
+                            String username = event.getPayload().get("username").asText();
+                            String sourceNode = event.getSourceNodeId();
+                            finalRoutingTable.registerRemoteClient(username, sourceNode);
+                            // Enviar lista actualizada SOLO a clientes locales (no federar de vuelta)
+                            try {
+                                broadcastManager.broadcastLocalOnly(
+                                        finalRouter.handleListClients());
+                            } catch (Exception ignored) {}
+                            break;
+                        }
+                        case "CLIENT_DISCONNECTED": {
+                            // Un cliente se desconectó de otro servidor
+                            String username = event.getPayload().get("username").asText();
+                            finalRoutingTable.unregisterClient(username);
+                            try {
+                                broadcastManager.broadcastLocalOnly(
+                                        finalRouter.handleListClients());
+                            } catch (Exception ignored) {}
+                            break;
+                        }
+                        case "NEW_MESSAGE": {
+                            // Un mensaje fue enviado en otro servidor → retransmitir a clientes locales
+                            String fromUser = event.getPayload().get("username").asText();
+                            String content  = event.getPayload().get("content").asText();
+                            String msgJson  = "{\"action\":\"NEW_MESSAGE\",\"payload\":{\"message\":\"["
+                                              + event.getSourceNodeId() + "] De " + fromUser + ": " + content + "\"}}";
+                            broadcastManager.broadcastLocalOnly(msgJson);
+                            break;
+                        }
+                        case "DOCUMENT_UPLOADED": {
+                            // Un documento fue subido en otro servidor → actualizar lista local
+                            try {
+                                broadcastManager.broadcastLocalOnly(finalRouter.handleListDocuments());
+                            } catch (Exception ignored) {}
+                            break;
+                        }
+                        default:
+                            logger.debug("Evento de replicación no manejado: {}", type);
+                    }
+                });
 
-                // 7j. Iniciar Gossip Protocol (descubrimiento por UDP)
+                // 7l. Handler de mensajes entrantes de peers (ahora con todas las dependencias)
+                PeerMessageHandler peerHandler = new PeerMessageHandler(
+                        replicator, finalRoutingTable, localClientRegistry);
+
+                // Inyectar proveedor de logs locales (para responder PEER_LOGS_REQUEST)
+                peerHandler.setLocalLogsSupplier(() -> {
+                    try { return finalRouter.handleListLogs(); } catch (Exception e) { return "{}"; }
+                });
+                // Inyectar broadcast local (para PEER_BROADCAST)
+                peerHandler.setLocalBroadcast(broadcastManager::broadcast);
+
+                // 7m. Estrategia de entrega remota
+                RemoteDeliveryStrategy remoteDelivery = new RemoteDeliveryStrategy(
+                        peerPool, finalRoutingTable);
+
+                // 7n. Activar integración P2P en el MainRouter
+                router.enableCluster(
+                        finalRoutingTable,
+                        localClientRegistry,
+                        replicator,
+                        remoteDelivery,
+                        identity.getNodeId(),
+                        membership,
+                        healthService,
+                        identity);
+
+                // 7o. Iniciar Gossip Protocol (descubrimiento por UDP)
                 GossipProtocol gossip = new GossipProtocol(
                         identity, membership, eventBus,
                         Arrays.asList(config.getSeedNodes()),
@@ -145,7 +288,7 @@ public class ServerApplication {
                         config.getFailureTimeoutMs());
                 new Thread(gossip, "Thread-GossipProtocol").start();
 
-                // 7k. Iniciar PeerServer TCP (recibe conexiones de otros servidores)
+                // 7p. Iniciar PeerServer TCP (recibe conexiones de otros servidores)
                 PeerServer peerServer = new PeerServer(config.getClusterPort(), peerHandler);
                 new Thread(peerServer, "Thread-PeerServer").start();
 
@@ -156,9 +299,9 @@ public class ServerApplication {
             }
 
             // 8. Interfaces Expuestas y Consola Administrativa
-            ServerAdminAPI adminAPI = new ServerAdminAPI(dao, dao);  // IUserRepository + IDocumentRepository
+            ServerAdminAPI adminAPI = new ServerAdminAPI(dao, dao);
             InteractiveConsole console = new InteractiveConsole(
-                    adminAPI, networkServer, healthService, routingTable);
+                    adminAPI, networkServer, healthService, routingTable, membership);
 
             // Arrancamos la consola en el hilo principal
             console.run();
@@ -169,6 +312,10 @@ public class ServerApplication {
         }
     }
 
+    /**
+     * Método auxiliar expuesto al ReplicationManager para recuperar la lista de clientes.
+     * Usamos un helper en el main para evitar acoplamiento circular.
+     */
     private static void configurarNivelesDeLog() {
         try {
             LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();

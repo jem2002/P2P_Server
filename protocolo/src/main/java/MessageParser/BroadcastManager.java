@@ -65,4 +65,26 @@ public class BroadcastManager {
             }
         }
     }
+
+    /**
+     * Envía el mensaje SOLO a los clientes locales de este servidor,
+     * sin propagar a los peers (federated hook ignorado).
+     *
+     * Usado para sincronización interna tras eventos de replicación,
+     * evitando que la lista de clientes de un nodo sobreescriba
+     * la lista del nodo receptor.
+     */
+    public void broadcastLocalOnly(String jsonMessage) {
+        logger.debug("Broadcast LOCAL-ONLY a {} clientes", activeStreams.size());
+        byte[] messageBytes = (jsonMessage + "\n").getBytes(StandardCharsets.UTF_8);
+        for (OutputStream out : activeStreams) {
+            try {
+                out.write(messageBytes);
+                out.flush();
+            } catch (Exception e) {
+                logger.error("Fallo al enviar broadcastLocalOnly a un stream.");
+                activeStreams.remove(out);
+            }
+        }
+    }
 }

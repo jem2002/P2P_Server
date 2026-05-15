@@ -43,4 +43,13 @@ public class ServerConfig {
         if (seeds.isEmpty()) return new String[0];
         return seeds.split(",");
     }
+
+    /**
+     * Sobreescribe una propiedad en memoria (sin tocar el archivo en disco).
+     * Usado por {@link NodeSetupWizard} para inyectar los valores ingresados
+     * en terminal antes de que la aplicación arranque.
+     */
+    public void overrideProperty(String key, String value) {
+        properties.setProperty(key, value);
+    }
 }

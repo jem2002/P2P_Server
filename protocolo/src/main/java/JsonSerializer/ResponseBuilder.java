@@ -73,4 +73,31 @@ public class ResponseBuilder {
         root.set(JsonSchema.KEY_PAYLOAD, payload);
         return root.toString();
     }
+
+    /**
+     * Versión genérica que acepta valores Object (para listas con campos mixtos como String o JSON incrustado).
+     */
+    public String buildObjectListResponse(String action, List<Map<String, Object>> items, String listName) {
+        ObjectNode root = mapper.createObjectNode();
+        root.put(JsonSchema.KEY_ACTION, action + "_ACK");
+
+        ObjectNode payload = mapper.createObjectNode();
+        payload.put("status", "SUCCESS");
+
+        ArrayNode arrayNode = payload.putArray(listName);
+        for (Map<String, Object> item : items) {
+            ObjectNode itemNode = mapper.createObjectNode();
+            item.forEach((k, v) -> {
+                if (v instanceof String) {
+                    itemNode.put(k, (String) v);
+                } else {
+                    itemNode.putPOJO(k, v);
+                }
+            });
+            arrayNode.add(itemNode);
+        }
+
+        root.set(JsonSchema.KEY_PAYLOAD, payload);
+        return root.toString();
+    }
 }

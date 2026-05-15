@@ -1,9 +1,11 @@
 package communication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import topology.RoutingTable;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,6 +62,48 @@ public final class InterServerProtocol {
         payload.put("targetUsername", targetUsername);
         payload.put("originalMessage", originalJson);
 
+        root.set("payload", payload);
+        return root.toString();
+    }
+
+    /**
+     * Construye una solicitud de logs dirigida a un peer.
+     * El peer responderá con PEER_LOGS_RESPONSE.
+     */
+    public static String buildLogsRequest(String requestingNodeId) {
+        ObjectNode root = mapper.createObjectNode();
+        root.put("action", "PEER_LOGS_REQUEST");
+        ObjectNode payload = mapper.createObjectNode();
+        payload.put("requestingNodeId", requestingNodeId);
+        root.set("payload", payload);
+        return root.toString();
+    }
+
+    /**
+     * Construye una respuesta con los logs de este servidor.
+     *
+     * @param sourceNodeId NodeId del servidor que responde
+     * @param logsJson     String JSON de la lista de logs (formato LIST_LOGS)
+     */
+    public static String buildLogsResponse(String sourceNodeId, String logsJson) {
+        ObjectNode root = mapper.createObjectNode();
+        root.put("action", "PEER_LOGS_RESPONSE");
+        ObjectNode payload = mapper.createObjectNode();
+        payload.put("sourceNodeId", sourceNodeId);
+        payload.put("logsJson", logsJson);
+        root.set("payload", payload);
+        return root.toString();
+    }
+
+    /**
+     * Envuelve un broadcast local en un envelope PEER_BROADCAST para retransmisión.
+     * El peer que lo recibe lo entrega a sus clientes locales.
+     */
+    public static String buildPeerBroadcast(String jsonMessage) {
+        ObjectNode root = mapper.createObjectNode();
+        root.put("action", "PEER_BROADCAST");
+        ObjectNode payload = mapper.createObjectNode();
+        payload.put("message", jsonMessage);
         root.set("payload", payload);
         return root.toString();
     }

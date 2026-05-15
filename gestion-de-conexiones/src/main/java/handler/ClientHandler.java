@@ -16,6 +16,8 @@ import MessageParser.BroadcastManager;
  * Gestiona el ciclo de vida de una conexión de cliente.
  *
  * Refactorizado: usa LineReader centralizado (DRY), constructor simplificado.
+ * Extensión P2P: notifica al router el OutputStream del cliente antes de cada
+ * petición para que ConnectHandler pueda registrarlo en LocalClientRegistry.
  */
 public class ClientHandler implements Runnable {
 
@@ -48,6 +50,9 @@ public class ClientHandler implements Runnable {
             broadcastManager.addStream(out);
             logger.info("Atendiendo conexión de CONTROL desde {}", clientIp);
 
+            // Registrar el OutputStream actual en el router (para ConnectHandler → LocalClientRegistry)
+            router.setCurrentClientOutputStream(out);
+
             // 1. Procesar la primera línea que ya leímos en el Triage
             enviarRespuestaJson(primeraLinea, out, clientIp);
 
@@ -79,6 +84,8 @@ public class ClientHandler implements Runnable {
     }
 
     private void enviarRespuestaJson(String json, OutputStream out, String clientIp) throws Exception {
+        // Actualizar el OutputStream antes de routear (por si es CONNECT)
+        router.setCurrentClientOutputStream(out);
         String jsonResponse = router.routeRequest(json, clientIp);
         out.write((jsonResponse + "\n").getBytes(StandardCharsets.UTF_8));
         out.flush();

@@ -9,13 +9,13 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
+        <module>shared</module>
+        <module>persistencia</module>
+        <module>servicios</module>
+        <module>cluster</module>
         <module>gestion-de-conexiones</module>
         <module>red</module>
         <module>protocolo</module>
-        <module>servicios</module>
-        <module>persistencia</module>
-        <module>shared</module>
-        <module>cluster</module>
         <module>main</module>
     </modules>
 

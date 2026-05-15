@@ -17,25 +17,32 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Implementación simplificada del Gossip Protocol para descubrimiento
- * y detección de fallos en la red P2P.
+ * Gossip Protocol para descubrimiento de miembros y detección de fallos en la red P2P.
+ *
+ * Protocolo de heartbeat ENRIQUECIDO con membresía:
+ *
+ *   Formato del mensaje UDP:
+ *     HEARTBEAT|nodeId|host|clusterPort|member1Id:member1Host:member1Port|member2Id:...
+ *
+ *   Esto permite "gossip real": cuando node-2 recibe el heartbeat de node-1
+ *   que incluye a node-3 en su lista de miembros, node-2 descubre a node-3
+ *   sin necesidad de conectarse directamente a él como seed.
+ *
+ *   Sin esto, en una topología en estrella (todos apuntan al mismo seed),
+ *   los nodos secundarios (node-2, node-3) nunca se conocen entre sí.
  *
  * Funcionamiento:
- *   1. Cada {@code heartbeatIntervalMs} envía un heartbeat UDP a los seed nodes
- *      y a todos los nodos conocidos.
- *   2. Un hilo de detección de fallos verifica periódicamente si algún nodo
- *      ha dejado de enviar heartbeats.
- *   3. Si un nodo no responde en {@code suspectTimeoutMs} → SUSPECTED.
- *   4. Si no responde en {@code failureTimeoutMs} → DOWN.
- *
- * Principios aplicados:
- *   - SRP: solo maneja heartbeats y detección. La reacción es del EventBus.
- *   - Observer (indirecto): publica eventos vía NetworkEventBus.
+ *   1. Cada heartbeatIntervalMs envía un heartbeat UDP a seeds + miembros conocidos.
+ *   2. El heartbeat incluye la lista de miembros ALIVE propios (propagación de membresía).
+ *   3. El receptor añade cualquier miembro nuevo que aparezca en el heartbeat.
+ *   4. Un hilo de detección verifica periódicamente si algún nodo dejó de responder.
+ *   5. Si un nodo no responde en suspectTimeoutMs → SUSPECTED.
+ *   6. Si no responde en failureTimeoutMs → DOWN.
  */
 public class GossipProtocol implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(GossipProtocol.class);
-    private static final int HEARTBEAT_BUFFER_SIZE = 512;
+    private static final int HEARTBEAT_BUFFER_SIZE = 2048; // ampliado para la lista de miembros
 
     private final NodeIdentity self;
     private final MembershipList membershipList;
@@ -49,14 +56,6 @@ public class GossipProtocol implements Runnable {
     private DatagramSocket socket;
     private ScheduledExecutorService scheduler;
 
-    /**
-     * @param self               Identidad de este nodo
-     * @param membershipList     Lista compartida de membresía
-     * @param eventBus           Bus de eventos para notificar cambios
-     * @param seedNodes          Lista de direcciones semilla ("host:port")
-     * @param heartbeatIntervalMs Intervalo entre heartbeats (ej. 2000ms)
-     * @param failureTimeoutMs   Timeout para declarar nodo DOWN (ej. 10000ms)
-     */
     public GossipProtocol(NodeIdentity self, MembershipList membershipList,
                           NetworkEventBus eventBus, List<String> seedNodes,
                           long heartbeatIntervalMs, long failureTimeoutMs) {
@@ -76,14 +75,12 @@ public class GossipProtocol implements Runnable {
             logger.info("GossipProtocol escuchando en UDP:{} — NodeId: {}",
                     self.getClusterPort(), self.getNodeId());
 
-            // Programar envío periódico de heartbeats
             scheduler = Executors.newScheduledThreadPool(2);
             scheduler.scheduleAtFixedRate(this::sendHeartbeats,
                     0, heartbeatIntervalMs, TimeUnit.MILLISECONDS);
             scheduler.scheduleAtFixedRate(this::checkForFailures,
                     heartbeatIntervalMs, heartbeatIntervalMs, TimeUnit.MILLISECONDS);
 
-            // Bucle principal: escuchar heartbeats entrantes
             byte[] buffer = new byte[HEARTBEAT_BUFFER_SIZE];
             while (running) {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -100,21 +97,47 @@ public class GossipProtocol implements Runnable {
         }
     }
 
+    // ── Envío ──────────────────────────────────────────────────────────────
+
     /**
-     * Envía un heartbeat UDP a todos los seed nodes y nodos conocidos.
-     * Formato del heartbeat: "HEARTBEAT|nodeId|host|clusterPort"
+     * Construye el heartbeat incluyendo la lista de miembros conocidos.
+     *
+     * Formato:
+     *   HEARTBEAT|selfId|selfHost|selfPort[|memberId:memberHost:memberPort]*
+     *
+     * El sufijo de miembros permite que el receptor descubra nodos que no
+     * conoce aún (propagación de membresía transitiva).
+     */
+    private String buildHeartbeatMessage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("HEARTBEAT|")
+          .append(self.getNodeId()).append("|")
+          .append(self.getHost()).append("|")
+          .append(self.getClusterPort());
+
+        // Añadir lista de miembros ALIVE conocidos (excluirse a sí mismo)
+        for (NodeInfo node : membershipList.getAliveNodes()) {
+            sb.append("|")
+              .append(node.getNodeId()).append(":")
+              .append(node.getHost()).append(":")
+              .append(node.getClusterPort());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Envía el heartbeat a seeds + miembros conocidos.
      */
     private void sendHeartbeats() {
-        String heartbeat = String.format("HEARTBEAT|%s|%s|%d",
-                self.getNodeId(), self.getHost(), self.getClusterPort());
+        String heartbeat = buildHeartbeatMessage();
         byte[] data = heartbeat.getBytes(StandardCharsets.UTF_8);
 
-        // Enviar a seed nodes (bootstrap)
+        // Bootstrap: seeds siempre reciben heartbeat
         for (String seedAddress : seedNodes) {
             sendUdpPacket(data, seedAddress);
         }
 
-        // Enviar a nodos conocidos vivos
+        // Miembros conocidos
         for (NodeInfo node : membershipList.getAliveNodes()) {
             sendUdpPacket(data, node.getAddress());
         }
@@ -128,7 +151,7 @@ public class GossipProtocol implements Runnable {
             InetAddress inetAddress = InetAddress.getByName(parts[0]);
             int port = Integer.parseInt(parts[1]);
 
-            // No enviar heartbeat a sí mismo
+            // No enviarse a sí mismo
             if (self.getHost().equals(parts[0]) && self.getClusterPort() == port) {
                 return;
             }
@@ -140,32 +163,59 @@ public class GossipProtocol implements Runnable {
         }
     }
 
+    // ── Recepción ──────────────────────────────────────────────────────────
+
     /**
-     * Procesa un heartbeat entrante de otro nodo.
+     * Procesa un heartbeat entrante.
+     *
+     * Parsea el remitente directo (partes 1-3) y la lista de miembros
+     * incluida en el mensaje (partes 4+). Cualquier miembro desconocido
+     * se agrega a la MembershipList y dispara onNodeJoined en el EventBus.
      */
     private void processIncomingHeartbeat(DatagramPacket packet) {
         try {
-            String message = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8);
+            String message = new String(
+                    packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8).trim();
             String[] parts = message.split("\\|");
 
             if (parts.length < 4 || !"HEARTBEAT".equals(parts[0])) {
                 return;
             }
 
-            String nodeId = parts[1];
-            String host = parts[2];
-            int clusterPort = Integer.parseInt(parts[3]);
+            // ── 1. Procesar el remitente directo ──────────────────────────
+            String nodeId     = parts[1];
+            String host       = parts[2];
+            int clusterPort   = Integer.parseInt(parts[3]);
 
-            // Ignorar heartbeats propios
-            if (nodeId.equals(self.getNodeId())) {
-                return;
+            if (!nodeId.equals(self.getNodeId())) {
+                NodeInfo sender = new NodeInfo(nodeId, host, clusterPort);
+                boolean isNew = membershipList.addOrUpdate(sender);
+                if (isNew) {
+                    logger.info("Nodo descubierto (directo): {}", sender);
+                    eventBus.publish(ClusterEvent.NODE_JOINED, sender);
+                }
             }
 
-            NodeInfo nodeInfo = new NodeInfo(nodeId, host, clusterPort);
-            boolean isNew = membershipList.addOrUpdate(nodeInfo);
+            // ── 2. Procesar miembros incluidos en el heartbeat ────────────
+            //    Formato de cada miembro: "memberId:memberHost:memberPort"
+            for (int i = 4; i < parts.length; i++) {
+                String[] m = parts[i].split(":");
+                if (m.length < 3) continue;
 
-            if (isNew) {
-                eventBus.publish(ClusterEvent.NODE_JOINED, nodeInfo);
+                String mId   = m[0];
+                String mHost = m[1];
+                int    mPort;
+                try { mPort = Integer.parseInt(m[2]); } catch (NumberFormatException e) { continue; }
+
+                // Ignorarse a sí mismo
+                if (mId.equals(self.getNodeId())) continue;
+
+                NodeInfo memberNode = new NodeInfo(mId, mHost, mPort);
+                boolean isNewMember = membershipList.addOrUpdate(memberNode);
+                if (isNewMember) {
+                    logger.info("Nodo descubierto (via gossip de '{}'): {}", nodeId, memberNode);
+                    eventBus.publish(ClusterEvent.NODE_JOINED, memberNode);
+                }
             }
 
         } catch (Exception e) {
@@ -173,9 +223,8 @@ public class GossipProtocol implements Runnable {
         }
     }
 
-    /**
-     * Verifica periódicamente si algún nodo ha dejado de enviar heartbeats.
-     */
+    // ── Detección de fallos ────────────────────────────────────────────────
+
     private void checkForFailures() {
         for (MemberEntry entry : membershipList.getAllEntries()) {
             long elapsed = entry.getTimeSinceLastHeartbeatMs();
@@ -193,16 +242,9 @@ public class GossipProtocol implements Runnable {
         }
     }
 
-    /**
-     * Detiene el protocolo Gossip de forma segura.
-     */
     public void stop() {
         running = false;
-        if (scheduler != null) {
-            scheduler.shutdownNow();
-        }
-        if (socket != null && !socket.isClosed()) {
-            socket.close();
-        }
+        if (scheduler != null) scheduler.shutdownNow();
+        if (socket != null && !socket.isClosed()) socket.close();
     }
 }

@@ -221,3 +221,370 @@ java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child 
 2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\Estudiante\Downloads\messaging_project (2)\messaging_project\messaging-server\.\storage\original\60abdea0-4edf-47c9-ada5-0320ea9ead27.pptx
 2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
 2026-04-24 09:02:27 [FileTransfer-88dabb77] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-05-14 16:00:27 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:00:27 [main] ERROR com.zaxxer.hikari.HikariConfig - HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
+2026-05-14 16:01:43 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:01:43 [main] ERROR com.zaxxer.hikari.HikariConfig - HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
+2026-05-14 16:07:36 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:07:36 [main] ERROR com.zaxxer.hikari.HikariConfig - HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
+2026-05-14 16:19:55 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:19:55 [main] ERROR com.zaxxer.hikari.HikariConfig - HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
+2026-05-14 16:20:00 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:20:00 [main] ERROR com.zaxxer.hikari.HikariConfig - HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
+2026-05-14 16:20:42 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:20:42 [main] ERROR com.zaxxer.hikari.HikariConfig - HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
+2026-05-14 16:21:08 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:21:08 [main] ERROR com.zaxxer.hikari.HikariConfig - HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
+2026-05-14 16:23:16 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:23:16 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 16:23:16 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 16:23:16 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 16:23:16 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 16:23:16 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 16:23:16 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8080
+2026-05-14 16:23:16 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 16:23:16 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@localhost:9090]
+2026-05-14 16:23:16 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 16:23:16 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-14 16:23:16 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-14 16:23:16 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-14 16:23:16 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-14 16:26:47 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 16:26:48 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 16:26:48 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 16:26:48 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 16:26:48 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 16:26:48 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 16:26:48 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 16:26:48 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-14 16:26:48 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@localhost:9091]
+2026-05-14 16:26:48 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 16:26:48 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-14 16:26:48 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9091, Peers TCP:9091
+2026-05-14 16:26:48 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9091
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9091 — NodeId: node-2
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@localhost:9091]
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@localhost:9091]
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@localhost:9091]
+2026-05-14 16:26:48 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en localhost:9091
+2026-05-14 16:26:48 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@localhost:9091]
+2026-05-14 16:26:48 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:42798
+2026-05-14 16:26:48 [PeerHandler-/127.0.0.1:42798] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:42798
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-14 16:26:48 [PeerHandler-/127.0.0.1:42798] WARN  communication.PeerMessageHandler - Acción peer desconocida: SERVER_JOINED desde /127.0.0.1:42798
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@localhost:9090]
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@localhost:9090]
+2026-05-14 16:26:48 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 16:26:48 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@localhost:9090]
+2026-05-14 16:26:48 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:40112
+2026-05-14 16:26:48 [PeerHandler-/127.0.0.1:40112] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:40112
+2026-05-14 16:26:48 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-14 16:26:48 [PeerHandler-/127.0.0.1:40112] WARN  communication.PeerMessageHandler - Acción peer desconocida: SERVER_JOINED desde /127.0.0.1:40112
+2026-05-14 17:33:32 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 17:33:33 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 17:33:33 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 17:33:33 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 17:33:33 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:33:33 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 17:33:33 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-14 17:33:33 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:33:33 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@localhost:9091]
+2026-05-14 17:33:33 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 17:33:33 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-14 17:33:33 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9091, Peers TCP:9091
+2026-05-14 17:33:33 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9091
+2026-05-14 17:33:33 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9091 — NodeId: node-2
+2026-05-14 17:34:42 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 17:34:42 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 17:34:42 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 17:34:42 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 17:34:42 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:34:42 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 17:34:42 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:34:42 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-14 17:34:42 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@localhost:9090]
+2026-05-14 17:34:42 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 17:34:42 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-14 17:34:42 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-14 17:34:42 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-14 17:34:42 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-14 17:35:22 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 17:35:22 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 17:35:22 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 17:35:22 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 17:35:22 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:35:22 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 17:35:22 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:35:22 [Thread-TCPServer] ERROR tcpsocketserver.TCPSocketServer - Error en el bucle principal de TCPSocketServer
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:565)
+	at java.base/sun.nio.ch.Net.bind(Net.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:636)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:391)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:278)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:171)
+	at tcpsocketserver.TCPSocketServer.run(TCPSocketServer.java:70)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-14 17:35:22 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@localhost:9091]
+2026-05-14 17:35:22 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 17:35:22 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-14 17:35:22 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9091, Peers TCP:9091
+2026-05-14 17:35:22 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9091
+2026-05-14 17:35:22 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9091 — NodeId: node-2
+2026-05-14 17:35:22 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@localhost:9091]
+2026-05-14 17:35:22 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@localhost:9091]
+2026-05-14 17:35:22 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@localhost:9091]
+2026-05-14 17:35:22 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en localhost:9091
+2026-05-14 17:35:22 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:40622
+2026-05-14 17:35:22 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@localhost:9091]
+2026-05-14 17:35:22 [PeerHandler-/127.0.0.1:40622] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:40622
+2026-05-14 17:35:22 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-14 17:35:22 [PeerHandler-/127.0.0.1:40622] WARN  communication.PeerMessageHandler - Acción peer desconocida: SERVER_JOINED desde /127.0.0.1:40622
+2026-05-14 17:35:24 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:35:24 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:35:24 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:35:24 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 17:35:24 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:58278
+2026-05-14 17:35:24 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:35:24 [PeerHandler-/127.0.0.1:58278] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:58278
+2026-05-14 17:35:24 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-14 17:35:24 [PeerHandler-/127.0.0.1:58278] WARN  communication.PeerMessageHandler - Acción peer desconocida: SERVER_JOINED desde /127.0.0.1:58278
+2026-05-14 17:35:56 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:39158
+2026-05-14 17:35:56 [PeerHandler-/127.0.0.1:39158] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:39158
+2026-05-14 17:36:10 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:33138
+2026-05-14 17:36:10 [PeerHandler-/127.0.0.1:33138] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:33138
+2026-05-14 17:44:30 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:39288
+2026-05-14 17:44:30 [PeerHandler-/127.0.0.1:39288] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:39288
+2026-05-14 17:45:37 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:34818
+2026-05-14 17:45:37 [PeerHandler-/127.0.0.1:34818] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:34818
+2026-05-14 17:46:24 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:48830
+2026-05-14 17:46:24 [PeerHandler-/127.0.0.1:48830] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:48830
+2026-05-14 17:47:18 [pool-2-thread-1] WARN  discovery.MembershipList - Nodo node-1 marcado como SUSPECTED
+2026-05-14 17:47:18 [pool-2-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:47:18 [pool-2-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' SUSPECTED
+2026-05-14 17:47:22 [pool-2-thread-1] ERROR discovery.MembershipList - Nodo node-1 marcado como DOWN
+2026-05-14 17:47:22 [pool-2-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:47:22 [pool-2-thread-1] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:47:22 [pool-2-thread-1] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:47:22 [pool-2-thread-1] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' LEFT
+2026-05-14 17:50:08 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 17:50:08 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 17:50:08 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 17:50:08 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 17:50:08 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:50:08 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 17:50:08 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:50:08 [Thread-TCPServer] ERROR tcpsocketserver.TCPSocketServer - Error en el bucle principal de TCPSocketServer
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:565)
+	at java.base/sun.nio.ch.Net.bind(Net.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:636)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:391)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:278)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:171)
+	at tcpsocketserver.TCPSocketServer.run(TCPSocketServer.java:70)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-14 17:50:08 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@localhost:9091]
+2026-05-14 17:50:08 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 17:50:08 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-14 17:50:08 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9091, Peers TCP:9091
+2026-05-14 17:50:08 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9091
+2026-05-14 17:50:08 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9091 — NodeId: node-2
+2026-05-14 17:50:08 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:43018
+2026-05-14 17:50:08 [PeerHandler-/127.0.0.1:43018] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:43018
+2026-05-14 17:50:08 [PeerHandler-/127.0.0.1:43018] WARN  communication.PeerMessageHandler - Acción peer desconocida: SERVER_JOINED desde /127.0.0.1:43018
+2026-05-14 17:50:09 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:50:09 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:50:09 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:50:09 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 17:50:09 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:50:09 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-14 17:54:48 [pool-2-thread-1] WARN  discovery.MembershipList - Nodo node-1 marcado como SUSPECTED
+2026-05-14 17:54:48 [pool-2-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:54:48 [pool-2-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' SUSPECTED
+2026-05-14 17:54:48 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:58022
+2026-05-14 17:54:48 [PeerHandler-/127.0.0.1:58022] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:58022
+2026-05-14 17:54:48 [PeerHandler-/127.0.0.1:58022] WARN  communication.PeerMessageHandler - Acción peer desconocida: SERVER_JOINED desde /127.0.0.1:58022
+2026-05-14 17:54:49 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo node-1 ha vuelto a estar ALIVE (estado previo: SUSPECTED)
+2026-05-14 17:54:49 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:54:49 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:54:49 [Thread-GossipProtocol] WARN  communication.PeerConnectionPool - Fallo broadcast a peer node-1
+2026-05-14 17:54:49 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-14 17:54:58 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 17:54:58 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 17:54:58 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 17:54:58 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 17:54:58 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:54:58 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 17:54:58 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:54:58 [Thread-TCPServer] ERROR tcpsocketserver.TCPSocketServer - Error en el bucle principal de TCPSocketServer
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:565)
+	at java.base/sun.nio.ch.Net.bind(Net.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:636)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:391)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:278)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:171)
+	at tcpsocketserver.TCPSocketServer.run(TCPSocketServer.java:70)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-14 17:54:58 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@localhost:9091]
+2026-05-14 17:54:58 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 17:54:58 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-14 17:54:58 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9091, Peers TCP:9091
+2026-05-14 17:54:58 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9091
+2026-05-14 17:54:58 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9091 — NodeId: node-2
+2026-05-14 17:54:59 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:54:59 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:54:59 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:54:59 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 17:54:59 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:54:59 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-14 17:57:15 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 17:57:16 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 17:57:16 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 17:57:16 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 17:57:16 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:57:16 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 17:57:16 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:57:16 [Thread-TCPServer] ERROR tcpsocketserver.TCPSocketServer - Error en el bucle principal de TCPSocketServer
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:565)
+	at java.base/sun.nio.ch.Net.bind(Net.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:636)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:391)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:278)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:171)
+	at tcpsocketserver.TCPSocketServer.run(TCPSocketServer.java:70)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-14 17:57:16 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@localhost:9091]
+2026-05-14 17:57:16 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 17:57:16 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-14 17:57:16 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9091, Peers TCP:9091
+2026-05-14 17:57:16 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9091
+2026-05-14 17:57:16 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9091 — NodeId: node-2
+2026-05-14 17:57:16 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:48518
+2026-05-14 17:57:16 [PeerHandler-/127.0.0.1:48518] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:48518
+2026-05-14 17:57:16 [PeerHandler-/127.0.0.1:48518] WARN  communication.PeerMessageHandler - Acción peer desconocida: SERVER_JOINED desde /127.0.0.1:48518
+2026-05-14 17:57:17 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:57:17 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:57:17 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:57:17 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 17:57:17 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:57:17 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-14 17:57:34 [PeerHandler-/127.0.0.1:48518] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-1
+2026-05-14 17:57:34 [PeerHandler-/127.0.0.1:48518] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /127.0.0.1:48518
+2026-05-14 17:58:05 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 17:58:06 [main] INFO  MySqlRepository.MySqlDao - Limpieza de inicio: 1 conexiones 'muertas' fueron cerradas.
+2026-05-14 17:58:06 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 17:58:06 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 17:58:06 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 17:58:06 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:58:06 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 17:58:06 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 17:58:06 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8082
+2026-05-14 17:58:06 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@localhost:9091]
+2026-05-14 17:58:06 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 17:58:06 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-14 17:58:06 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9091, Peers TCP:9091
+2026-05-14 17:58:06 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9091
+2026-05-14 17:58:06 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9091 — NodeId: node-2
+2026-05-14 17:58:06 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /127.0.0.1:51014
+2026-05-14 17:58:06 [PeerHandler-/127.0.0.1:51014] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /127.0.0.1:51014
+2026-05-14 17:58:06 [PeerHandler-/127.0.0.1:51014] WARN  communication.PeerMessageHandler - Acción peer desconocida: SERVER_JOINED desde /127.0.0.1:51014
+2026-05-14 17:58:07 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:58:07 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:58:07 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:58:07 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 17:58:07 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@localhost:9090]
+2026-05-14 17:58:07 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-14 17:58:13 [PeerHandler-/127.0.0.1:51014] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /127.0.0.1:51014
+2026-05-14 17:58:13 [PeerHandler-/127.0.0.1:51014] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-1
+2026-05-14 17:58:13 [PeerHandler-/127.0.0.1:51014] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /127.0.0.1:51014
+2026-05-14 17:58:37 [PeerHandler-/127.0.0.1:51014] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-1
+2026-05-14 17:58:37 [PeerHandler-/127.0.0.1:51014] WARN  communication.PeerConnectionPool - Fallo broadcast a peer node-1
+2026-05-14 17:58:37 [PeerHandler-/127.0.0.1:51014] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /127.0.0.1:51014
+2026-05-14 17:58:59 [PeerHandler-/127.0.0.1:51014] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-1
+2026-05-14 17:58:59 [PeerHandler-/127.0.0.1:51014] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 17:58:59 [PeerHandler-/127.0.0.1:51014] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /127.0.0.1:51014
+2026-05-14 17:59:15 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.20.31:56026
+2026-05-14 17:59:15 [pool-1-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.20.31:56026
+2026-05-14 17:59:15 [pool-1-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-14 17:59:15 [pool-1-thread-1] WARN  communication.PeerConnectionPool - Fallo broadcast a peer node-1
+2026-05-14 18:00:36 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.20.31:47486
+2026-05-14 18:00:36 [pool-1-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.20.31:47486
+2026-05-14 18:00:36 [pool-1-thread-2] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 18:00:36 [pool-1-thread-2] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-14 18:00:53 [pool-1-thread-2] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-14 18:00:53 [pool-1-thread-2] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-14 18:00:53 [pool-1-thread-2] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: /home/zebastor/Documents/mis/sw2/p2p/P2P_Server/./storage/original/db271f2f-0bbc-4fda-b014-865d008ca08f.txt
+2026-05-14 18:00:53 [pool-1-thread-2] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-14 18:00:53 [pool-1-thread-2] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-05-14 18:00:53 [pool-1-thread-2] WARN  communication.PeerConnectionPool - Fallo enviando a peer node-1, intentando reconectar...
+2026-05-14 18:00:53 [pool-1-thread-2] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en localhost:9090
+2026-05-14 18:00:53 [pool-1-thread-2] INFO  routing.RemoteDeliveryStrategy - Mensaje reenviado a peer 'node-1' para usuario 'Usuario2'
+2026-05-14 18:16:55 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 18:17:00 [main] INFO  MySqlRepository.MySqlDao - Limpieza de inicio: 4 conexiones 'muertas' fueron cerradas.
+2026-05-14 18:17:00 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 18:17:00 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 18:17:00 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 18:17:00 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 18:17:00 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 18:17:00 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 18:17:00 [Thread-TCPServer] ERROR tcpsocketserver.TCPSocketServer - Error en el bucle principal de TCPSocketServer
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:565)
+	at java.base/sun.nio.ch.Net.bind(Net.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:636)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:391)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:278)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:171)
+	at tcpsocketserver.TCPSocketServer.run(TCPSocketServer.java:70)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-14 18:17:00 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@localhost:9090]
+2026-05-14 18:17:00 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 18:17:00 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-14 18:17:00 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-14 18:17:00 [Thread-PeerServer] ERROR communication.PeerServer - Error en PeerServer
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:565)
+	at java.base/sun.nio.ch.Net.bind(Net.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:636)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:391)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:278)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:171)
+	at communication.PeerServer.run(PeerServer.java:34)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-14 18:17:00 [Thread-GossipProtocol] ERROR discovery.GossipProtocol - Error en GossipProtocol
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:565)
+	at java.base/sun.nio.ch.DatagramChannelImpl.bindInternal(DatagramChannelImpl.java:1267)
+	at java.base/sun.nio.ch.DatagramChannelImpl.bind(DatagramChannelImpl.java:1237)
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.bind(DatagramSocketAdaptor.java:111)
+	at java.base/java.net.DatagramSocket.createDelegate(DatagramSocket.java:1425)
+	at java.base/java.net.DatagramSocket.<init>(DatagramSocket.java:328)
+	at java.base/java.net.DatagramSocket.<init>(DatagramSocket.java:387)
+	at java.base/java.net.DatagramSocket.<init>(DatagramSocket.java:353)
+	at discovery.GossipProtocol.run(GossipProtocol.java:75)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-14 18:17:22 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-14 18:17:25 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-14 18:17:25 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-14 18:17:25 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-14 18:17:25 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 18:17:25 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-14 18:17:25 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-14 18:17:25 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-14 18:17:25 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@localhost:9090]
+2026-05-14 18:17:25 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-14 18:17:25 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-14 18:17:25 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-14 18:17:25 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-14 18:17:25 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
