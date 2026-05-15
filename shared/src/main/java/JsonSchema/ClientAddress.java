@@ -23,9 +23,11 @@ public final class ClientAddress {
      */
     public static ClientAddress parse(String rawAddress) {
         String clean = rawAddress.replace("/", "");
-        if (clean.contains(":")) {
-            String[] parts = clean.split(":");
-            return new ClientAddress(parts[0], Integer.parseInt(parts[1]));
+        int lastColon = clean.lastIndexOf(":");
+        if (lastColon > 0) {
+            String ip = clean.substring(0, lastColon);
+            int port = Integer.parseInt(clean.substring(lastColon + 1));
+            return new ClientAddress(ip, port);
         }
         return new ClientAddress(clean, 0);
     }

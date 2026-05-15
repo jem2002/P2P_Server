@@ -116,7 +116,7 @@ public class FileTransferHandler implements Runnable {
         
         String docType = "FILE";
         if (ticket.getTargetUsername() != null && !ticket.getTargetUsername().trim().isEmpty()) {
-            docType = "PRIVATE_TO:" + ticket.getTargetUsername().trim();
+            docType = "PRIVATE_FILE_TO:" + ticket.getTargetUsername().trim();
         }
         
         boolean exito = documentManager.procesarRecepcionDocumento(

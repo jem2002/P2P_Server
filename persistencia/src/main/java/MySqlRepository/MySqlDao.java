@@ -359,7 +359,7 @@ public class MySqlDao implements IUserRepository, IDocumentRepository, ISessionR
                   "JOIN users u ON d.owner_user_id = u.id " +
                   "WHERE d.doc_type = 'FILE' " +
                   "   OR d.doc_type = ? " +
-                  "   OR (d.doc_type LIKE 'PRIVATE_TO:%' AND d.owner_user_id = (SELECT id FROM users WHERE username = ?)) " +
+                  "   OR (d.doc_type LIKE 'PRIVATE_FILE_TO:%' AND d.owner_user_id = (SELECT id FROM users WHERE username = ?)) " +
                   "ORDER BY d.id DESC";
         } else {
             sql = "SELECT d.id, d.name, d.size_bytes, d.extension, u.username, u.ip_address " +
@@ -373,7 +373,7 @@ public class MySqlDao implements IUserRepository, IDocumentRepository, ISessionR
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             if (filterByUser) {
-                stmt.setString(1, "PRIVATE_TO:" + requestingUsername);
+                stmt.setString(1, "PRIVATE_FILE_TO:" + requestingUsername);
                 stmt.setString(2, requestingUsername);
             }
 
@@ -448,6 +448,17 @@ public class MySqlDao implements IUserRepository, IDocumentRepository, ISessionR
             }
         }
         return userId;
+    }
+
+    public void cerrarSesionPorUsername(String username) throws Exception {
+        String sql = "UPDATE client_connections c JOIN users u ON c.user_id = u.id " +
+                     "SET c.is_active = FALSE, c.disconnected_at = NOW() " +
+                     "WHERE u.username = ? AND c.is_active = TRUE";
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.executeUpdate();
+        }
     }
 
     @Override

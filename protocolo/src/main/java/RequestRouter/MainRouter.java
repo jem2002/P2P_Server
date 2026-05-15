@@ -203,23 +203,39 @@ public class MainRouter {
             long userId = userManager.desconectarPorCaidaDeRed(address.getIp(), address.getPort());
             String username = userManager.obtenerNombreUsuario(userId);
 
-            logManager.registrarAccion(null, userId, "DISCONNECT", "SUCCESS",
-                    "Desconexión física del usuario " + username + " (" + address + ")");
-            broadcastManager.broadcast(listLogsHandler.handle(null, null));
+            // Fallback: si MySQL no encontró la sesión por IP/Puerto (puede pasar con IPv6 o NAT local),
+            // buscamos el username directamente en el LocalClientRegistry usando el OutputStream.
+            if (("UsuarioDesconocido".equals(username) || username == null) && localClientRegistry != null && out != null) {
+                String fallbackName = localClientRegistry.getUsernameByStream(out);
+                if (fallbackName != null) {
+                    username = fallbackName;
+                    logger.info("Resolución de usuario por fallback (Stream) exitosa: {}", username);
+                    try {
+                        userManager.cerrarSesionPorUsername(username);
+                    } catch (Exception e) {
+                        logger.warn("No se pudo cerrar sesión en BD por username: {}", e.getMessage());
+                    }
+                }
+            }
 
-            // --- Integración P2P: limpiar registros del cliente ───────────────
-            if (routingTable != null && username != null && !username.isBlank()) {
-                routingTable.unregisterClient(username);
+            if (!"UsuarioDesconocido".equals(username) && username != null) {
+                logManager.registrarAccion(null, userId > 0 ? userId : -1, "DISCONNECT", "SUCCESS",
+                        "Desconexión física del usuario " + username + " (" + address + ")");
+                broadcastManager.broadcast(listLogsHandler.handle(null, null));
+
+                // --- Integración P2P: limpiar registros del cliente ───────────────
+                if (routingTable != null) {
+                    routingTable.unregisterClient(username);
+                }
+                if (localClientRegistry != null) {
+                    localClientRegistry.unregister(username);
+                }
+                if (replicationManager != null && localNodeId != null) {
+                    replicationManager.propagate(
+                            ReplicationEvent.clientDisconnected(localNodeId, username));
+                }
+                // ──────────────────────────────────────────────────────────────────
             }
-            if (localClientRegistry != null && username != null && !username.isBlank()) {
-                localClientRegistry.unregister(username);
-            }
-            if (replicationManager != null && localNodeId != null
-                    && username != null && !username.isBlank()) {
-                replicationManager.propagate(
-                        ReplicationEvent.clientDisconnected(localNodeId, username));
-            }
-            // ──────────────────────────────────────────────────────────────────
 
             String listaTrasDesconexion = listClientsHandler.handle(null, null);
             broadcastManager.broadcast(listaTrasDesconexion);

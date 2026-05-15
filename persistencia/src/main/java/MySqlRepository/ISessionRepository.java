@@ -15,5 +15,7 @@ public interface ISessionRepository {
 
     long cerrarSesionPorIpYPuerto(String ipAddress, int port) throws Exception;
 
+    void cerrarSesionPorUsername(String username) throws Exception;
+
     void limpiarConexionesMuertas();
 }

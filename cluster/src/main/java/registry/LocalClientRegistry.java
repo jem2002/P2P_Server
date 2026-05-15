@@ -74,6 +74,20 @@ public class LocalClientRegistry {
     }
 
     /**
+     * Devuelve el username asociado a un OutputStream, si existe.
+     * Útil como fallback cuando falla la resolución por IP/Puerto.
+     */
+    public String getUsernameByStream(OutputStream out) {
+        if (out == null) return null;
+        for (java.util.Map.Entry<String, OutputStream> entry : clientStreams.entrySet()) {
+            if (entry.getValue().equals(out)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Número de clientes locales actualmente registrados.
      */
     public int size() {

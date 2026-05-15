@@ -44,6 +44,15 @@ public class UserManager {
         }
     }
 
+    public void cerrarSesionPorUsername(String username) {
+        try {
+            sessionRepository.cerrarSesionPorUsername(username);
+            logger.info("Estado actualizado: Sesión cerrada en BD para username: {}", username);
+        } catch (Exception e) {
+            logger.error("Error al cerrar sesión por username", e);
+        }
+    }
+
     public List<ActiveClient> obtenerClientesActivos() {
         try {
             return userRepository.listarClientesActivos();
