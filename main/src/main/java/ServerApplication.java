@@ -213,9 +213,17 @@ public class ServerApplication {
                     String type = event.getEventType();
                     switch (type) {
                         case "CLIENT_CONNECTED": {
-                            // Un cliente se conectó a otro servidor → registrar en RoutingTable
+                            // Un cliente se conectó a otro servidor → registrar en RoutingTable y crear en BD local si no existe
                             String username = event.getPayload().get("username").asText();
                             String sourceNode = event.getSourceNodeId();
+                            String clientIp = event.getPayload().has("ip") ? event.getPayload().get("ip").asText() : "unknown";
+
+                            try {
+                                userManager.obtenerORegistrarUsuario(username, clientIp);
+                            } catch (Exception e) {
+                                logger.error("Error registrando usuario conectado {}", username, e);
+                            }
+
                             finalRoutingTable.registerRemoteClient(username, sourceNode);
                             // Enviar lista actualizada SOLO a clientes locales (no federar de vuelta)
                             try {
@@ -241,7 +249,7 @@ public class ServerApplication {
                             String fromIp   = event.getPayload().has("ip") ? event.getPayload().get("ip").asText() : "unknown";
 
                             try {
-                                long userId = userManager.obtenerORegistrarUsuario(fromUser, fromIp);
+                                long userId = userManager.obtenerIdUsuario(fromUser);
                                 java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                                 String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
                                 documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "MESSAGE");
@@ -269,7 +277,7 @@ public class ServerApplication {
                                 String host = p.get("host").asText();
                                 int clientPort = p.get("clientPort").asInt();
 
-                                long localUserId = userManager.obtenerORegistrarUsuario(ownerUsername, ownerIp);
+                                long localUserId = userManager.obtenerIdUsuario(ownerUsername);
                                 documentManager.registrarDocumentoReplicado(filename, sizeBytes, extension, mimeType, docType, localUserId, ownerIp, host, clientPort, docId);
                                 broadcastManager.broadcastLocalOnly(finalRouter.handleListDocuments());
                             } catch (Exception ignored) {}
@@ -293,7 +301,7 @@ public class ServerApplication {
 
                 peerHandler.setOnRouteDelivered((targetUser, fromUser, rawContent, clientIp) -> {
                     try {
-                        long userId = userManager.obtenerORegistrarUsuario(fromUser, clientIp);
+                        long userId = userManager.obtenerIdUsuario(fromUser);
                         java.io.InputStream textStream = new java.io.ByteArrayInputStream(rawContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                         String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
                         documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, rawContent.length(), ".txt", "text/plain", userId, "replicado", "PRIVATE_TO:" + targetUser);

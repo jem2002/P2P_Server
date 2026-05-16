@@ -91,7 +91,7 @@ public class ConnectHandler implements ActionHandler {
 
             // 3. Propagar evento de conexión a todos los peers
             if (replicationManager != null && localNodeId != null) {
-                ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username);
+                ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp());
                 replicationManager.propagate(event);
             }
 
