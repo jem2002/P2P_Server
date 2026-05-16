@@ -171,12 +171,25 @@ public class FileTransferHandler implements Runnable {
             String req = "{\"action\":\"DOWNLOAD_INIT\", \"payload\":{\"document_id\":" + remoteDocId + ", \"format\":\"" + format + "\", \"username\":\"" + downloaderUsername + "\"}}\n";
             controlSocket.getOutputStream().write(req.getBytes(StandardCharsets.UTF_8));
             controlSocket.getOutputStream().flush();
-            
-            String res = LineReader.readLine(controlSocket.getInputStream());
-            com.fasterxml.jackson.databind.JsonNode root = new com.fasterxml.jackson.databind.ObjectMapper().readTree(res);
-            if (root.has("payload") && root.get("payload").has("message")) {
-                String remoteToken = root.get("payload").get("message").asText();
+            String remoteToken = null;
+            String res;
+            while ((res = LineReader.readLine(controlSocket.getInputStream())) != null) {
+                com.fasterxml.jackson.databind.JsonNode root = new com.fasterxml.jackson.databind.ObjectMapper().readTree(res);
+                String action = root.has("action") ? root.get("action").asText() : "";
                 
+                if ("DOWNLOAD_INIT_ACK".equals(action)) {
+                    if (root.has("payload") && root.get("payload").has("message")) {
+                        remoteToken = root.get("payload").get("message").asText();
+                    }
+                    break;
+                } else if ("ERROR_ACK".equals(action)) {
+                    logger.error("Error devuelto por peer remoto: {}", root.path("payload").path("reason").asText());
+                    break;
+                }
+                // Si es LIST_LOGS_ACK, LIST_CLIENTS_ACK, u otro broadcast, lo ignoramos
+            }
+            
+            if (remoteToken != null) {
                 try (Socket dataSocket = new Socket(peerHost, peerPort)) {
                     dataSocket.getOutputStream().write((remoteToken + "\n").getBytes(StandardCharsets.UTF_8));
                     dataSocket.getOutputStream().flush();
