@@ -240,11 +240,13 @@ public class ServerApplication {
                             String content  = event.getPayload().get("content").asText();
 
                             try {
-                                long userId = userManager.obtenerIdUsuario(fromUser);
+                                long userId = userManager.obtenerORegistrarUsuario(fromUser, "unknown");
                                 java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                                 String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
                                 documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "MESSAGE");
-                            } catch (Exception e) {}
+                            } catch (Exception e) {
+                                logger.error("Error guardando mensaje replicado de {}", fromUser, e);
+                            }
 
                             String msgJson  = "{\"action\":\"NEW_MESSAGE\",\"payload\":{\"message\":\"["
                                               + event.getSourceNodeId() + "] De " + fromUser + ": " + content + "\"}}";
@@ -261,12 +263,13 @@ public class ServerApplication {
                                 String extension = p.get("extension").asText();
                                 String mimeType = p.get("mimeType").asText();
                                 String docType = p.get("docType").asText();
-                                long ownerUserId = p.get("ownerUserId").asLong();
+                                String ownerUsername = p.get("ownerUsername").asText();
                                 String ownerIp = p.get("ownerIp").asText();
                                 String host = p.get("host").asText();
                                 int clientPort = p.get("clientPort").asInt();
 
-                                documentManager.registrarDocumentoReplicado(filename, sizeBytes, extension, mimeType, docType, ownerUserId, ownerIp, host, clientPort, docId);
+                                long localUserId = userManager.obtenerORegistrarUsuario(ownerUsername, ownerIp);
+                                documentManager.registrarDocumentoReplicado(filename, sizeBytes, extension, mimeType, docType, localUserId, ownerIp, host, clientPort, docId);
                                 broadcastManager.broadcastLocalOnly(finalRouter.handleListDocuments());
                             } catch (Exception ignored) {}
                             break;
@@ -289,17 +292,17 @@ public class ServerApplication {
 
                 peerHandler.setOnRouteDelivered((targetUser, content) -> {
                     try {
-                        long userId = userManager.obtenerIdUsuario(targetUser);
+                        long userId = userManager.obtenerORegistrarUsuario(targetUser, "unknown");
                         java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                         String nombreArchivo = "msg_private_" + System.currentTimeMillis() + ".txt";
                         documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "PRIVATE_TO:" + targetUser);
                     } catch (Exception e) {}
                 });
 
-                documentManager.setOnLocalDocumentUploaded((docId, filename, sizeBytes, extension, mimeType, ownerUserId, ownerIp, docType) -> {
+                documentManager.setOnLocalDocumentUploaded((docId, filename, sizeBytes, extension, mimeType, ownerUsername, ownerIp, docType) -> {
                     if (identity != null) {
                         replicator.propagate(ReplicationEvent.documentUploaded(
-                                identity.getNodeId(), docId, filename, sizeBytes, extension, mimeType, docType, ownerUserId, ownerIp, identity.getHost(), identity.getClientPort()));
+                                identity.getNodeId(), docId, filename, sizeBytes, extension, mimeType, docType, ownerUsername, ownerIp, identity.getHost(), identity.getClientPort()));
                     }
                 });
 

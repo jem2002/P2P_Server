@@ -33,6 +33,10 @@ public class UserManager {
         return userId;
     }
 
+    public long obtenerORegistrarUsuario(String username, String ipAddress) throws Exception {
+        return userRepository.obtenerORegistrarUsuario(username, ipAddress);
+    }
+
     public long desconectarPorCaidaDeRed(String ipAddress, int port) {
         try {
             long userId = sessionRepository.cerrarSesionPorIpYPuerto(ipAddress, port);

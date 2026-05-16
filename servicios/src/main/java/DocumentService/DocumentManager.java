@@ -40,7 +40,7 @@ public class DocumentManager {
 
     public interface LocalDocumentUploadedListener {
         void onUploaded(long docId, String filename, long sizeBytes, String extension,
-                        String mimeType, long ownerUserId, String ownerIp, String docType);
+                        String mimeType, String ownerUsername, String ownerIp, String docType);
     }
     private LocalDocumentUploadedListener onLocalDocumentUploaded;
 
@@ -212,7 +212,8 @@ public class DocumentManager {
             logger.info("¡Documento procesado al 100%! ID asignado: {}", docId);
             
             if (onLocalDocumentUploaded != null) {
-                onLocalDocumentUploaded.onUploaded(docId, nombre, sizeBytes, extension, mimeType, ownerUserId, ownerIp, docType);
+                String ownerUsername = userRepository.obtenerNombreUsuario(ownerUserId);
+                onLocalDocumentUploaded.onUploaded(docId, nombre, sizeBytes, extension, mimeType, ownerUsername, ownerIp, docType);
             }
             
             return true;
