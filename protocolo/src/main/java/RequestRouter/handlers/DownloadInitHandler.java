@@ -81,7 +81,7 @@ public class DownloadInitHandler implements ActionHandler {
         }
 
         String token = prefix + java.util.UUID.randomUUID().toString();
-        TransferTicket ticket = new TransferTicket(token, detalles.getNombre(), size, "", ticketInfo, userId, clientIp);
+        TransferTicket ticket = new TransferTicket(token, detalles.getNombre(), size, "", ticketInfo, userId, clientIp, username);
         transferManager.registrarTicket(ticket);
 
         logManager.registrarAccion(docId, userId, "DOWNLOAD_INIT", "SUCCESS",

@@ -84,9 +84,10 @@ public class FileTransferHandler implements Runnable {
             int peerPort = Integer.parseInt(parts[2]);
             long remoteDocId = Long.parseLong(parts[3]);
             
-            ejecutarProxyDescarga(peerHost, peerPort, remoteDocId, getFormatString(mode), out);
+            String realUsername = ticket.getTargetUsername() != null ? ticket.getTargetUsername() : "UsuarioDesconocido";
+            ejecutarProxyDescarga(peerHost, peerPort, remoteDocId, getFormatString(mode), out, realUsername);
             
-            logManager.registrarAccion(null, 0, "DOWNLOAD_COMPLETE", "SUCCESS", "Descarga proxy P2P finalizada");
+            logManager.registrarAccion(null, ticket.getOwnerUserId(), "DOWNLOAD_COMPLETE", "SUCCESS", "Descarga proxy P2P finalizada");
             broadcastManager.broadcast(router.handleListLogs());
             return;
         }
@@ -117,7 +118,7 @@ public class FileTransferHandler implements Runnable {
                 break;
         }
 
-        logManager.registrarAccion(docIdToLog > 0 ? docIdToLog : null, 0,
+        logManager.registrarAccion(docIdToLog > 0 ? docIdToLog : null, ticket.getOwnerUserId(),
                 "DOWNLOAD_COMPLETE", "SUCCESS", "Descarga finalizada en modo: " + mode.name());
         broadcastManager.broadcast(router.handleListLogs());
     }
@@ -165,9 +166,9 @@ public class FileTransferHandler implements Runnable {
         }
     }
 
-    private void ejecutarProxyDescarga(String peerHost, int peerPort, long remoteDocId, String format, OutputStream clientOut) throws Exception {
+    private void ejecutarProxyDescarga(String peerHost, int peerPort, long remoteDocId, String format, OutputStream clientOut, String downloaderUsername) throws Exception {
         try (Socket controlSocket = new Socket(peerHost, peerPort)) {
-            String req = "{\"action\":\"DOWNLOAD_INIT\", \"payload\":{\"document_id\":" + remoteDocId + ", \"format\":\"" + format + "\", \"username\":\"proxy\"}}\n";
+            String req = "{\"action\":\"DOWNLOAD_INIT\", \"payload\":{\"document_id\":" + remoteDocId + ", \"format\":\"" + format + "\", \"username\":\"" + downloaderUsername + "\"}}\n";
             controlSocket.getOutputStream().write(req.getBytes(StandardCharsets.UTF_8));
             controlSocket.getOutputStream().flush();
             
