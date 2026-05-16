@@ -39,8 +39,18 @@ public class NodeSetupWizard {
         System.out.print(BOLD + "¿Es este el PRIMER nodo de la red? (s/n): " + RESET);
         String resp = scanner.nextLine().trim().toLowerCase();
 
+        String defaultHost = "localhost";
+        try {
+            defaultHost = java.net.InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {}
+
         if (resp.equals("s") || resp.equals("si") || resp.equals("sí") || resp.equals("y") || resp.equals("yes")) {
             // ── Primer nodo: valores predeterminados ──────────────────────
+            System.out.println();
+            System.out.println(CYAN + "Configurando primer nodo..." + RESET);
+            String host = ask(scanner, "Dirección IP / Host (server.host)", defaultHost);
+
+            config.overrideProperty("server.host",      host);
             config.overrideProperty("server.port",      "8081");
             config.overrideProperty("cluster.nodeId",   "node-1");
             config.overrideProperty("cluster.port",     "9090");
@@ -48,7 +58,7 @@ public class NodeSetupWizard {
 
             System.out.println();
             System.out.println(GREEN + "✔  Configuración de nodo primario aplicada:" + RESET);
-            printSummary("8081", "node-1", "9090", "(ninguno — este es el primer nodo)");
+            printSummary(host, "8081", "node-1", "9090", "(ninguno — este es el primer nodo)");
 
         } else {
             // ── Nodo adicional: pedir cada parámetro ──────────────────────
@@ -57,11 +67,13 @@ public class NodeSetupWizard {
             System.out.println(DIM + "(Presiona Enter para conservar el valor actual entre [corchetes])" + RESET);
             System.out.println();
 
+            String host        = ask(scanner, "Dirección IP / Host (server.host)", defaultHost);
             String serverPort  = ask(scanner, "Puerto de clientes  (server.port)",   String.valueOf(config.getPort()));
             String nodeId      = ask(scanner, "ID único del nodo   (cluster.nodeId)", config.getNodeId());
             String clusterPort = ask(scanner, "Puerto del cluster  (cluster.port)",   String.valueOf(config.getClusterPort()));
             String seedNodes   = askSeeds(scanner, config);
 
+            config.overrideProperty("server.host",       host);
             config.overrideProperty("server.port",       serverPort);
             config.overrideProperty("cluster.nodeId",    nodeId);
             config.overrideProperty("cluster.port",      clusterPort);
@@ -69,7 +81,7 @@ public class NodeSetupWizard {
 
             System.out.println();
             System.out.println(GREEN + "✔  Configuración aplicada:" + RESET);
-            printSummary(serverPort, nodeId, clusterPort,
+            printSummary(host, serverPort, nodeId, clusterPort,
                     seedNodes.isEmpty() ? "(ninguno)" : seedNodes);
         }
 
@@ -98,8 +110,9 @@ public class NodeSetupWizard {
         return input.isEmpty() ? defaultSeeds : input;
     }
 
-    private static void printSummary(String port, String nodeId, String clusterPort, String seeds) {
+    private static void printSummary(String host, String port, String nodeId, String clusterPort, String seeds) {
         System.out.println(DIM + "  ┌──────────────────────────────────────────────");
+        System.out.println("  │  server.host       = " + host);
         System.out.println("  │  server.port       = " + port);
         System.out.println("  │  cluster.nodeId    = " + nodeId);
         System.out.println("  │  cluster.port      = " + clusterPort);

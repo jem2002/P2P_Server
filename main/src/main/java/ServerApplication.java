@@ -82,6 +82,7 @@ public class ServerApplication {
 
             // 1c. Confirmar en log los valores reales que usará el servidor
             logger.info("╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════");
+            logger.info("║  server.host       = {}", config.getHost());
             logger.info("║  server.port       = {}", config.getPort());
             logger.info("║  cluster.nodeId    = {}", config.getNodeId());
             logger.info("║  cluster.port      = {}", config.getClusterPort());
