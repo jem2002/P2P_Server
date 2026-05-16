@@ -50,12 +50,14 @@ public class PeerMessageHandler {
     /** Callback que se invoca al recibir PEER_LOGS_RESPONSE, con (nodeId, logsJson). */
     private volatile java.util.function.BiConsumer<String, String> peerLogsReceiver;
 
+    public interface RouteDeliveryListener {
+        void onDelivered(String targetUser, String fromUser, String rawContent);
+    }
+    
     /**
      * Callback que se invoca cuando un PEER_ROUTE es entregado exitosamente al cliente local.
-     * Recibe (targetUsername, messageText) para que el servidor receptor pueda persistir
-     * una copia local del mensaje (visible en LIST_MESSAGES del receptor).
      */
-    private volatile java.util.function.BiConsumer<String, String> onRouteDelivered;
+    private volatile RouteDeliveryListener onRouteDelivered;
 
     public PeerMessageHandler(ReplicationManager replicationManager, RoutingTable routingTable,
                                LocalClientRegistry localClientRegistry) {
@@ -80,7 +82,7 @@ public class PeerMessageHandler {
     }
 
     /** Inyecta el callback de persistencia para mensajes enrutados (PEER_ROUTE). */
-    public void setOnRouteDelivered(java.util.function.BiConsumer<String, String> callback) {
+    public void setOnRouteDelivered(RouteDeliveryListener callback) {
         this.onRouteDelivered = callback;
     }
 
@@ -198,6 +200,8 @@ public class PeerMessageHandler {
         try {
             String targetUsername  = payload.get("targetUsername").asText();
             String originalMessage = payload.get("originalMessage").asText();
+            String fromUser = payload.has("fromUser") ? payload.get("fromUser").asText() : "unknown";
+            String rawContent = payload.has("rawContent") ? payload.get("rawContent").asText() : "";
 
             boolean delivered = localClientRegistry.deliver(targetUsername, originalMessage);
             if (!delivered) {
@@ -208,10 +212,8 @@ public class PeerMessageHandler {
             // Persistir copia local en el servidor receptor para que aparezca en LIST_MESSAGES
             if (onRouteDelivered != null) {
                 try {
-                    JsonNode msgNode = mapper.readTree(originalMessage);
-                    String messageText = msgNode.path("payload").path("message").asText("");
-                    if (!messageText.isBlank()) {
-                        onRouteDelivered.accept(targetUsername, messageText);
+                    if (!rawContent.isBlank()) {
+                        onRouteDelivered.onDelivered(targetUsername, fromUser, rawContent);
                     }
                 } catch (Exception e) {
                     logger.warn("No se pudo persistir copia local del mensaje enrutado: {}", e.getMessage());

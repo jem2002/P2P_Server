@@ -290,12 +290,12 @@ public class ServerApplication {
                 // Inyectar broadcast local (para PEER_BROADCAST)
                 peerHandler.setLocalBroadcast(broadcastManager::broadcast);
 
-                peerHandler.setOnRouteDelivered((targetUser, content) -> {
+                peerHandler.setOnRouteDelivered((targetUser, fromUser, rawContent) -> {
                     try {
-                        long userId = userManager.obtenerORegistrarUsuario(targetUser, "unknown");
-                        java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-                        String nombreArchivo = "msg_private_" + System.currentTimeMillis() + ".txt";
-                        documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "PRIVATE_TO:" + targetUser);
+                        long userId = userManager.obtenerORegistrarUsuario(fromUser, "unknown");
+                        java.io.InputStream textStream = new java.io.ByteArrayInputStream(rawContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                        String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
+                        documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, rawContent.length(), ".txt", "text/plain", userId, "replicado", "PRIVATE_TO:" + targetUser);
                     } catch (Exception e) {}
                 });
 

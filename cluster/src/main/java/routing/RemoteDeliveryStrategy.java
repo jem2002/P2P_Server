@@ -25,7 +25,7 @@ public class RemoteDeliveryStrategy implements MessageRoutingStrategy {
     }
 
     @Override
-    public void deliver(String jsonMessage, String targetUsername) throws Exception {
+    public void deliver(String jsonMessage, String targetUsername, String fromUser, String rawContent) throws Exception {
         String nodeId = routingTable.resolveNode(targetUsername);
         if (nodeId == null) {
             logger.warn("No se encontró nodo para el usuario '{}' en la tabla de enrutamiento",
@@ -33,7 +33,7 @@ public class RemoteDeliveryStrategy implements MessageRoutingStrategy {
             return;
         }
 
-        String routeMessage = InterServerProtocol.buildRouteMessage(targetUsername, jsonMessage);
+        String routeMessage = InterServerProtocol.buildRouteMessage(targetUsername, jsonMessage, fromUser, rawContent);
         peerPool.sendToPeer(nodeId, routeMessage);
         logger.info("Mensaje reenviado a peer '{}' para usuario '{}'", nodeId, targetUsername);
     }

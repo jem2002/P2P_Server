@@ -160,7 +160,7 @@ public class SendMessageHandler implements ActionHandler {
                 // Cliente REMOTO: reenviar al servidor peer via PEER_ROUTE
                 // El peer entrega solo al socket del destinatario (handleRoute → localClientRegistry.deliver)
                 if (remoteDelivery != null) {
-                    remoteDelivery.deliver(mensajeRealTime, targetUsername);
+                    remoteDelivery.deliver(mensajeRealTime, targetUsername, fromUser, content);
                     delivered = true;
                 }
             }
