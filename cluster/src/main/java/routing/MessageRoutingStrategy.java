@@ -15,5 +15,5 @@ public interface MessageRoutingStrategy {
      * @param targetUsername  Usuario destino
      * @throws Exception si la entrega falla
      */
-    void deliver(String jsonMessage, String targetUsername, String fromUser, String rawContent) throws Exception;
+    void deliver(String jsonMessage, String targetUsername, String fromUser, String rawContent, String clientIp) throws Exception;
 }

@@ -22,7 +22,7 @@ public class LocalDeliveryStrategy implements MessageRoutingStrategy {
     }
 
     @Override
-    public void deliver(String jsonMessage, String targetUsername, String fromUser, String rawContent) {
+    public void deliver(String jsonMessage, String targetUsername, String fromUser, String rawContent, String clientIp) throws Exception {
         logger.debug("Entrega LOCAL para usuario '{}'", targetUsername);
         localBroadcast.accept(jsonMessage);
     }

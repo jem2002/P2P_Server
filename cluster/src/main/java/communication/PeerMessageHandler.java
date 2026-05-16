@@ -51,7 +51,7 @@ public class PeerMessageHandler {
     private volatile java.util.function.BiConsumer<String, String> peerLogsReceiver;
 
     public interface RouteDeliveryListener {
-        void onDelivered(String targetUser, String fromUser, String rawContent);
+        void onDelivered(String targetUser, String fromUser, String rawContent, String clientIp);
     }
     
     /**
@@ -202,6 +202,7 @@ public class PeerMessageHandler {
             String originalMessage = payload.get("originalMessage").asText();
             String fromUser = payload.has("fromUser") ? payload.get("fromUser").asText() : "unknown";
             String rawContent = payload.has("rawContent") ? payload.get("rawContent").asText() : "";
+            String clientIp = payload.has("clientIp") ? payload.get("clientIp").asText() : "unknown";
 
             boolean delivered = localClientRegistry.deliver(targetUsername, originalMessage);
             if (!delivered) {
@@ -213,7 +214,7 @@ public class PeerMessageHandler {
             if (onRouteDelivered != null) {
                 try {
                     if (!rawContent.isBlank()) {
-                        onRouteDelivered.onDelivered(targetUsername, fromUser, rawContent);
+                        onRouteDelivered.onDelivered(targetUsername, fromUser, rawContent, clientIp);
                     }
                 } catch (Exception e) {
                     logger.warn("No se pudo persistir copia local del mensaje enrutado: {}", e.getMessage());

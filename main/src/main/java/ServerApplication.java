@@ -238,9 +238,10 @@ public class ServerApplication {
                             // Un mensaje fue enviado en otro servidor → retransmitir a clientes locales
                             String fromUser = event.getPayload().get("username").asText();
                             String content  = event.getPayload().get("content").asText();
+                            String fromIp   = event.getPayload().has("ip") ? event.getPayload().get("ip").asText() : "unknown";
 
                             try {
-                                long userId = userManager.obtenerORegistrarUsuario(fromUser, "unknown");
+                                long userId = userManager.obtenerORegistrarUsuario(fromUser, fromIp);
                                 java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                                 String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
                                 documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "MESSAGE");
@@ -290,9 +291,9 @@ public class ServerApplication {
                 // Inyectar broadcast local (para PEER_BROADCAST)
                 peerHandler.setLocalBroadcast(broadcastManager::broadcast);
 
-                peerHandler.setOnRouteDelivered((targetUser, fromUser, rawContent) -> {
+                peerHandler.setOnRouteDelivered((targetUser, fromUser, rawContent, clientIp) -> {
                     try {
-                        long userId = userManager.obtenerORegistrarUsuario(fromUser, "unknown");
+                        long userId = userManager.obtenerORegistrarUsuario(fromUser, clientIp);
                         java.io.InputStream textStream = new java.io.ByteArrayInputStream(rawContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                         String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
                         documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, rawContent.length(), ".txt", "text/plain", userId, "replicado", "PRIVATE_TO:" + targetUser);

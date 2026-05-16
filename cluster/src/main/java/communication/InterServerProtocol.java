@@ -54,7 +54,7 @@ public final class InterServerProtocol {
     /**
      * Construye un mensaje de enrutamiento (reenviar mensaje a cliente remoto).
      */
-    public static String buildRouteMessage(String targetUsername, String originalJson, String fromUser, String rawContent) {
+    public static String buildRouteMessage(String targetUsername, String originalJson, String fromUser, String rawContent, String clientIp) {
         ObjectNode root = mapper.createObjectNode();
         root.put("action", "PEER_ROUTE");
 
@@ -63,6 +63,7 @@ public final class InterServerProtocol {
         payload.put("originalMessage", originalJson);
         payload.put("fromUser", fromUser);
         payload.put("rawContent", rawContent);
+        payload.put("clientIp", clientIp);
 
         root.set("payload", payload);
         return root.toString();

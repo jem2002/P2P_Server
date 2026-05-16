@@ -124,7 +124,7 @@ public class SendMessageHandler implements ActionHandler {
             // Replicar el evento para que los peers actualicen su copia
             if (replicationManager != null && localNodeId != null) {
                 replicationManager.propagate(
-                        ReplicationEvent.newMessage(localNodeId, fromUser, content));
+                        ReplicationEvent.newMessage(localNodeId, fromUser, content, clientIp));
             }
 
             // Log actualizado a todos (broadcast es esperado en modo ALL)
@@ -160,7 +160,7 @@ public class SendMessageHandler implements ActionHandler {
                 // Cliente REMOTO: reenviar al servidor peer via PEER_ROUTE
                 // El peer entrega solo al socket del destinatario (handleRoute → localClientRegistry.deliver)
                 if (remoteDelivery != null) {
-                    remoteDelivery.deliver(mensajeRealTime, targetUsername, fromUser, content);
+                    remoteDelivery.deliver(mensajeRealTime, targetUsername, fromUser, content, clientIp);
                     delivered = true;
                 }
             }

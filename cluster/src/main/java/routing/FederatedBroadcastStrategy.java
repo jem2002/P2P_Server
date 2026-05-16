@@ -34,7 +34,7 @@ public class FederatedBroadcastStrategy implements MessageRoutingStrategy {
      * @param targetUsername  Ignorado — se envía a todos
      */
     @Override
-    public void deliver(String jsonMessage, String targetUsername, String fromUser, String rawContent) {
+    public void deliver(String jsonMessage, String targetUsername, String fromUser, String rawContent, String clientIp) throws Exception {
         // 1. Broadcast local a todos los clientes de este servidor
         localBroadcast.accept(jsonMessage);
 

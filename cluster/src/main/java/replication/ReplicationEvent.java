@@ -38,10 +38,11 @@ public class ReplicationEvent {
 
     // ============ Factory Methods ============
 
-    public static ReplicationEvent newMessage(String sourceNodeId, String username, String content) {
+    public static ReplicationEvent newMessage(String sourceNodeId, String username, String content, String ip) {
         ObjectNode payload = mapper.createObjectNode();
         payload.put("username", username);
         payload.put("content", content);
+        payload.put("ip", ip);
         return create(sourceNodeId, "NEW_MESSAGE", payload);
     }
 
