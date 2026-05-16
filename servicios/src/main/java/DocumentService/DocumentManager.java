@@ -38,6 +38,12 @@ public class DocumentManager {
     private final IUserRepository userRepository;
     private final LogManager logManager;
 
+    public interface LocalDocumentUploadedListener {
+        void onUploaded(long docId, String filename, long sizeBytes, String extension,
+                        String mimeType, long ownerUserId, String ownerIp, String docType);
+    }
+    private LocalDocumentUploadedListener onLocalDocumentUploaded;
+
     public DocumentManager(LocalFileManager fileManager, CryptoManager cryptoManager,
                            IDocumentRepository documentRepository, IUserRepository userRepository,
                            LogManager logManager) {
@@ -46,6 +52,10 @@ public class DocumentManager {
         this.documentRepository = documentRepository;
         this.userRepository = userRepository;
         this.logManager = logManager;
+    }
+
+    public void setOnLocalDocumentUploaded(LocalDocumentUploadedListener listener) {
+        this.onLocalDocumentUploaded = listener;
     }
 
     public DownloadDetails obtenerDetallesDescarga(long documentId) throws Exception {
@@ -200,6 +210,11 @@ public class DocumentManager {
                     "Archivo subido exitosamente por: " + username);
 
             logger.info("¡Documento procesado al 100%! ID asignado: {}", docId);
+            
+            if (onLocalDocumentUploaded != null) {
+                onLocalDocumentUploaded.onUploaded(docId, nombre, sizeBytes, extension, mimeType, ownerUserId, ownerIp, docType);
+            }
+            
             return true;
 
         } catch (Exception e) {
@@ -214,6 +229,21 @@ public class DocumentManager {
                 }
             }
             return false;
+        }
+    }
+
+    public void registrarDocumentoReplicado(String nombre, long sizeBytes, String extension, String mimeType,
+                                            String docType, long ownerUserId, String ownerIp,
+                                            String remoteHost, int remoteClientPort, long remoteDocId) {
+        try {
+            String proxyPath = "PEER:" + remoteHost + ":" + remoteClientPort + ":" + remoteDocId;
+            long docId = documentRepository.registrarDocumento(nombre, sizeBytes, extension, mimeType,
+                    docType, proxyPath, ownerUserId, ownerIp);
+            documentRepository.registrarHashDocumento(docId, "SHA256", proxyPath);
+            documentRepository.registrarCifradoDocumento(docId, "AES256", proxyPath, "SERVER_STATIC_KEY");
+            logger.info("Documento replicado registrado. ID local: {} -> Remoto: {}", docId, proxyPath);
+        } catch (Exception e) {
+            logger.error("Error registrando documento replicado", e);
         }
     }
 }

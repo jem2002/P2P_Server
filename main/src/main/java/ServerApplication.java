@@ -238,14 +238,35 @@ public class ServerApplication {
                             // Un mensaje fue enviado en otro servidor → retransmitir a clientes locales
                             String fromUser = event.getPayload().get("username").asText();
                             String content  = event.getPayload().get("content").asText();
+
+                            try {
+                                long userId = userManager.obtenerIdUsuario(fromUser);
+                                java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                                String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
+                                documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "MESSAGE");
+                            } catch (Exception e) {}
+
                             String msgJson  = "{\"action\":\"NEW_MESSAGE\",\"payload\":{\"message\":\"["
                                               + event.getSourceNodeId() + "] De " + fromUser + ": " + content + "\"}}";
                             broadcastManager.broadcastLocalOnly(msgJson);
                             break;
                         }
                         case "DOCUMENT_UPLOADED": {
-                            // Un documento fue subido en otro servidor → actualizar lista local
+                            // Un documento fue subido en otro servidor → registrar metadatos (Proxy) y actualizar lista local
                             try {
+                                com.fasterxml.jackson.databind.JsonNode p = event.getPayload();
+                                long docId = p.get("documentId").asLong();
+                                String filename = p.get("filename").asText();
+                                long sizeBytes = p.get("sizeBytes").asLong();
+                                String extension = p.get("extension").asText();
+                                String mimeType = p.get("mimeType").asText();
+                                String docType = p.get("docType").asText();
+                                long ownerUserId = p.get("ownerUserId").asLong();
+                                String ownerIp = p.get("ownerIp").asText();
+                                String host = p.get("host").asText();
+                                int clientPort = p.get("clientPort").asInt();
+
+                                documentManager.registrarDocumentoReplicado(filename, sizeBytes, extension, mimeType, docType, ownerUserId, ownerIp, host, clientPort, docId);
                                 broadcastManager.broadcastLocalOnly(finalRouter.handleListDocuments());
                             } catch (Exception ignored) {}
                             break;
@@ -265,6 +286,22 @@ public class ServerApplication {
                 });
                 // Inyectar broadcast local (para PEER_BROADCAST)
                 peerHandler.setLocalBroadcast(broadcastManager::broadcast);
+
+                peerHandler.setOnRouteDelivered((targetUser, content) -> {
+                    try {
+                        long userId = userManager.obtenerIdUsuario(targetUser);
+                        java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                        String nombreArchivo = "msg_private_" + System.currentTimeMillis() + ".txt";
+                        documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "PRIVATE_TO:" + targetUser);
+                    } catch (Exception e) {}
+                });
+
+                documentManager.setOnLocalDocumentUploaded((docId, filename, sizeBytes, extension, mimeType, ownerUserId, ownerIp, docType) -> {
+                    if (identity != null) {
+                        replicator.propagate(ReplicationEvent.documentUploaded(
+                                identity.getNodeId(), docId, filename, sizeBytes, extension, mimeType, docType, ownerUserId, ownerIp, identity.getHost(), identity.getClientPort()));
+                    }
+                });
 
 
                 // 7m. Estrategia de entrega remota

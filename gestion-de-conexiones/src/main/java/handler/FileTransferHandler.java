@@ -77,6 +77,20 @@ public class FileTransferHandler implements Runnable {
         DownloadMode mode = DownloadMode.fromToken(token);
         long docIdToLog = 0;
 
+        if (ticket.getMimeType() != null && ticket.getMimeType().startsWith("PEER:")) {
+            logger.info("Proxy Descarga P2P. Token: {} | Target: {}", token, ticket.getMimeType());
+            String[] parts = ticket.getMimeType().split(":");
+            String peerHost = parts[1];
+            int peerPort = Integer.parseInt(parts[2]);
+            long remoteDocId = Long.parseLong(parts[3]);
+            
+            ejecutarProxyDescarga(peerHost, peerPort, remoteDocId, getFormatString(mode), out);
+            
+            logManager.registrarAccion(null, 0, "DOWNLOAD_COMPLETE", "SUCCESS", "Descarga proxy P2P finalizada");
+            broadcastManager.broadcast(router.handleListLogs());
+            return;
+        }
+
         switch (mode) {
             case ORIGINAL:
                 logger.info("Enviando ARCHIVO ORIGINAL. Token: {}", token);
@@ -139,6 +153,44 @@ public class FileTransferHandler implements Runnable {
             if (!socket.isClosed()) socket.close();
         } catch (Exception ignored) {
             // Ignorar errores al cerrar — el recurso ya no es necesario
+        }
+    }
+
+    private String getFormatString(DownloadMode mode) {
+        switch(mode) {
+            case ORIGINAL: return "ORG";
+            case ENCRYPTED: return "ENC";
+            case HASH: return "HSH";
+            default: return "";
+        }
+    }
+
+    private void ejecutarProxyDescarga(String peerHost, int peerPort, long remoteDocId, String format, OutputStream clientOut) throws Exception {
+        try (Socket controlSocket = new Socket(peerHost, peerPort)) {
+            String req = "{\"action\":\"DOWNLOAD_INIT\", \"payload\":{\"document_id\":" + remoteDocId + ", \"format\":\"" + format + "\", \"username\":\"proxy\"}}\n";
+            controlSocket.getOutputStream().write(req.getBytes(StandardCharsets.UTF_8));
+            controlSocket.getOutputStream().flush();
+            
+            String res = LineReader.readLine(controlSocket.getInputStream());
+            com.fasterxml.jackson.databind.JsonNode root = new com.fasterxml.jackson.databind.ObjectMapper().readTree(res);
+            if (root.has("payload") && root.get("payload").has("message")) {
+                String remoteToken = root.get("payload").get("message").asText();
+                
+                try (Socket dataSocket = new Socket(peerHost, peerPort)) {
+                    dataSocket.getOutputStream().write((remoteToken + "\n").getBytes(StandardCharsets.UTF_8));
+                    dataSocket.getOutputStream().flush();
+                    
+                    InputStream peerIn = dataSocket.getInputStream();
+                    byte[] buffer = new byte[8192];
+                    int read;
+                    while ((read = peerIn.read(buffer)) != -1) {
+                        clientOut.write(buffer, 0, read);
+                    }
+                    clientOut.flush();
+                }
+            } else {
+                logger.error("Error en proxy P2P: No se obtuvo token del peer");
+            }
         }
     }
 }

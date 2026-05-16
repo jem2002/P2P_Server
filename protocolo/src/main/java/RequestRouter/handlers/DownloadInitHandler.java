@@ -61,15 +61,23 @@ public class DownloadInitHandler implements ActionHandler {
             case "HSH":
                 prefix = "DWN-HSH-";
                 ticketInfo = String.valueOf(docId);
-                size = documentManager.obtenerTamanoHash(docId);
+                if (encryptedPath == null || !encryptedPath.startsWith("PEER:")) {
+                    size = documentManager.obtenerTamanoHash(docId);
+                }
                 break;
             case "ENC":
                 prefix = "DWN-ENC-";
                 ticketInfo = String.valueOf(docId);
-                size = documentManager.obtenerTamanoEncriptado(docId);
+                if (encryptedPath == null || !encryptedPath.startsWith("PEER:")) {
+                    size = documentManager.obtenerTamanoEncriptado(docId);
+                }
                 break;
             default:
                 break;
+        }
+
+        if (encryptedPath != null && encryptedPath.startsWith("PEER:")) {
+            ticketInfo = encryptedPath;
         }
 
         String token = prefix + java.util.UUID.randomUUID().toString();

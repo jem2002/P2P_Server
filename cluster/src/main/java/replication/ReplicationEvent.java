@@ -58,11 +58,21 @@ public class ReplicationEvent {
     }
 
     public static ReplicationEvent documentUploaded(String sourceNodeId, long docId,
-                                                     String filename, long sizeBytes) {
+                                                     String filename, long sizeBytes,
+                                                     String extension, String mimeType, String docType,
+                                                     long ownerUserId, String ownerIp,
+                                                     String host, int clientPort) {
         ObjectNode payload = mapper.createObjectNode();
         payload.put("documentId", docId);
         payload.put("filename", filename);
         payload.put("sizeBytes", sizeBytes);
+        payload.put("extension", extension);
+        payload.put("mimeType", mimeType);
+        payload.put("docType", docType);
+        payload.put("ownerUserId", ownerUserId);
+        payload.put("ownerIp", ownerIp);
+        payload.put("host", host);
+        payload.put("clientPort", clientPort);
         return create(sourceNodeId, "DOCUMENT_UPLOADED", payload);
     }
 
