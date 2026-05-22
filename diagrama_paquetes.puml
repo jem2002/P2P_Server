@@ -1,0 +1,86 @@
+@startuml
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+
+title Arquitectura del Servidor P2P (Módulos y Paquetes)
+
+component "main" {
+    package "api"
+    package "config"
+    package "console"
+}
+
+component "servicios" {
+    package "DocumentService"
+    package "LogService"
+    package "UserService"
+    package "CryptoService"
+    package "FileSystemStorage"
+    package "ports.spi"
+}
+
+component "persistencia" {
+    package "MySqlRepository"
+}
+
+component "shared" {
+    package "JsonSchema"
+    package "EncryptionUtils"
+}
+
+component "protocolo" {
+    package "JsonSerializer"
+    package "MessageParser"
+    package "RequestRouter"
+    package "RequestRouter.handlers"
+}
+
+component "red" {
+    package "protocolSelector"
+    package "tcpsocketserver"
+    package "udpsocketserver"
+}
+
+component "gestion-de-conexiones" {
+    package "executor"
+    package "handler"
+    package "pool"
+}
+
+component "cluster" {
+    package "communication"
+    package "discovery"
+    package "events"
+    package "health"
+    package "identity"
+    package "registry"
+    package "replication"
+    package "routing"
+    package "topology"
+}
+
+' Relaciones entre Módulos
+main ..> persistencia : "carga dinámica (SPI)"
+main --> servicios
+main --> protocolo
+main --> cluster
+main --> red
+main --> "gestion-de-conexiones"
+
+persistencia -up-> servicios : "implementa puertos (DIP)"
+
+servicios --> shared
+
+protocolo --> servicios
+protocolo --> shared
+
+"gestion-de-conexiones" --> protocolo
+"gestion-de-conexiones" --> servicios
+
+red --> "gestion-de-conexiones"
+red --> protocolo
+
+cluster --> protocolo
+cluster --> shared
+
+@enduml

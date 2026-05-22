@@ -30,20 +30,25 @@ public class ProtocolSelector {
             ThreadPoolManager threadPool, MainRouter router, BroadcastManager broadcastManager,
             TransferManager transferManager, DocumentManager documentManager, LogService.LogManager logManager) {
 
-        if ("TCP".equalsIgnoreCase(protocol)) {
+        boolean startTcp = "TCP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);
+        boolean startUdp = "UDP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);
+
+        if (!startTcp && !startUdp) {
+            logger.error("Protocolo no soportado: {}. Use TCP, UDP o BOTH.", protocol);
+            throw new IllegalArgumentException("Protocolo inválido");
+        }
+
+        if (startTcp) {
             logger.info("Iniciando servicio en modo TCP...");
             tcpServer = new TCPSocketServer(port, pool, threadPool, router, broadcastManager, transferManager,
                     documentManager, logManager);
             new Thread(tcpServer, "Thread-TCPServer").start();
-
-        } else if ("UDP".equalsIgnoreCase(protocol)) {
+        }
+        
+        if (startUdp) {
             logger.info("Iniciando servicio en modo UDP...");
             udpServer = new UDPSocketServer(port, threadPool, router);
             new Thread(udpServer, "Thread-UDPServer").start();
-
-        } else {
-            logger.error("Protocolo no soportado: {}. Use TCP o UDP.", protocol);
-            throw new IllegalArgumentException("Protocolo inválido");
         }
     }
 

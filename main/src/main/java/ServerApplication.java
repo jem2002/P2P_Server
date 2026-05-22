@@ -178,7 +178,7 @@ public class ServerApplication {
 
                 // 7i. Notificador de eventos del cluster hacia clientes locales
                 //     Requerimiento: "Los servidores deberán informar cuando se une o desconecta un servidor"
-                ClusterNotifier clusterNotifier = new ClusterNotifier(broadcastManager::broadcast);
+                ClusterNotifier clusterNotifier = new ClusterNotifier(broadcastManager::broadcastLocalOnly);
                 eventBus.subscribe(clusterNotifier);
 
                 // 7i-b. Bootstrap sync: cuando un nuevo nodo se une, enviarle nuestra
