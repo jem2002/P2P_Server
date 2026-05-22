@@ -2,8 +2,8 @@ package api;
 
 import JsonSchema.DocumentInfo;
 import JsonSchema.UserRecord;
-import MySqlRepository.IDocumentRepository;
-import MySqlRepository.IUserRepository;
+import ports.spi.IDocumentRepository;
+import ports.spi.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

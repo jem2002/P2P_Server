@@ -22,7 +22,7 @@
             <groupId>com.universidad.messaging.server</groupId>
             <artifactId>persistencia</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.universidad.messaging.server</groupId>

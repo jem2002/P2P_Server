@@ -1,7 +1,7 @@
 package LogService;
 
 import JsonSchema.LogEntry;
-import MySqlRepository.IAuditLogRepository;
+import ports.spi.IAuditLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

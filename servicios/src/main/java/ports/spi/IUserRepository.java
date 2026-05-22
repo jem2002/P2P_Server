@@ -1,4 +1,4 @@
-package MySqlRepository;
+package ports.spi;
 
 import JsonSchema.ActiveClient;
 import JsonSchema.UserRecord;

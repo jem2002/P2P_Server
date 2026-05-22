@@ -1,0 +1,468 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+  class ProtocolTester
+  class PersistenceTester
+  class ServiceTester
+  class ServerApplication
+  class Main
+package JsonSerializer {
+  class ResponseBuilder
+}
+package MessageParser {
+  class BroadcastManager
+  interface FederatedBroadcastHook
+  class JsonInputParser
+  class MessageWrapper
+}
+package RequestRouter {
+  class MainRouter
+  class TransferManager
+  class TransferTicket
+  interface ActionHandler
+}
+package RequestRouter.handlers {
+  class SendMessageHandler
+  class DownloadInitHandler
+  class UploadInitHandler
+  class ConnectHandler
+}
+package network.handlers {
+  class ListLogsHandler
+  class ListPeerLogsHandler
+  class ListDocumentsHandler
+  class ListMessagesHandler
+  class ListClientsHandler
+  class ListPeerInfoHandler
+  class DownloadInitAckHandler
+  class SendMessageAckHandler
+  class UploadStatusHandler
+  class NewMessageHandler
+  class ConnectAckHandler
+  interface MessageHandler
+  class ServerJoinedHandler
+  class UploadInitAckHandler
+  class ServerLeftHandler
+}
+package protocolSelector {
+  class ProtocolSelector
+}
+package tcpsocketserver {
+  class TCPSocketServer
+}
+package udpsocketserver {
+  class UDPSocketServer
+}
+package MySqlRepository {
+  interface IDocumentRepository
+  class MySqlDao
+  class SqlScriptRunner
+  class DatabaseInitializer
+  interface IUserRepository
+  interface ISessionRepository
+  interface IAuditLogRepository
+}
+package com.universidad.messaging.server.repository.pool {
+  class DatabaseConnectionManager
+}
+package FileSystemStorage {
+  class LocalFileManager
+}
+package DocumentService {
+  class CryptoResult
+  class DocumentManager
+}
+package LogService {
+  class LogManager
+}
+package FileStorageService {
+  class StorageManager
+}
+package UserService {
+  class UserManager
+}
+package CryptoService {
+  class CryptoManager
+}
+package EncryptionUtils {
+  class EncryptionUtils
+  interface IEncryptionUtils
+}
+package JsonSchema {
+  class UserRecord
+  class FederatedClientInfo
+  class DownloadDetails
+  enum DownloadMode
+  class LogEntry
+  class ActiveClient
+  class JsonSchema
+  class ClientAddress
+  enum DocType
+  class DocumentInfo
+}
+package com.universidad.messaging.server {
+  class ServerMain
+  class App
+  class AppTest
+}
+package pool {
+  class PooledClientConnection
+  class ConnectionPoolManager
+  interface IConnectionPool
+}
+package com.universidad.messaging.server.pool {
+  class ClientConnectionPool
+  interface Poolable
+}
+package config {
+  class AppConfig
+  class ServerConfig
+  class NodeSetupWizard
+}
+package com.universidad.messaging.server.storage {
+  class StorageService
+}
+package com.universidad.messaging.server.business {
+  interface MessageProcessor
+  class DefaultMessageProcessor
+}
+package handler {
+  class ClientHandler
+  class LineReader
+  class FileTransferHandler
+}
+package com.universidad.messaging.server.network {
+  class UDPServer
+  class TCPServer
+}
+package executor {
+  class ThreadPoolManager
+}
+package api {
+  class ServerAdminAPI
+}
+package console {
+  class InteractiveConsole
+}
+package health {
+  class ClusterHealthService
+  class NodeHealthReport
+  class ClusterHealthReport
+}
+package topology {
+  class RoutingTable
+}
+package events {
+  class NodeInfo
+  class NetworkEventBus
+  interface NetworkEventListener
+  enum ClusterEvent
+  class ClusterNotifier
+}
+package communication {
+  class PeerServer
+  class PeerConnectionPool
+  class PeerMessageHandler
+  class PeerConnection
+  class InterServerProtocol
+}
+package identity {
+  class NodeIdentity
+}
+package registry {
+  class LocalClientRegistry
+}
+package routing {
+  class LocalDeliveryStrategy
+  class RemoteDeliveryStrategy
+  class FederatedBroadcastStrategy
+  interface MessageRoutingStrategy
+}
+package replication {
+  class EventDeduplicator
+  class ReplicationManager
+  class ReplicationEvent
+}
+package discovery {
+  class MemberEntry
+  class GossipProtocol
+  class MembershipList
+  enum NodeState
+}
+package ui {
+  class SwingEventPublisher
+  class VentanaConexion
+  class Dashboard
+}
+package ui.componentes {
+  class ComponenteTablaMensajes
+  class ComponenteClientes
+  class ComponenteServidores
+  class MensajeCopiableEditor
+  class ComponenteLogs
+  class EditorGenerico
+  class ComponenteTablaArchivos
+  class MensajeCopiableRenderer
+  class RendererGenerico
+  class ComponentePeerLogs
+  class PanelBotonesGenerico
+}
+package data {
+  class H2ChatRepository
+  class H2Database
+}
+package domain.ports {
+  interface UIEventPublisher
+  interface ChatRepository
+}
+package models {
+  class MessageRequest
+}
+package network {
+  class UDPClient
+  class JSONSerializer
+  class ConnectionHandler
+  class TCPClient
+  class ClientRouter
+}
+
+BroadcastManager --> FederatedBroadcastHook
+MainRouter --> ListClientsHandler
+MainRouter --> LocalClientRegistry
+MainRouter --> UserManager
+MainRouter --> RoutingTable
+MainRouter --> ListLogsHandler
+MainRouter --> MessageWrapper
+MainRouter --> ListDocumentsHandler
+MainRouter --> SendMessageHandler
+MainRouter --> ReplicationManager
+MainRouter --> ClientAddress
+MainRouter --> BroadcastManager
+MainRouter --> JsonInputParser
+MainRouter --> ResponseBuilder
+MainRouter --> LogManager
+MainRouter --> ConnectHandler
+MainRouter --> ListMessagesHandler
+MainRouter --> ActionHandler
+ActionHandler <|.. SendMessageHandler
+SendMessageHandler --> LocalClientRegistry
+SendMessageHandler --> ReplicationManager
+SendMessageHandler --> LogManager
+SendMessageHandler --> RemoteDeliveryStrategy
+SendMessageHandler --> DocumentManager
+SendMessageHandler --> BroadcastManager
+SendMessageHandler --> ResponseBuilder
+SendMessageHandler --> UserManager
+SendMessageHandler --> RoutingTable
+SendMessageHandler --> ListLogsHandler
+MessageHandler <|.. ListLogsHandler
+ListLogsHandler --> UIEventPublisher
+MessageHandler <|.. ListPeerLogsHandler
+ListPeerLogsHandler --> UIEventPublisher
+MessageHandler <|.. ListDocumentsHandler
+ListDocumentsHandler --> UIEventPublisher
+ActionHandler <|.. DownloadInitHandler
+DownloadInitHandler --> LogManager
+DownloadInitHandler --> TransferManager
+DownloadInitHandler --> DocumentManager
+DownloadInitHandler --> BroadcastManager
+DownloadInitHandler --> ResponseBuilder
+DownloadInitHandler --> TransferTicket
+DownloadInitHandler --> DownloadDetails
+DownloadInitHandler --> UserManager
+DownloadInitHandler --> ListLogsHandler
+ActionHandler <|.. UploadInitHandler
+UploadInitHandler --> LogManager
+UploadInitHandler --> TransferManager
+UploadInitHandler --> BroadcastManager
+UploadInitHandler --> ResponseBuilder
+UploadInitHandler --> TransferTicket
+UploadInitHandler --> UserManager
+UploadInitHandler --> ListLogsHandler
+MessageHandler <|.. ListMessagesHandler
+ListMessagesHandler --> UIEventPublisher
+MessageHandler <|.. ListClientsHandler
+ListClientsHandler --> UIEventPublisher
+ActionHandler <|.. ConnectHandler
+ConnectHandler --> ListClientsHandler
+ConnectHandler --> ReplicationManager
+ConnectHandler --> LogManager
+ConnectHandler --> LocalClientRegistry
+ConnectHandler --> ClientAddress
+ConnectHandler --> ReplicationEvent
+ConnectHandler --> BroadcastManager
+ConnectHandler --> ResponseBuilder
+ConnectHandler --> UserManager
+ConnectHandler --> RoutingTable
+MessageHandler <|.. ListPeerInfoHandler
+ListPeerInfoHandler --> UIEventPublisher
+ProtocolSelector --> TCPSocketServer
+ProtocolSelector --> UDPSocketServer
+TCPSocketServer --> PooledClientConnection
+TCPSocketServer --> ThreadPoolManager
+TCPSocketServer --> TransferManager
+TCPSocketServer --> DocumentManager
+TCPSocketServer --> BroadcastManager
+TCPSocketServer --> IConnectionPool
+TCPSocketServer --> MainRouter
+UDPSocketServer --> ThreadPoolManager
+UDPSocketServer --> MainRouter
+IUserRepository <|.. MySqlDao
+IDocumentRepository <|.. MySqlDao
+ISessionRepository <|.. MySqlDao
+IAuditLogRepository <|.. MySqlDao
+MySqlDao --> DatabaseConnectionManager
+DocumentManager --> LogManager
+DocumentManager --> IDocumentRepository
+DocumentManager --> LocalFileManager
+DocumentManager --> DownloadDetails
+DocumentManager --> IUserRepository
+DocumentManager --> CryptoResult
+DocumentManager --> CryptoManager
+LogManager --> IAuditLogRepository
+UserManager --> IUserRepository
+UserManager --> ISessionRepository
+CryptoManager --> IEncryptionUtils
+IEncryptionUtils <|.. EncryptionUtils
+ServerMain --> AppConfig
+ServerMain --> TCPServer
+ServerMain --> MessageProcessor
+ServerMain --> DatabaseConnectionManager
+ServerMain --> UDPServer
+ServerMain --> ClientConnectionPool
+ClientConnectionPool --> PooledClientConnection
+MessageProcessor <|.. DefaultMessageProcessor
+ClientHandler --> PooledClientConnection
+ClientHandler --> BroadcastManager
+ClientHandler --> IConnectionPool
+ClientHandler --> MainRouter
+UDPServer --> MessageProcessor
+UDPServer --> ClientConnectionPool
+TCPServer --> PooledClientConnection
+TCPServer --> ClientHandler
+TCPServer --> MessageProcessor
+TCPServer --> ClientConnectionPool
+IConnectionPool <|.. ConnectionPoolManager
+ConnectionPoolManager --> PooledClientConnection
+FileTransferHandler --> DownloadMode
+FileTransferHandler --> TransferManager
+FileTransferHandler --> DocumentManager
+FileTransferHandler --> BroadcastManager
+FileTransferHandler --> MainRouter
+FileTransferHandler --> TransferTicket
+ServerApplication --> LocalClientRegistry
+ServerApplication --> ProtocolSelector
+ServerApplication --> ServerAdminAPI
+ServerApplication --> PeerConnectionPool
+ServerApplication --> UserManager
+ServerApplication --> CryptoManager
+ServerApplication --> RoutingTable
+ServerApplication --> IEncryptionUtils
+ServerApplication --> ThreadPoolManager
+ServerApplication --> TransferManager
+ServerApplication --> MySqlDao
+ServerApplication --> NetworkEventBus
+ServerApplication --> LocalFileManager
+ServerApplication --> MainRouter
+ServerApplication --> MembershipList
+ServerApplication --> ConnectionPoolManager
+ServerApplication --> BroadcastManager
+ServerApplication --> ServerConfig
+ServerApplication --> ClusterHealthService
+ServerApplication --> LogManager
+ServerApplication --> PeerServer
+ServerApplication --> ClusterNotifier
+ServerAdminAPI --> IUserRepository
+ServerAdminAPI --> IDocumentRepository
+InteractiveConsole --> ClusterHealthService
+InteractiveConsole --> ProtocolSelector
+InteractiveConsole --> ServerAdminAPI
+InteractiveConsole --> MembershipList
+InteractiveConsole --> RoutingTable
+ClusterHealthService --> PeerConnectionPool
+ClusterHealthService --> NodeIdentity
+ClusterHealthService --> MembershipList
+ClusterHealthService --> ClusterHealthReport
+ClusterHealthService --> NodeState
+NodeHealthReport --> NodeState
+NetworkEventListener <|.. RoutingTable
+NetworkEventListener <|.. ClusterNotifier
+PeerServer --> PeerMessageHandler
+NetworkEventListener <|.. PeerConnectionPool
+PeerConnectionPool --> PeerConnection
+PeerMessageHandler --> ReplicationManager
+PeerMessageHandler --> LocalClientRegistry
+PeerMessageHandler --> ReplicationEvent
+PeerMessageHandler --> RoutingTable
+MessageRoutingStrategy <|.. LocalDeliveryStrategy
+MessageRoutingStrategy <|.. RemoteDeliveryStrategy
+RemoteDeliveryStrategy --> RoutingTable
+RemoteDeliveryStrategy --> PeerConnectionPool
+MessageRoutingStrategy <|.. FederatedBroadcastStrategy
+FederatedBroadcastStrategy --> PeerConnectionPool
+NetworkEventListener <|.. ReplicationManager
+ReplicationManager --> PeerConnectionPool
+ReplicationManager --> EventDeduplicator
+ReplicationManager --> MembershipList
+MemberEntry --> NodeState
+MemberEntry --> NodeInfo
+GossipProtocol --> NetworkEventBus
+GossipProtocol --> NodeInfo
+GossipProtocol --> NodeIdentity
+GossipProtocol --> MembershipList
+GossipProtocol --> NodeState
+MembershipList --> MemberEntry
+MembershipList --> NodeState
+Main --> AppConfig
+Main --> H2Database
+Main --> ChatRepository
+Main --> VentanaConexion
+UIEventPublisher <|.. SwingEventPublisher
+SwingEventPublisher --> Dashboard
+VentanaConexion --> Dashboard
+VentanaConexion --> SwingEventPublisher
+VentanaConexion --> UDPClient
+VentanaConexion --> ChatRepository
+VentanaConexion --> TCPClient
+VentanaConexion --> ClientRouter
+Dashboard --> ChatRepository
+Dashboard --> TCPClient
+Dashboard --> ComponenteServidores
+Dashboard --> ComponenteTablaMensajes
+Dashboard --> ComponenteTablaArchivos
+Dashboard --> ComponentePeerLogs
+Dashboard --> UDPClient
+Dashboard --> ComponenteLogs
+Dashboard --> ComponenteClientes
+EditorGenerico --> PanelBotonesGenerico
+RendererGenerico --> PanelBotonesGenerico
+ChatRepository <|.. H2ChatRepository
+H2ChatRepository --> H2Database
+UDPClient --> MessageRequest
+UDPClient --> ClientRouter
+ConnectionHandler --> TCPClient
+ConnectionHandler --> ClientRouter
+ConnectionHandler --> UIEventPublisher
+TCPClient --> UIEventPublisher
+TCPClient --> MessageRequest
+TCPClient --> ClientRouter
+TCPClient --> ChatRepository
+TCPClient --> ConnectionHandler
+MessageHandler <|.. DownloadInitAckHandler
+DownloadInitAckHandler --> UIEventPublisher
+MessageHandler <|.. SendMessageAckHandler
+SendMessageAckHandler --> UIEventPublisher
+MessageHandler <|.. UploadStatusHandler
+UploadStatusHandler --> UIEventPublisher
+MessageHandler <|.. NewMessageHandler
+NewMessageHandler --> UIEventPublisher
+MessageHandler <|.. ConnectAckHandler
+ConnectAckHandler --> UIEventPublisher
+MessageHandler <|.. ServerJoinedHandler
+ServerJoinedHandler --> UIEventPublisher
+MessageHandler <|.. UploadInitAckHandler
+UploadInitAckHandler --> UIEventPublisher
+MessageHandler <|.. ServerLeftHandler
+ServerLeftHandler --> UIEventPublisher
+@enduml

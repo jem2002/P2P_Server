@@ -1,8 +1,8 @@
 package UserService;
 
 import JsonSchema.ActiveClient;
-import MySqlRepository.ISessionRepository;
-import MySqlRepository.IUserRepository;
+import ports.spi.ISessionRepository;
+import ports.spi.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

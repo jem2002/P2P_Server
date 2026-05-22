@@ -5,6 +5,10 @@ import JsonSchema.DocumentInfo;
 import JsonSchema.DownloadDetails;
 import JsonSchema.LogEntry;
 import JsonSchema.UserRecord;
+import ports.spi.IAuditLogRepository;
+import ports.spi.IDocumentRepository;
+import ports.spi.ISessionRepository;
+import ports.spi.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

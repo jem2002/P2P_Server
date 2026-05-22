@@ -1,0 +1,376 @@
+main/src/main/java/api/ServerAdminAPI.java:7: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+main/src/main/java/api/ServerAdminAPI.java:8: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+main/src/main/java/api/ServerAdminAPI.java:20: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(ServerAdminAPI.class);
+                         ^
+  symbol:   class Logger
+  location: class ServerAdminAPI
+red/src/main/java/protocolSelector/ProtocolSelector.java:8: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+red/src/main/java/protocolSelector/ProtocolSelector.java:9: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/health/ClusterHealthService.java:8: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+cluster/src/main/java/health/ClusterHealthService.java:9: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/topology/RoutingTable.java:5: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+cluster/src/main/java/topology/RoutingTable.java:6: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/discovery/MembershipList.java:4: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+cluster/src/main/java/discovery/MembershipList.java:5: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/discovery/MembershipList.java:21: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(MembershipList.class);
+                         ^
+  symbol:   class Logger
+  location: class MembershipList
+cluster/src/main/java/topology/RoutingTable.java:25: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(RoutingTable.class);
+                         ^
+  symbol:   class Logger
+  location: class RoutingTable
+cluster/src/main/java/health/ClusterHealthService.java:23: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(ClusterHealthService.class);
+                         ^
+  symbol:   class Logger
+  location: class ClusterHealthService
+cluster/src/main/java/communication/PeerConnectionPool.java:5: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+cluster/src/main/java/communication/PeerConnectionPool.java:6: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/communication/PeerConnectionPool.java:21: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(PeerConnectionPool.class);
+                         ^
+  symbol:   class Logger
+  location: class PeerConnectionPool
+cluster/src/main/java/communication/PeerConnection.java:3: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+cluster/src/main/java/communication/PeerConnection.java:4: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/communication/PeerConnection.java:20: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(PeerConnection.class);
+                         ^
+  symbol:   class Logger
+  location: class PeerConnection
+red/src/main/java/protocolSelector/ProtocolSelector.java:15: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(ProtocolSelector.class);
+                         ^
+  symbol:   class Logger
+  location: class ProtocolSelector
+red/src/main/java/tcpsocketserver/TCPSocketServer.java:11: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+red/src/main/java/tcpsocketserver/TCPSocketServer.java:12: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+red/src/main/java/udpsocketserver/UDPSocketServer.java:5: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+red/src/main/java/udpsocketserver/UDPSocketServer.java:6: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+gestion-de-conexiones/src/main/java/executor/ThreadPoolManager.java:3: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+gestion-de-conexiones/src/main/java/executor/ThreadPoolManager.java:4: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+protocolo/src/main/java/RequestRouter/MainRouter.java:13: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.JsonNode;
+                                     ^
+protocolo/src/main/java/RequestRouter/MainRouter.java:14: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+protocolo/src/main/java/RequestRouter/MainRouter.java:15: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+protocolo/src/main/java/MessageParser/BroadcastManager.java:3: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+protocolo/src/main/java/MessageParser/BroadcastManager.java:4: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+servicios/src/main/java/DocumentService/DocumentManager.java:10: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+servicios/src/main/java/DocumentService/DocumentManager.java:11: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+servicios/src/main/java/LogService/LogManager.java:5: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+servicios/src/main/java/LogService/LogManager.java:6: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+servicios/src/main/java/LogService/LogManager.java:20: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(LogManager.class);
+                         ^
+  symbol:   class Logger
+  location: class LogManager
+servicios/src/main/java/DocumentService/DocumentManager.java:32: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(DocumentManager.class);
+                         ^
+  symbol:   class Logger
+  location: class DocumentManager
+servicios/src/main/java/FileSystemStorage/LocalFileManager.java:3: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+servicios/src/main/java/FileSystemStorage/LocalFileManager.java:4: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+servicios/src/main/java/CryptoService/CryptoManager.java:5: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+servicios/src/main/java/CryptoService/CryptoManager.java:6: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+servicios/src/main/java/CryptoService/CryptoManager.java:29: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(CryptoManager.class);
+                         ^
+  symbol:   class Logger
+  location: class CryptoManager
+servicios/src/main/java/FileSystemStorage/LocalFileManager.java:17: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(LocalFileManager.class);
+                         ^
+  symbol:   class Logger
+  location: class LocalFileManager
+protocolo/src/main/java/MessageParser/BroadcastManager.java:23: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(BroadcastManager.class);
+                         ^
+  symbol:   class Logger
+  location: class BroadcastManager
+protocolo/src/main/java/RequestRouter/MainRouter.java:43: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(MainRouter.class);
+                         ^
+  symbol:   class Logger
+  location: class MainRouter
+protocolo/src/main/java/MessageParser/JsonInputParser.java:3: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.JsonNode;
+                                     ^
+protocolo/src/main/java/MessageParser/JsonInputParser.java:4: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.ObjectMapper;
+                                     ^
+protocolo/src/main/java/MessageParser/JsonInputParser.java:5: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+protocolo/src/main/java/MessageParser/JsonInputParser.java:6: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+protocolo/src/main/java/JsonSerializer/ResponseBuilder.java:3: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.ObjectMapper;
+                                     ^
+protocolo/src/main/java/JsonSerializer/ResponseBuilder.java:4: error: package com.fasterxml.jackson.databind.node does not exist
+import com.fasterxml.jackson.databind.node.ArrayNode;
+                                          ^
+protocolo/src/main/java/JsonSerializer/ResponseBuilder.java:5: error: package com.fasterxml.jackson.databind.node does not exist
+import com.fasterxml.jackson.databind.node.ObjectNode;
+                                          ^
+protocolo/src/main/java/RequestRouter/ActionHandler.java:3: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.JsonNode;
+                                     ^
+protocolo/src/main/java/RequestRouter/handlers/ListClientsHandler.java:8: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.JsonNode;
+                                     ^
+protocolo/src/main/java/RequestRouter/handlers/ListLogsHandler.java:8: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.JsonNode;
+                                     ^
+servicios/src/main/java/UserService/UserManager.java:6: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+servicios/src/main/java/UserService/UserManager.java:7: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/registry/LocalClientRegistry.java:3: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+cluster/src/main/java/registry/LocalClientRegistry.java:4: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/replication/ReplicationManager.java:7: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+cluster/src/main/java/replication/ReplicationManager.java:8: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+protocolo/src/main/java/RequestRouter/handlers/ConnectHandler.java:10: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.JsonNode;
+                                     ^
+cluster/src/main/java/routing/RemoteDeliveryStrategy.java:5: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+cluster/src/main/java/routing/RemoteDeliveryStrategy.java:6: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+cluster/src/main/java/routing/RemoteDeliveryStrategy.java:18: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(RemoteDeliveryStrategy.class);
+                         ^
+  symbol:   class Logger
+  location: class RemoteDeliveryStrategy
+protocolo/src/main/java/RequestRouter/handlers/ConnectHandler.java:69: error: cannot find symbol
+    public String handle(JsonNode payload, String clientIp) throws Exception {
+                         ^
+  symbol:   class JsonNode
+  location: class ConnectHandler
+cluster/src/main/java/replication/ReplicationManager.java:21: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(ReplicationManager.class);
+                         ^
+  symbol:   class Logger
+  location: class ReplicationManager
+cluster/src/main/java/replication/ReplicationEvent.java:3: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.JsonNode;
+                                     ^
+cluster/src/main/java/replication/ReplicationEvent.java:4: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.ObjectMapper;
+                                     ^
+cluster/src/main/java/replication/ReplicationEvent.java:5: error: package com.fasterxml.jackson.databind.node does not exist
+import com.fasterxml.jackson.databind.node.ObjectNode;
+                                          ^
+cluster/src/main/java/replication/ReplicationEvent.java:22: error: cannot find symbol
+    private static final ObjectMapper mapper = new ObjectMapper();
+                         ^
+  symbol:   class ObjectMapper
+  location: class ReplicationEvent
+cluster/src/main/java/replication/ReplicationEvent.java:28: error: cannot find symbol
+    private final JsonNode payload;
+                  ^
+  symbol:   class JsonNode
+  location: class ReplicationEvent
+cluster/src/main/java/replication/ReplicationEvent.java:31: error: cannot find symbol
+                            String eventType, long timestamp, JsonNode payload) {
+                                                              ^
+  symbol:   class JsonNode
+  location: class ReplicationEvent
+cluster/src/main/java/replication/ReplicationEvent.java:81: error: cannot find symbol
+    private static ReplicationEvent create(String sourceNodeId, String eventType, JsonNode payload) {
+                                                                                  ^
+  symbol:   class JsonNode
+  location: class ReplicationEvent
+cluster/src/main/java/replication/ReplicationEvent.java:128: error: cannot find symbol
+    public JsonNode getPayload() { return payload; }
+           ^
+  symbol:   class JsonNode
+  location: class ReplicationEvent
+cluster/src/main/java/registry/LocalClientRegistry.java:22: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(LocalClientRegistry.class);
+                         ^
+  symbol:   class Logger
+  location: class LocalClientRegistry
+servicios/src/main/java/UserService/UserManager.java:20: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
+                         ^
+  symbol:   class Logger
+  location: class UserManager
+protocolo/src/main/java/RequestRouter/handlers/ListLogsHandler.java:30: error: cannot find symbol
+    public String handle(JsonNode payload, String clientIp) throws Exception {
+                         ^
+  symbol:   class JsonNode
+  location: class ListLogsHandler
+protocolo/src/main/java/RequestRouter/handlers/ListClientsHandler.java:56: error: cannot find symbol
+    public String handle(JsonNode payload, String clientIp) throws Exception {
+                         ^
+  symbol:   class JsonNode
+  location: class ListClientsHandler
+protocolo/src/main/java/RequestRouter/ActionHandler.java:22: error: cannot find symbol
+    String handle(JsonNode payload, String clientIp) throws Exception;
+                  ^
+  symbol:   class JsonNode
+  location: interface ActionHandler
+protocolo/src/main/java/JsonSerializer/ResponseBuilder.java:12: error: cannot find symbol
+    private final ObjectMapper mapper;
+                  ^
+  symbol:   class ObjectMapper
+  location: class ResponseBuilder
+protocolo/src/main/java/MessageParser/JsonInputParser.java:9: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(JsonInputParser.class);
+                         ^
+  symbol:   class Logger
+  location: class JsonInputParser
+protocolo/src/main/java/MessageParser/JsonInputParser.java:10: error: cannot find symbol
+    private final ObjectMapper mapper;
+                  ^
+  symbol:   class ObjectMapper
+  location: class JsonInputParser
+protocolo/src/main/java/MessageParser/MessageWrapper.java:3: error: package com.fasterxml.jackson.databind does not exist
+import com.fasterxml.jackson.databind.JsonNode;
+                                     ^
+protocolo/src/main/java/MessageParser/MessageWrapper.java:13: error: cannot find symbol
+    private final JsonNode payload;
+                  ^
+  symbol:   class JsonNode
+  location: class MessageWrapper
+protocolo/src/main/java/MessageParser/MessageWrapper.java:15: error: cannot find symbol
+    public MessageWrapper(String action, JsonNode payload) {
+                                         ^
+  symbol:   class JsonNode
+  location: class MessageWrapper
+protocolo/src/main/java/MessageParser/MessageWrapper.java:24: error: cannot find symbol
+    public JsonNode getPayload() {
+           ^
+  symbol:   class JsonNode
+  location: class MessageWrapper
+gestion-de-conexiones/src/main/java/executor/ThreadPoolManager.java:11: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(ThreadPoolManager.class);
+                         ^
+  symbol:   class Logger
+  location: class ThreadPoolManager
+red/src/main/java/udpsocketserver/UDPSocketServer.java:13: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(UDPSocketServer.class);
+                         ^
+  symbol:   class Logger
+  location: class UDPSocketServer
+red/src/main/java/tcpsocketserver/TCPSocketServer.java:28: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(TCPSocketServer.class);
+                         ^
+  symbol:   class Logger
+  location: class TCPSocketServer
+main/src/main/java/config/ServerConfig.java:3: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+main/src/main/java/config/ServerConfig.java:4: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+main/src/main/java/config/ServerConfig.java:10: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(ServerConfig.class);
+                         ^
+  symbol:   class Logger
+  location: class ServerConfig
+main/src/main/java/ServerApplication.java:16: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+main/src/main/java/ServerApplication.java:17: error: package org.slf4j does not exist
+import org.slf4j.LoggerFactory;
+                ^
+main/src/main/java/ServerApplication.java:18: error: package ch.qos.logback.classic does not exist
+import ch.qos.logback.classic.Level;
+                             ^
+main/src/main/java/ServerApplication.java:19: error: package ch.qos.logback.classic does not exist
+import ch.qos.logback.classic.LoggerContext;
+                             ^
+main/src/main/java/ServerApplication.java:72: error: cannot find symbol
+    private static final Logger logger = LoggerFactory.getLogger(ServerApplication.class);
+                         ^
+  symbol:   class Logger
+  location: class ServerApplication
+cluster/src/main/java/events/NetworkEventBus.java:3: error: package org.slf4j does not exist
+import org.slf4j.Logger;
+                ^
+100 errors
+only showing the first 100 errors, of 253 total; use -Xmaxerrs if you would like to see more

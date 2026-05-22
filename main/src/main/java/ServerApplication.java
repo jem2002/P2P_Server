@@ -5,7 +5,6 @@ import EncryptionUtils.IEncryptionUtils;
 import FileSystemStorage.LocalFileManager;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
-import MySqlRepository.MySqlDao;
 import RequestRouter.MainRouter;
 import RequestRouter.TransferManager;
 import UserService.UserManager;
@@ -23,6 +22,12 @@ import protocolSelector.ProtocolSelector;
 import registry.LocalClientRegistry;
 import replication.ReplicationEvent;
 import routing.RemoteDeliveryStrategy;
+import java.util.ServiceLoader;
+import ports.spi.RepositoryFactory;
+import ports.spi.IUserRepository;
+import ports.spi.IDocumentRepository;
+import ports.spi.IAuditLogRepository;
+import ports.spi.ISessionRepository;
 
 // Imports del módulo Cluster P2P
 import communication.PeerConnectionPool;
@@ -89,18 +94,21 @@ public class ServerApplication {
             logger.info("║  cluster.seedNodes = {}", String.join(",", config.getSeedNodes()));
             logger.info("╚═══════════════════════════════════════════════════════");
 
-            // 2. Módulo Persistencia
-            MySqlDao dao = new MySqlDao();
-            dao.limpiarConexionesMuertas();
+            // 2. Módulo Persistencia (ServiceLoader)
+            RepositoryFactory repoFactory = ServiceLoader.load(RepositoryFactory.class).iterator().next();
+            IUserRepository userRepo = repoFactory.getUserRepository();
+            IDocumentRepository docRepo = repoFactory.getDocumentRepository();
+            IAuditLogRepository logRepo = repoFactory.getAuditLogRepository();
+            ISessionRepository sessionRepo = repoFactory.getSessionRepository();
 
             // 3. Módulo Servicios
-            UserManager userManager = new UserManager(dao, dao);
+            UserManager userManager = new UserManager(userRepo, sessionRepo);
             LocalFileManager fileManager = new LocalFileManager();
             IEncryptionUtils encryptionUtils = new EncryptionUtils();
             CryptoManager cryptoManager = new CryptoManager(encryptionUtils);
-            LogManager logManager = new LogManager(dao);
+            LogManager logManager = new LogManager(logRepo);
             DocumentManager documentManager = new DocumentManager(
-                    fileManager, cryptoManager, dao, dao, logManager);
+                    fileManager, cryptoManager, docRepo, userRepo, logManager);
             BroadcastManager broadcastManager = new BroadcastManager();
             TransferManager transferManager = new TransferManager();
 
@@ -350,7 +358,7 @@ public class ServerApplication {
             }
 
             // 8. Interfaces Expuestas y Consola Administrativa
-            ServerAdminAPI adminAPI = new ServerAdminAPI(dao, dao);
+            ServerAdminAPI adminAPI = new ServerAdminAPI(userRepo, docRepo);
             InteractiveConsole console = new InteractiveConsole(
                     adminAPI, networkServer, healthService, routingTable, membership);
 
