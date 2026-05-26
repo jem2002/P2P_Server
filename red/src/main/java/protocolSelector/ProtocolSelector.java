@@ -1,9 +1,10 @@
 package protocolSelector;
 
 import DocumentService.DocumentManager;
-import MessageParser.BroadcastManager;
-import RequestRouter.MainRouter;
-import RequestRouter.TransferManager;
+import ports.api.IBroadcastManager;
+import ports.api.IRequestDispatcher;
+import ports.api.ITransferDispatcher;
+import LogService.LogManager;
 import executor.ThreadPoolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +28,8 @@ public class ProtocolSelector {
      * @param router     Router del protocolo JSON
      */
     public void iniciarServidor(String protocol, int port, IConnectionPool pool,
-            ThreadPoolManager threadPool, MainRouter router, BroadcastManager broadcastManager,
-            TransferManager transferManager, DocumentManager documentManager, LogService.LogManager logManager) {
+            ThreadPoolManager threadPool, IRequestDispatcher router, IBroadcastManager broadcastManager,
+            ITransferDispatcher transferManager, DocumentManager documentManager, LogManager logManager) {
 
         boolean startTcp = "TCP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);
         boolean startUdp = "UDP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);

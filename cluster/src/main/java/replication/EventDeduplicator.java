@@ -16,23 +16,16 @@ import java.util.Set;
  */
 public class EventDeduplicator {
 
-    private final Set<String> seenEvents;
+    private final java.util.concurrent.ConcurrentHashMap<String, Boolean> seenEvents;
+    private final int maxCapacity;
 
     /**
      * @param maxCapacity Número máximo de event IDs a recordar.
      *                    Los más antiguos se descartan automáticamente (LRU).
      */
     public EventDeduplicator(int maxCapacity) {
-        // LinkedHashMap con accessOrder=true y removeEldestEntry = LRU cache
-        Map<String, Boolean> lruMap = Collections.synchronizedMap(
-                new LinkedHashMap<String, Boolean>(maxCapacity, 0.75f, true) {
-                    @Override
-                    protected boolean removeEldestEntry(Map.Entry<String, Boolean> eldest) {
-                        return size() > maxCapacity;
-                    }
-                }
-        );
-        this.seenEvents = Collections.newSetFromMap(lruMap);
+        this.maxCapacity = maxCapacity;
+        this.seenEvents = new java.util.concurrent.ConcurrentHashMap<>(maxCapacity);
     }
 
     /**
@@ -42,7 +35,18 @@ public class EventDeduplicator {
      * @return true si el evento es NUEVO (no se ha visto antes), false si es duplicado
      */
     public boolean tryAccept(String eventId) {
-        return seenEvents.add(eventId);
+        Boolean previous = seenEvents.putIfAbsent(eventId, Boolean.TRUE);
+        if (previous != null) return false; // ya existía — duplicado
+        // Evicción simple: si excede capacidad, limpiar las más viejas
+        if (seenEvents.size() > maxCapacity) {
+            // Eliminar la primera entrada (aproximación, aceptable para deduplicación)
+            java.util.Iterator<String> it = seenEvents.keySet().iterator();
+            if (it.hasNext()) {
+                it.next();
+                it.remove();
+            }
+        }
+        return true;
     }
 
     /**

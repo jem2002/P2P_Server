@@ -1,6 +1,6 @@
 package udpsocketserver;
 
-import RequestRouter.MainRouter;
+import ports.api.IRequestDispatcher;
 import executor.ThreadPoolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +14,11 @@ public class UDPSocketServer implements Runnable {
 
     private final int port;
     private final ThreadPoolManager threadPool;
-    private final MainRouter router;
+    private final IRequestDispatcher router;
     private volatile boolean running;
     private DatagramSocket datagramSocket;
 
-    public UDPSocketServer(int port, ThreadPoolManager threadPool, MainRouter router) {
+    public UDPSocketServer(int port, ThreadPoolManager threadPool, IRequestDispatcher router) {
         this.port = port;
         this.threadPool = threadPool;
         this.router = router;

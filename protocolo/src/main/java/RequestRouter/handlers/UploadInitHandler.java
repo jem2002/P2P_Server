@@ -6,7 +6,7 @@ import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import RequestRouter.ActionHandler;
 import RequestRouter.TransferManager;
-import RequestRouter.TransferTicket;
+import ports.api.TransferTicket;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 

@@ -3,7 +3,10 @@ package RequestRouter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TransferManager {
+import ports.api.ITransferDispatcher;
+import ports.api.TransferTicket;
+
+public class TransferManager implements ITransferDispatcher {
     // Usamos ConcurrentHashMap porque muchos hilos (clientes) podrían pedir tickets al mismo tiempo
     private final Map<String, TransferTicket> pendingTransfers = new ConcurrentHashMap<>();
 

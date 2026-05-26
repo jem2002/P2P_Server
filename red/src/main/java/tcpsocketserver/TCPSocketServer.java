@@ -1,9 +1,9 @@
 package tcpsocketserver;
 
 import DocumentService.DocumentManager;
-import MessageParser.BroadcastManager;
-import RequestRouter.MainRouter;
-import RequestRouter.TransferManager;
+import ports.api.IBroadcastManager;
+import ports.api.IRequestDispatcher;
+import ports.api.ITransferDispatcher;
 import executor.ThreadPoolManager;
 import handler.ClientHandler;
 import handler.FileTransferHandler;
@@ -31,16 +31,16 @@ public class TCPSocketServer implements Runnable {
     private final int port;
     private final IConnectionPool pool;
     private final ThreadPoolManager threadPool;
-    private final MainRouter router;
     private volatile boolean running;
     private ServerSocket serverSocket;
-    private final BroadcastManager broadcastManager;
-    private final TransferManager transferManager;
+    private final IRequestDispatcher router;
+    private final IBroadcastManager broadcastManager;
+    private final ITransferDispatcher transferManager;
     private final DocumentManager documentManager;
     private final LogService.LogManager logManager;
 
-    public TCPSocketServer(int port, IConnectionPool pool, ThreadPoolManager threadPool, MainRouter router,
-            BroadcastManager broadcastManager, TransferManager transferManager, DocumentManager documentManager,
+    public TCPSocketServer(int port, IConnectionPool pool, ThreadPoolManager threadPool, IRequestDispatcher router,
+            IBroadcastManager broadcastManager, ITransferDispatcher transferManager, DocumentManager documentManager,
             LogService.LogManager logManager) {
         this.port = port;
         this.pool = pool;

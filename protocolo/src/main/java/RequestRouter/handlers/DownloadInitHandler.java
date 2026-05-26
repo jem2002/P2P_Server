@@ -8,7 +8,7 @@ import MessageParser.BroadcastManager;
 import DocumentService.DocumentManager;
 import RequestRouter.ActionHandler;
 import RequestRouter.TransferManager;
-import RequestRouter.TransferTicket;
+import ports.api.TransferTicket;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 

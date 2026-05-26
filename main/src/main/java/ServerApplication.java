@@ -116,6 +116,14 @@ public class ServerApplication {
             MainRouter router = new MainRouter(userManager, documentManager, logManager,
                     broadcastManager, transferManager);
 
+            orchestrators.DisconnectionOrchestrator disconnectionService = new orchestrators.DisconnectionOrchestrator(
+                    userManager, logManager, broadcastManager);
+            disconnectionService.setListSuppliers(
+                    () -> { try { return router.handleListClients(); } catch (Exception e) { return "{}"; } },
+                    () -> { try { return router.handleListLogs(); } catch (Exception e) { return "{}"; } }
+            );
+            router.setDisconnectionService(disconnectionService);
+
             // 5. Módulo Gestión de Conexiones
             int maxConnections = config.getMaxConnections();
             ConnectionPoolManager pool = new ConnectionPoolManager(maxConnections);
@@ -192,16 +200,23 @@ public class ServerApplication {
                         // Esperamos en un hilo aparte para que PeerConnectionPool
                         // haya tenido tiempo de abrir la conexión TCP primero.
                         new Thread(() -> {
-                            try {
-                                Thread.sleep(800); // dar tiempo a PeerConnectionPool.onNodeJoined
-                                String syncMsg = communication.InterServerProtocol
-                                        .buildSyncMessage(finalNodeId, finalRoutingTable);
-                                peerPool.sendToPeer(node.getNodeId(), syncMsg);
-                                logger.info("RoutingTable enviada a nuevo nodo '{}' (bootstrap sync)",
-                                        node.getNodeId());
-                            } catch (Exception e) {
-                                logger.warn("No se pudo enviar bootstrap sync a '{}': {}",
-                                        node.getNodeId(), e.getMessage());
+                            int maxRetries = 5;
+                            long delay = 200; // ms
+                            for (int i = 0; i < maxRetries; i++) {
+                                try {
+                                    Thread.sleep(delay);
+                                    String syncMsg = communication.InterServerProtocol
+                                            .buildSyncMessage(finalNodeId, finalRoutingTable);
+                                    peerPool.sendToPeer(node.getNodeId(), syncMsg);
+                                    logger.info("RoutingTable enviada a nuevo nodo '{}' (bootstrap sync)", node.getNodeId());
+                                    return; // éxito
+                                } catch (Exception e) {
+                                    delay *= 2; // backoff exponencial
+                                    if (i == maxRetries - 1) {
+                                        logger.warn("No se pudo enviar bootstrap sync a '{}' tras {} intentos: {}",
+                                                node.getNodeId(), maxRetries, e.getMessage());
+                                    }
+                                }
                             }
                         }, "BootstrapSync-" + node.getNodeId()).start();
                     }
@@ -214,87 +229,14 @@ public class ServerApplication {
 
                 // 7k. Conectar ReplicationManager al dominio local:
                 //     Cuando un evento replicado llega de un peer, aplicarlo aquí
-                final MembershipList finalMembership = membership;
                 final LocalClientRegistry finalRegistry = localClientRegistry;
                 final MainRouter finalRouter = router;
-                replicator.setEventHandler(event -> {
-                    String type = event.getEventType();
-                    switch (type) {
-                        case "CLIENT_CONNECTED": {
-                            // Un cliente se conectó a otro servidor → registrar en RoutingTable y crear en BD local si no existe
-                            String username = event.getPayload().get("username").asText();
-                            String sourceNode = event.getSourceNodeId();
-                            String clientIp = event.getPayload().has("ip") ? event.getPayload().get("ip").asText() : "unknown";
-
-                            try {
-                                userManager.obtenerORegistrarUsuario(username, clientIp);
-                            } catch (Exception e) {
-                                logger.error("Error registrando usuario conectado {}", username, e);
-                            }
-
-                            finalRoutingTable.registerRemoteClient(username, sourceNode);
-                            // Enviar lista actualizada SOLO a clientes locales (no federar de vuelta)
-                            try {
-                                broadcastManager.broadcastLocalOnly(
-                                        finalRouter.handleListClients());
-                            } catch (Exception ignored) {}
-                            break;
-                        }
-                        case "CLIENT_DISCONNECTED": {
-                            // Un cliente se desconectó de otro servidor
-                            String username = event.getPayload().get("username").asText();
-                            finalRoutingTable.unregisterClient(username);
-                            try {
-                                broadcastManager.broadcastLocalOnly(
-                                        finalRouter.handleListClients());
-                            } catch (Exception ignored) {}
-                            break;
-                        }
-                        case "NEW_MESSAGE": {
-                            // Un mensaje fue enviado en otro servidor → retransmitir a clientes locales
-                            String fromUser = event.getPayload().get("username").asText();
-                            String content  = event.getPayload().get("content").asText();
-                            String fromIp   = event.getPayload().has("ip") ? event.getPayload().get("ip").asText() : "unknown";
-
-                            try {
-                                long userId = userManager.obtenerIdUsuario(fromUser);
-                                java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-                                String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
-                                documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "MESSAGE");
-                            } catch (Exception e) {
-                                logger.error("Error guardando mensaje replicado de {}", fromUser, e);
-                            }
-
-                            String msgJson  = "{\"action\":\"NEW_MESSAGE\",\"payload\":{\"message\":\"["
-                                              + event.getSourceNodeId() + "] De " + fromUser + ": " + content + "\"}}";
-                            broadcastManager.broadcastLocalOnly(msgJson);
-                            break;
-                        }
-                        case "DOCUMENT_UPLOADED": {
-                            // Un documento fue subido en otro servidor → registrar metadatos (Proxy) y actualizar lista local
-                            try {
-                                com.fasterxml.jackson.databind.JsonNode p = event.getPayload();
-                                long docId = p.get("documentId").asLong();
-                                String filename = p.get("filename").asText();
-                                long sizeBytes = p.get("sizeBytes").asLong();
-                                String extension = p.get("extension").asText();
-                                String mimeType = p.get("mimeType").asText();
-                                String docType = p.get("docType").asText();
-                                String ownerUsername = p.get("ownerUsername").asText();
-                                String ownerIp = p.get("ownerIp").asText();
-                                String host = p.get("host").asText();
-                                int clientPort = p.get("clientPort").asInt();
-
-                                long localUserId = userManager.obtenerIdUsuario(ownerUsername);
-                                documentManager.registrarDocumentoReplicado(filename, sizeBytes, extension, mimeType, docType, localUserId, ownerIp, host, clientPort, docId);
-                                broadcastManager.broadcastLocalOnly(finalRouter.handleListDocuments());
-                            } catch (Exception ignored) {}
-                            break;
-                        }
-                        default:
-                            logger.debug("Evento de replicación no manejado: {}", type);
-                    }
-                });
+                orchestrators.ReplicationEventApplier eventApplier = new orchestrators.ReplicationEventApplier(
+                        userManager, documentManager, broadcastManager,
+                        finalRoutingTable, identity.getNodeId(),
+                        () -> { try { return finalRouter.handleListClients(); } catch (Exception e) { return "{}"; } },
+                        () -> { try { return finalRouter.handleListDocuments(); } catch (Exception e) { return "{}"; } });
+                replicator.setEventHandler(eventApplier);
 
                 // 7l. Handler de mensajes entrantes de peers (ahora con todas las dependencias)
                 PeerMessageHandler peerHandler = new PeerMessageHandler(
@@ -329,6 +271,7 @@ public class ServerApplication {
                         peerPool, finalRoutingTable);
 
                 // 7n. Activar integración P2P en el MainRouter
+                disconnectionService.enableCluster(finalRoutingTable, localClientRegistry, replicator, identity.getNodeId());
                 router.enableCluster(
                         finalRoutingTable,
                         localClientRegistry,

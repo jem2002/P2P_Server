@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import ports.api.IRequestDispatcher;
+
 /**
  * Router principal del protocolo JSON.
  * Despacha las solicitudes entrantes al ActionHandler correspondiente.
@@ -38,7 +40,7 @@ import java.util.Map;
  * Cuando el cluster está habilitado, ConnectHandler, SendMessageHandler y
  * ListClientsHandler trabajan de forma federada.
  */
-public class MainRouter {
+public class MainRouter implements IRequestDispatcher {
 
     private static final Logger logger = LoggerFactory.getLogger(MainRouter.class);
 
@@ -63,6 +65,12 @@ public class MainRouter {
 
     // Handler de conexión (referencia necesaria para inyección de OutputStream)
     private final ConnectHandler connectHandler;
+
+    private ports.api.IDisconnectionHandler disconnectionService;
+
+    public void setDisconnectionService(ports.api.IDisconnectionHandler ds) {
+        this.disconnectionService = ds;
+    }
 
     public MainRouter(UserManager userManager, DocumentManager documentManager, LogManager logManager,
                       BroadcastManager broadcastManager, TransferManager transferManager) {
@@ -196,52 +204,10 @@ public class MainRouter {
      * En modo cluster: elimina de RoutingTable y LocalClientRegistry, propaga evento.
      */
     public void notificarDesconexionFisica(String rawClientIp, OutputStream out) {
-        try {
-            ClientAddress address = ClientAddress.parse(rawClientIp);
-            if (out != null) broadcastManager.removeStream(out);
-
-            long userId = userManager.desconectarPorCaidaDeRed(address.getIp(), address.getPort());
-            String username = userManager.obtenerNombreUsuario(userId);
-
-            // Fallback: si MySQL no encontró la sesión por IP/Puerto (puede pasar con IPv6 o NAT local),
-            // buscamos el username directamente en el LocalClientRegistry usando el OutputStream.
-            if (("UsuarioDesconocido".equals(username) || username == null) && localClientRegistry != null && out != null) {
-                String fallbackName = localClientRegistry.getUsernameByStream(out);
-                if (fallbackName != null) {
-                    username = fallbackName;
-                    logger.info("Resolución de usuario por fallback (Stream) exitosa: {}", username);
-                    try {
-                        userManager.cerrarSesionPorUsername(username);
-                    } catch (Exception e) {
-                        logger.warn("No se pudo cerrar sesión en BD por username: {}", e.getMessage());
-                    }
-                }
-            }
-
-            if (!"UsuarioDesconocido".equals(username) && username != null) {
-                logManager.registrarAccion(null, userId > 0 ? userId : -1, "DISCONNECT", "SUCCESS",
-                        "Desconexión física del usuario " + username + " (" + address + ")");
-                broadcastManager.broadcast(listLogsHandler.handle(null, null));
-
-                // --- Integración P2P: limpiar registros del cliente ───────────────
-                if (routingTable != null) {
-                    routingTable.unregisterClient(username);
-                }
-                if (localClientRegistry != null) {
-                    localClientRegistry.unregister(username);
-                }
-                if (replicationManager != null && localNodeId != null) {
-                    replicationManager.propagate(
-                            ReplicationEvent.clientDisconnected(localNodeId, username));
-                }
-                // ──────────────────────────────────────────────────────────────────
-            }
-
-            String listaTrasDesconexion = listClientsHandler.handle(null, null);
-            broadcastManager.broadcast(listaTrasDesconexion);
-
-        } catch (Exception e) {
-            logger.error("Error procesando desconexión física", e);
+        if (disconnectionService != null) {
+            disconnectionService.procesarDesconexion(rawClientIp, out);
+        } else {
+            logger.warn("DisconnectionService no configurado.");
         }
     }
 

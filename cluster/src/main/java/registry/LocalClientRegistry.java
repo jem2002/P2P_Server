@@ -55,8 +55,10 @@ public class LocalClientRegistry {
         }
         try {
             byte[] bytes = (jsonMessage + "\n").getBytes(StandardCharsets.UTF_8);
-            out.write(bytes);
-            out.flush();
+            synchronized (out) {
+                out.write(bytes);
+                out.flush();
+            }
             logger.debug("Mensaje entregado directamente a '{}'", username);
             return true;
         } catch (Exception e) {

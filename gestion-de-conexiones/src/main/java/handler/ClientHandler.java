@@ -1,6 +1,7 @@
 package handler;
 
-import RequestRouter.MainRouter;
+import ports.api.IBroadcastManager;
+import ports.api.IRequestDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pool.IConnectionPool;
@@ -9,7 +10,6 @@ import pool.PooledClientConnection;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import MessageParser.BroadcastManager;
 
 /**
  * Handler para conexiones de control (protocolo JSON persistente).
@@ -25,12 +25,12 @@ public class ClientHandler implements Runnable {
 
     private final PooledClientConnection connection;
     private final IConnectionPool pool;
-    private final MainRouter router;
-    private final BroadcastManager broadcastManager;
+    private final IRequestDispatcher router;
+    private final IBroadcastManager broadcastManager;
     private final String primeraLinea;
 
-    public ClientHandler(PooledClientConnection connection, IConnectionPool pool, MainRouter router,
-                         BroadcastManager broadcastManager, String primeraLinea) {
+    public ClientHandler(PooledClientConnection connection, IConnectionPool pool, IRequestDispatcher router,
+                         IBroadcastManager broadcastManager, String primeraLinea) {
         this.connection = connection;
         this.pool = pool;
         this.router = router;

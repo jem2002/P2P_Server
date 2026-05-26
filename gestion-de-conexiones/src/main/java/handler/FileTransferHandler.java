@@ -2,10 +2,10 @@ package handler;
 
 import DocumentService.DocumentManager;
 import JsonSchema.DownloadMode;
-import MessageParser.BroadcastManager;
-import RequestRouter.MainRouter;
-import RequestRouter.TransferManager;
-import RequestRouter.TransferTicket;
+import ports.api.IBroadcastManager;
+import ports.api.IRequestDispatcher;
+import ports.api.ITransferDispatcher;
+import ports.api.TransferTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,14 +26,14 @@ public class FileTransferHandler implements Runnable {
 
     private final Socket socket;
     private final String token;
-    private final TransferManager transferManager;
+    private final ITransferDispatcher transferManager;
     private final DocumentManager documentManager;
-    private final MainRouter router;
-    private final BroadcastManager broadcastManager;
+    private final IRequestDispatcher router;
+    private final IBroadcastManager broadcastManager;
     private final LogService.LogManager logManager;
 
-    public FileTransferHandler(Socket socket, String token, TransferManager transferManager,
-            DocumentManager documentManager, MainRouter router, BroadcastManager broadcastManager,
+    public FileTransferHandler(Socket socket, String token, ITransferDispatcher transferManager,
+            DocumentManager documentManager, IRequestDispatcher router, IBroadcastManager broadcastManager,
             LogService.LogManager logManager) {
         this.socket = socket;
         this.token = token;

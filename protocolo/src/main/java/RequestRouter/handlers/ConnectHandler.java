@@ -36,7 +36,7 @@ public class ConnectHandler implements ActionHandler {
     private ReplicationManager replicationManager;
     private LocalClientRegistry localClientRegistry;
     private String localNodeId;
-    private OutputStream clientOut;   // Se inyecta por setter antes de cada handle()
+    private final ThreadLocal<OutputStream> clientOut = new ThreadLocal<>();
 
     public ConnectHandler(UserManager userManager, LogManager logManager,
                           ResponseBuilder serializer, BroadcastManager broadcastManager,
@@ -62,7 +62,7 @@ public class ConnectHandler implements ActionHandler {
      * para que ConnectHandler pueda registrar el stream del cliente.
      */
     public void setClientOutputStream(OutputStream out) {
-        this.clientOut = out;
+        this.clientOut.set(out);
     }
 
     @Override
@@ -85,8 +85,9 @@ public class ConnectHandler implements ActionHandler {
             routingTable.registerLocalClient(username);
 
             // 2. Registrar el OutputStream para entrega directa de mensajes
-            if (localClientRegistry != null && clientOut != null) {
-                localClientRegistry.register(username, clientOut);
+            OutputStream currentOut = clientOut.get();
+            if (localClientRegistry != null && currentOut != null) {
+                localClientRegistry.register(username, currentOut);
             }
 
             // 3. Propagar evento de conexión a todos los peers
