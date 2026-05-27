@@ -22,9 +22,9 @@ import java.util.List;
 public class MySqlUserDao implements IUserRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(MySqlUserDao.class);
-    private final DatabaseConnectionManager dbManager;
+    private final IDatabaseConnectionManager dbManager;
 
-    public MySqlUserDao(DatabaseConnectionManager dbManager) {
+    public MySqlUserDao(IDatabaseConnectionManager dbManager) {
         this.dbManager = dbManager;
     }
 

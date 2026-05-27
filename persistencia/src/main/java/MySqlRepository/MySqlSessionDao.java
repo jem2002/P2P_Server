@@ -18,9 +18,9 @@ import java.sql.*;
 public class MySqlSessionDao implements ISessionRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(MySqlSessionDao.class);
-    private final DatabaseConnectionManager dbManager;
+    private final IDatabaseConnectionManager dbManager;
 
-    public MySqlSessionDao(DatabaseConnectionManager dbManager) {
+    public MySqlSessionDao(IDatabaseConnectionManager dbManager) {
         this.dbManager = dbManager;
     }
 

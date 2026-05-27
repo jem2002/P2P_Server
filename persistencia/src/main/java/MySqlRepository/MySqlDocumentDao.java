@@ -22,9 +22,9 @@ import java.util.List;
 public class MySqlDocumentDao implements IDocumentRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(MySqlDocumentDao.class);
-    private final DatabaseConnectionManager dbManager;
+    private final IDatabaseConnectionManager dbManager;
 
-    public MySqlDocumentDao(DatabaseConnectionManager dbManager) {
+    public MySqlDocumentDao(IDatabaseConnectionManager dbManager) {
         this.dbManager = dbManager;
     }
 

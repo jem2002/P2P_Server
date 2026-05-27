@@ -21,9 +21,9 @@ import java.util.List;
 public class MySqlAuditLogDao implements IAuditLogRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(MySqlAuditLogDao.class);
-    private final DatabaseConnectionManager dbManager;
+    private final IDatabaseConnectionManager dbManager;
 
-    public MySqlAuditLogDao(DatabaseConnectionManager dbManager) {
+    public MySqlAuditLogDao(IDatabaseConnectionManager dbManager) {
         this.dbManager = dbManager;
     }
 

@@ -12,7 +12,7 @@ import java.util.Properties;
 /**
  * Gestor de conexiones a la base de datos MySQL mediante HikariCP.
  */
-public class DatabaseConnectionManager {
+public class DatabaseConnectionManager implements IDatabaseConnectionManager {
 
     private final HikariDataSource dataSource;
 
