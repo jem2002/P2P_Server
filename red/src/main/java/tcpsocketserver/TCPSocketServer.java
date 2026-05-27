@@ -14,6 +14,7 @@ import pool.IConnectionPool;
 import pool.PooledClientConnection;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -125,6 +126,14 @@ public class TCPSocketServer implements Runnable {
         PooledClientConnection pooledConnection = pool.acquire();
         if (pooledConnection == null) {
             logger.warn("Rechazando conexión de control: Pool agotado.");
+            // Cumplir requerimiento: "Informar al cliente que no puede aceptar la conexión"
+            try (OutputStream rejectOut = clientSocket.getOutputStream()) {
+                String rejection = "{\"action\":\"ERROR_ACK\",\"payload\":{\"reason\":\"Servidor lleno. Máximo de conexiones alcanzado.\"}}\n";
+                rejectOut.write(rejection.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                rejectOut.flush();
+            } catch (Exception e) {
+                logger.debug("No se pudo enviar mensaje de rechazo al cliente: {}", e.getMessage());
+            }
             clientSocket.close();
             return;
         }
