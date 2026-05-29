@@ -259,7 +259,8 @@ public class ServerApplication {
                 });
 
                 documentManager.setOnLocalDocumentUploaded((docId, filename, sizeBytes, extension, mimeType, ownerUsername, ownerIp, docType) -> {
-                    if (identity != null) {
+                    // Solo propagar eventos de archivos, no de mensajes (los mensajes usan NEW_MESSAGE)
+                    if (identity != null && !docType.equals("MESSAGE") && !docType.startsWith("PRIVATE_TO:")) {
                         replicator.propagate(ReplicationEvent.documentUploaded(
                                 identity.getNodeId(), docId, filename, sizeBytes, extension, mimeType, docType, ownerUsername, ownerIp, identity.getHost(), identity.getClientPort()));
                     }

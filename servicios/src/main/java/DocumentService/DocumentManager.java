@@ -147,7 +147,7 @@ public class DocumentManager {
                 // En un cluster con MySQL compartido, la BD puede tener referencias a archivos
                 // que solo existen en el sistema de archivos de otro nodo.
                 String pathStr = item.getRutaOriginal();
-                if (pathStr == null || !java.nio.file.Files.exists(java.nio.file.Paths.get(pathStr))) {
+                if (pathStr == null) {
                     logger.debug("Mensaje omitido (archivo en otro nodo): {}", pathStr);
                     continue;
                 }
