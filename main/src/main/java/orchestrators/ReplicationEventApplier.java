@@ -114,23 +114,68 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
     }
 
     private void handleDocumentUploaded(ReplicationEvent event) {
-        // Un documento fue subido en otro servidor → registrar metadatos (Proxy) y actualizar lista local
-        try {
-            com.fasterxml.jackson.databind.JsonNode p = event.getPayload();
-            long docId = p.get("documentId").asLong();
-            String filename = p.get("filename").asText();
-            long sizeBytes = p.get("sizeBytes").asLong();
-            String extension = p.get("extension").asText();
-            String mimeType = p.get("mimeType").asText();
-            String docType = p.get("docType").asText();
-            String ownerUsername = p.get("ownerUsername").asText();
-            String ownerIp = p.get("ownerIp").asText();
-            String host = p.get("host").asText();
-            int clientPort = p.get("clientPort").asInt();
+        // Un documento fue subido en otro servidor → descargar físicamente el archivo en background
+        new Thread(() -> {
+            try {
+                com.fasterxml.jackson.databind.JsonNode p = event.getPayload();
+                long docId = p.get("documentId").asLong();
+                String filename = p.get("filename").asText();
+                long sizeBytes = p.get("sizeBytes").asLong();
+                String extension = p.get("extension").asText();
+                String mimeType = p.get("mimeType").asText();
+                String docType = p.get("docType").asText();
+                String ownerUsername = p.get("ownerUsername").asText();
+                String ownerIp = p.get("ownerIp").asText();
+                String host = p.get("host").asText();
+                int clientPort = p.get("clientPort").asInt();
 
-            long localUserId = userManager.obtenerIdUsuario(ownerUsername);
-            documentManager.registrarDocumentoReplicado(filename, sizeBytes, extension, mimeType, docType, localUserId, ownerIp, host, clientPort, docId);
-            broadcastManager.broadcastLocalOnly(documentsListSupplier.get());
-        } catch (Exception ignored) {}
+                long localUserId = userManager.obtenerIdUsuario(ownerUsername);
+
+                logger.info("Iniciando descarga física en background del documento remoto {} desde {}:{}", docId, host, clientPort);
+
+                try (java.net.Socket controlSocket = new java.net.Socket(host, clientPort)) {
+                    String req = "{\"action\":\"DOWNLOAD_INIT\", \"payload\":{\"document_id\":" + docId + ", \"format\":\"ORG\", \"username\":\"replicador\"}}\n";
+                    controlSocket.getOutputStream().write(req.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                    controlSocket.getOutputStream().flush();
+                    
+                    String remoteToken = null;
+                    java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(controlSocket.getInputStream(), java.nio.charset.StandardCharsets.UTF_8));
+                    String res;
+                    com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                    
+                    while ((res = in.readLine()) != null) {
+                        com.fasterxml.jackson.databind.JsonNode root = mapper.readTree(res);
+                        String action = root.has("action") ? root.get("action").asText() : "";
+                        
+                        if ("DOWNLOAD_INIT_ACK".equals(action)) {
+                            if (root.has("payload") && root.get("payload").has("message")) {
+                                remoteToken = root.get("payload").get("message").asText();
+                            }
+                            break;
+                        } else if ("ERROR_ACK".equals(action)) {
+                            logger.error("Error devuelto por peer remoto al intentar replicar: {}", root.path("payload").path("reason").asText());
+                            break;
+                        }
+                    }
+                    
+                    if (remoteToken != null) {
+                        try (java.net.Socket dataSocket = new java.net.Socket(host, clientPort)) {
+                            dataSocket.getOutputStream().write((remoteToken + "\n").getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                            dataSocket.getOutputStream().flush();
+                            
+                            java.io.InputStream peerIn = dataSocket.getInputStream();
+                            documentManager.procesarRecepcionDocumento(peerIn, filename, sizeBytes, extension, mimeType, localUserId, "replicado", docType);
+                            logger.info("Descarga física de replicación completada con éxito para {}", filename);
+                            broadcastManager.broadcastLocalOnly(documentsListSupplier.get());
+                        }
+                    } else {
+                        logger.error("Error en proxy P2P de replicación: No se obtuvo token del peer");
+                    }
+                }
+
+            } catch (Exception e) {
+                logger.error("Fallo durante la descarga física de replicación", e);
+            }
+        }, "ReplicationDownloader").start();
     }
 }

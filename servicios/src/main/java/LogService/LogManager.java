@@ -26,6 +26,10 @@ public class LogManager {
     }
 
     public void registrarAccion(Long docId, long senderId, String action, String status, String details) {
+        if (senderId <= 0) {
+            logger.debug("Omitiendo registro de log de auditoria para accion de sistema (ID<=0): {} - {}", action, details);
+            return;
+        }
         auditLogRepository.registrarLog(docId, senderId, null, action, "TCP", status, details);
     }
 

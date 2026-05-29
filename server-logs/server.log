@@ -938,3 +938,1058 @@ java.net.BindException: Address already in use
 2026-05-28 19:26:31 [pool-4-thread-1] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-1@192.168.1.19:9090]
 2026-05-28 19:26:31 [pool-4-thread-1] INFO  topology.RoutingTable - Eliminados 1 clientes de la tabla — nodo caído: node-1
 2026-05-28 19:26:31 [pool-4-thread-1] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' LEFT
+2026-05-28 19:32:17 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:32:21 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 19:32:21 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 19:32:21 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-28 19:32:21 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-28 19:32:21 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-28 19:32:21 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
+2026-05-28 19:32:21 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 19:32:22 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 19:32:22 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 19:32:22 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 19:32:22 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 19:32:22 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 19:32:22 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 19:32:22 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 19:32:22 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 19:32:22 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-28 19:32:22 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:32:22 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 19:32:22 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:32:22 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
+2026-05-28 19:32:22 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
+2026-05-28 19:32:22 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 19:32:22 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-28 19:32:22 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-28 19:32:22 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-28 19:32:22 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-28 19:32:46 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:33:17 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 19:33:17 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 19:33:17 [main] INFO  ServerApplication - ║  server.port       = 8082
+2026-05-28 19:33:17 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-2
+2026-05-28 19:33:17 [main] INFO  ServerApplication - ║  cluster.port      = 9092
+2026-05-28 19:33:17 [main] INFO  ServerApplication - ║  cluster.seedNodes = 192.168.1.24:9090
+2026-05-28 19:33:17 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 19:33:17 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 19:33:17 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 19:33:18 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 19:33:18 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 19:33:18 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 19:33:18 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 19:33:18 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 19:33:18 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 19:33:18 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8082
+2026-05-28 19:33:18 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:33:18 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 19:33:18 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:33:18 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@192.168.1.24:9092]
+2026-05-28 19:33:18 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8082
+2026-05-28 19:33:18 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 19:33:18 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9092 — NodeId: node-2
+2026-05-28 19:33:18 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9092, Peers TCP:9092
+2026-05-28 19:33:18 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9092
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:18 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 19:33:18 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:52151
+2026-05-28 19:33:18 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:18 [PeerHandler-/192.168.1.24:52151] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:52151
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:33:18 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en 192.168.1.24:9090
+2026-05-28 19:33:18 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:52152
+2026-05-28 19:33:18 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:33:18 [PeerHandler-/192.168.1.24:52152] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:52152
+2026-05-28 19:33:18 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-28 19:33:18 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 19:33:18 [PeerHandler-/192.168.1.24:52151] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-1'
+2026-05-28 19:33:18 [BootstrapSync-node-1] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-1' (bootstrap sync)
+2026-05-28 19:33:18 [PeerHandler-/192.168.1.24:52152] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 19:33:30 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:33:32 [pool-4-thread-1] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 19:33:32 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:32 [pool-4-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 19:33:36 [pool-4-thread-1] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 19:33:36 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:36 [pool-4-thread-1] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:36 [pool-4-thread-1] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:33:36 [pool-4-thread-1] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 19:34:05 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 19:34:05 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 19:34:05 [main] INFO  ServerApplication - ║  server.port       = 8083
+2026-05-28 19:34:05 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-3
+2026-05-28 19:34:05 [main] INFO  ServerApplication - ║  cluster.port      = 9093
+2026-05-28 19:34:05 [main] INFO  ServerApplication - ║  cluster.seedNodes = 192.168.1.24:9090
+2026-05-28 19:34:05 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 19:34:06 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 19:34:06 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 19:34:06 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 19:34:06 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 19:34:06 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 19:34:06 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 19:34:06 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 19:34:06 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 19:34:06 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8083
+2026-05-28 19:34:06 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:34:06 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 19:34:06 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:34:06 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8083
+2026-05-28 19:34:06 [main] INFO  ServerApplication - Identidad del nodo: Node[node-3@192.168.1.24:9093]
+2026-05-28 19:34:06 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 19:34:06 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-3'
+2026-05-28 19:34:06 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9093 — NodeId: node-3
+2026-05-28 19:34:06 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9093, Peers TCP:9093
+2026-05-28 19:34:06 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9093
+2026-05-28 19:34:06 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:34:06 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:34:06 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:34:06 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:34:06 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-3' JOINED
+2026-05-28 19:34:06 [PeerConnect-node-3] INFO  communication.PeerConnection - Conexión establecida con peer node-3 en 192.168.1.24:9093
+2026-05-28 19:34:06 [PeerConnect-node-3] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:34:06 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:52169
+2026-05-28 19:34:06 [PeerHandler-/192.168.1.24:52169] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:52169
+2026-05-28 19:34:06 [BootstrapSync-node-3] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-3' (bootstrap sync)
+2026-05-28 19:34:06 [PeerHandler-/192.168.1.24:52169] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-1'
+2026-05-28 19:34:08 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:34:08 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:34:08 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:34:08 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:34:08 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en 192.168.1.24:9090
+2026-05-28 19:34:08 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:52170
+2026-05-28 19:34:08 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:34:08 [PeerHandler-/192.168.1.24:52170] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:52170
+2026-05-28 19:34:08 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-28 19:34:08 [BootstrapSync-node-1] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-1' (bootstrap sync)
+2026-05-28 19:34:08 [PeerHandler-/192.168.1.24:52170] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-3'
+2026-05-28 19:35:53 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:37:01 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 19:37:05 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 19:37:05 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 19:37:05 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 19:37:05 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 19:37:05 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 19:37:05 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 19:37:05 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 19:37:05 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 19:37:05 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:37:05 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 19:37:05 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:37:05 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
+2026-05-28 19:37:05 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
+2026-05-28 19:37:05 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 19:37:05 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-28 19:37:05 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-28 19:37:05 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-28 19:37:05 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-28 19:37:10 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:37:28 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 19:37:28 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 19:37:28 [main] INFO  ServerApplication - ║  server.port       = 8082
+2026-05-28 19:37:28 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-2
+2026-05-28 19:37:28 [main] INFO  ServerApplication - ║  cluster.port      = 9092
+2026-05-28 19:37:28 [main] INFO  ServerApplication - ║  cluster.seedNodes = 192.168.1.24:9090
+2026-05-28 19:37:28 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 19:37:28 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 19:37:28 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 19:37:29 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 19:37:29 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 19:37:29 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 19:37:29 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 19:37:29 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 19:37:29 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 19:37:29 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8082
+2026-05-28 19:37:29 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:37:29 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 19:37:29 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:37:29 [main] INFO  ServerApplication - Identidad del nodo: Node[node-2@192.168.1.24:9092]
+2026-05-28 19:37:29 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8082
+2026-05-28 19:37:29 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 19:37:29 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-2'
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9092 — NodeId: node-2
+2026-05-28 19:37:29 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9092, Peers TCP:9092
+2026-05-28 19:37:29 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9092
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:37:29 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 19:37:29 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:37:29 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:56304
+2026-05-28 19:37:29 [PeerHandler-/192.168.1.24:56304] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:56304
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 19:37:29 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 19:37:29 [PeerHandler-/192.168.1.24:56304] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-1'
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:37:29 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en 192.168.1.24:9090
+2026-05-28 19:37:29 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:37:29 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:56305
+2026-05-28 19:37:29 [PeerHandler-/192.168.1.24:56305] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:56305
+2026-05-28 19:37:29 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-28 19:37:30 [BootstrapSync-node-1] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-1' (bootstrap sync)
+2026-05-28 19:37:30 [PeerHandler-/192.168.1.24:56305] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 19:37:34 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:38:07 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 19:38:07 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 19:38:07 [main] INFO  ServerApplication - ║  server.port       = 8083
+2026-05-28 19:38:07 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-3
+2026-05-28 19:38:07 [main] INFO  ServerApplication - ║  cluster.port      = 9093
+2026-05-28 19:38:07 [main] INFO  ServerApplication - ║  cluster.seedNodes = 192.168.1.24:9090
+2026-05-28 19:38:07 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 19:38:08 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 19:38:08 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 19:38:08 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 19:38:08 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 19:38:08 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 19:38:08 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 19:38:08 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 19:38:08 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 19:38:08 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8083
+2026-05-28 19:38:08 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:38:08 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 19:38:08 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:38:08 [main] INFO  ServerApplication - Identidad del nodo: Node[node-3@192.168.1.24:9093]
+2026-05-28 19:38:08 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8083
+2026-05-28 19:38:08 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 19:38:08 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-3'
+2026-05-28 19:38:08 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9093 — NodeId: node-3
+2026-05-28 19:38:08 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9093, Peers TCP:9093
+2026-05-28 19:38:08 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9093
+2026-05-28 19:38:08 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:08 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:08 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:08 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:08 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-3' JOINED
+2026-05-28 19:38:08 [PeerConnect-node-3] INFO  communication.PeerConnection - Conexión establecida con peer node-3 en 192.168.1.24:9093
+2026-05-28 19:38:08 [PeerConnect-node-3] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:08 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:61777
+2026-05-28 19:38:08 [PeerHandler-/192.168.1.24:61777] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:61777
+2026-05-28 19:38:08 [BootstrapSync-node-3] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-3' (bootstrap sync)
+2026-05-28 19:38:08 [PeerHandler-/192.168.1.24:61777] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-1'
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo descubierto via gossip (indirecto): NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (via gossip de 'node-1'): NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-3' JOINED
+2026-05-28 19:38:09 [PeerConnect-node-3] INFO  communication.PeerConnection - Conexión establecida con peer node-3 en 192.168.1.24:9093
+2026-05-28 19:38:09 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:61780
+2026-05-28 19:38:09 [PeerConnect-node-3] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:38:09 [PeerHandler-/192.168.1.24:61780] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:61780
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:38:09 [PeerConnect-node-1] INFO  communication.PeerConnection - Conexión establecida con peer node-1 en 192.168.1.24:9090
+2026-05-28 19:38:09 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:61781
+2026-05-28 19:38:09 [PeerConnect-node-1] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:38:09 [PeerHandler-/192.168.1.24:61781] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:61781
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' JOINED
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo descubierto via gossip (indirecto): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (via gossip de 'node-1'): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:38:09 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 19:38:09 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 19:38:09 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:38:09 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:61782
+2026-05-28 19:38:09 [PeerHandler-/192.168.1.24:61782] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:61782
+2026-05-28 19:38:10 [BootstrapSync-node-3] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-3' (bootstrap sync)
+2026-05-28 19:38:10 [PeerHandler-/192.168.1.24:61780] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 19:38:10 [BootstrapSync-node-1] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-1' (bootstrap sync)
+2026-05-28 19:38:10 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 19:38:10 [PeerHandler-/192.168.1.24:61782] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-3'
+2026-05-28 19:38:10 [PeerHandler-/192.168.1.24:61781] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-3'
+2026-05-28 19:39:07 [pool-4-thread-1] WARN  discovery.MembershipList - Nodo node-1 marcado como SUSPECTED
+2026-05-28 19:39:07 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:39:07 [pool-4-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' SUSPECTED
+2026-05-28 19:39:08 [pool-4-thread-1] WARN  discovery.MembershipList - Nodo node-1 marcado como SUSPECTED
+2026-05-28 19:39:08 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:39:08 [pool-4-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' SUSPECTED
+2026-05-28 19:39:12 [pool-4-thread-1] ERROR discovery.MembershipList - Nodo node-1 marcado como DOWN
+2026-05-28 19:39:12 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:39:12 [pool-4-thread-1] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:39:12 [pool-4-thread-1] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:39:12 [pool-4-thread-1] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' LEFT
+2026-05-28 19:39:13 [pool-4-thread-1] ERROR discovery.MembershipList - Nodo node-1 marcado como DOWN
+2026-05-28 19:39:13 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:39:13 [pool-4-thread-1] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:39:13 [pool-4-thread-1] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-1@192.168.1.24:9090]
+2026-05-28 19:39:13 [pool-4-thread-1] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-1' LEFT
+2026-05-28 19:39:34 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:40:03 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 19:40:03 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 19:40:03 [main] INFO  ServerApplication - ║  server.port       = 8084
+2026-05-28 19:40:03 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-4
+2026-05-28 19:40:03 [main] INFO  ServerApplication - ║  cluster.port      = 9094
+2026-05-28 19:40:03 [main] INFO  ServerApplication - ║  cluster.seedNodes = 192.168.1.24:9092
+2026-05-28 19:40:03 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 19:40:04 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 19:40:04 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 19:40:04 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 19:40:04 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 19:40:04 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 19:40:04 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 19:40:04 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 19:40:04 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 19:40:04 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8084
+2026-05-28 19:40:04 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:40:04 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 19:40:04 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:40:04 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8084
+2026-05-28 19:40:04 [main] INFO  ServerApplication - Identidad del nodo: Node[node-4@192.168.1.24:9094]
+2026-05-28 19:40:04 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 19:40:04 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-4'
+2026-05-28 19:40:04 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9094 — NodeId: node-4
+2026-05-28 19:40:04 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9094, Peers TCP:9094
+2026-05-28 19:40:04 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9094
+2026-05-28 19:40:04 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:04 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:04 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:04 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:04 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-4' JOINED
+2026-05-28 19:40:04 [PeerConnect-node-4] INFO  communication.PeerConnection - Conexión establecida con peer node-4 en 192.168.1.24:9094
+2026-05-28 19:40:04 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:60381
+2026-05-28 19:40:04 [PeerConnect-node-4] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:04 [PeerHandler-/192.168.1.24:60381] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:60381
+2026-05-28 19:40:04 [BootstrapSync-node-4] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-4' (bootstrap sync)
+2026-05-28 19:40:04 [PeerHandler-/192.168.1.24:60381] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo descubierto via gossip (indirecto): NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (via gossip de 'node-2'): NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-4' JOINED
+2026-05-28 19:40:05 [PeerConnect-node-4] INFO  communication.PeerConnection - Conexión establecida con peer node-4 en 192.168.1.24:9094
+2026-05-28 19:40:05 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:60382
+2026-05-28 19:40:05 [PeerConnect-node-4] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-4@192.168.1.24:9094]
+2026-05-28 19:40:05 [PeerHandler-/192.168.1.24:60382] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:60382
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:40:05 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 19:40:05 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:60383
+2026-05-28 19:40:05 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:40:05 [PeerHandler-/192.168.1.24:60383] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:60383
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo descubierto via gossip (indirecto): NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (via gossip de 'node-2'): NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:40:05 [PeerConnect-node-3] INFO  communication.PeerConnection - Conexión establecida con peer node-3 en 192.168.1.24:9093
+2026-05-28 19:40:05 [PeerConnect-node-3] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-3@192.168.1.24:9093]
+2026-05-28 19:40:05 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:60384
+2026-05-28 19:40:05 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-3' JOINED
+2026-05-28 19:40:05 [PeerHandler-/192.168.1.24:60384] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:60384
+2026-05-28 19:40:05 [BootstrapSync-node-4] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-4' (bootstrap sync)
+2026-05-28 19:40:05 [PeerHandler-/192.168.1.24:60382] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-3'
+2026-05-28 19:40:05 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 19:40:05 [PeerHandler-/192.168.1.24:60383] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-4'
+2026-05-28 19:40:05 [BootstrapSync-node-3] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-3' (bootstrap sync)
+2026-05-28 19:40:05 [PeerHandler-/192.168.1.24:60384] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-4'
+2026-05-28 19:52:26 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 19:56:40 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 19:56:40 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 19:56:40 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 19:56:40 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 19:56:40 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 19:56:40 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 19:56:40 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 19:56:40 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 19:56:40 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:56:40 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 19:56:40 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 19:56:40 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
+2026-05-28 19:56:40 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
+2026-05-28 19:56:40 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 19:56:40 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-28 19:56:40 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-28 19:56:40 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-28 19:56:40 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-28 19:56:59 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:56:59 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:56:59 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:56:59 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:56:59 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 19:56:59 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 19:56:59 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 19:56:59 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 19:57:00 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:51384
+2026-05-28 19:57:00 [PeerHandler-/192.168.1.24:51384] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:51384
+2026-05-28 19:57:01 [PeerHandler-/192.168.1.24:51384] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 19:57:13 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51387
+2026-05-28 19:57:13 [pool-3-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51387
+2026-05-28 19:57:13 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 19:57:34 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 19:57:34 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 19:57:54 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: NEW_MESSAGE_ACK desde /192.168.1.24:51384
+2026-05-28 19:57:54 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: NEW_MESSAGE desde node-2
+2026-05-28 19:57:54 [PeerHandler-/192.168.1.24:51384] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 19:57:54 [PeerHandler-/192.168.1.24:51384] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 19:57:54 [PeerHandler-/192.168.1.24:51384] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\ae8c052c-e026-46f7-b601-bf86d9cb62a9.txt
+2026-05-28 19:57:54 [PeerHandler-/192.168.1.24:51384] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 19:57:54 [PeerHandler-/192.168.1.24:51384] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-05-28 19:57:54 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 19:58:32 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 19:58:32 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 19:58:32 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\3a30e2ce-8b4f-4861-9925-58b5de07733d.txt
+2026-05-28 19:58:32 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 19:58:32 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 2
+2026-05-28 19:58:32 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
+2026-05-28 19:58:50 [pool-3-thread-1] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:51387
+2026-05-28 19:58:50 [pool-3-thread-1] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51387 (User ID: 1)
+2026-05-28 19:58:50 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_DISCONNECTED propagado a 1/1 peers
+2026-05-28 19:59:03 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 19:59:03 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 19:59:44 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51424
+2026-05-28 19:59:44 [pool-3-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51424
+2026-05-28 19:59:44 [pool-3-thread-2] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 19:59:59 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 19:59:59 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-2
+2026-05-28 19:59:59 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 20:00:13 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:00:13 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-2
+2026-05-28 20:00:13 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 20:00:39 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51432
+2026-05-28 20:00:39 [pool-3-thread-3] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51432
+2026-05-28 20:00:39 [pool-3-thread-3] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 20:00:54 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 20:00:54 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 20:01:18 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: NEW_MESSAGE desde node-2
+2026-05-28 20:01:18 [PeerHandler-/192.168.1.24:51384] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:01:18 [PeerHandler-/192.168.1.24:51384] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:01:18 [PeerHandler-/192.168.1.24:51384] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\9fb17b9f-d86d-4d31-9828-f57597e994bb.txt
+2026-05-28 20:01:18 [PeerHandler-/192.168.1.24:51384] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:01:18 [PeerHandler-/192.168.1.24:51384] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 3
+2026-05-28 20:01:18 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: NEW_MESSAGE_ACK desde /192.168.1.24:51384
+2026-05-28 20:01:18 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:02:18 [pool-3-thread-2] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:51424
+2026-05-28 20:02:18 [pool-3-thread-2] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51424 (User ID: 1)
+2026-05-28 20:02:18 [pool-3-thread-2] INFO  replication.ReplicationManager - Evento CLIENT_DISCONNECTED propagado a 1/1 peers
+2026-05-28 20:02:19 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:02:19 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-2
+2026-05-28 20:02:19 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 20:02:20 [pool-3-thread-3] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:51432
+2026-05-28 20:02:20 [pool-3-thread-3] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51432 (User ID: 2)
+2026-05-28 20:02:20 [pool-3-thread-3] INFO  replication.ReplicationManager - Evento CLIENT_DISCONNECTED propagado a 1/1 peers
+2026-05-28 20:03:17 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51468
+2026-05-28 20:03:17 [pool-3-thread-4] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51468
+2026-05-28 20:03:17 [pool-3-thread-4] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 20:03:33 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51472
+2026-05-28 20:03:33 [pool-3-thread-5] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51472
+2026-05-28 20:03:33 [pool-3-thread-5] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 20:03:45 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 20:03:45 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 20:03:58 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 20:03:58 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 20:04:19 [pool-3-thread-4] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:04:19 [pool-3-thread-4] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:04:19 [pool-3-thread-4] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\1b437aac-6f82-4f6f-b300-8614f5df8646.txt
+2026-05-28 20:04:19 [pool-3-thread-4] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:04:19 [pool-3-thread-4] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 4
+2026-05-28 20:04:19 [pool-3-thread-4] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
+2026-05-28 20:05:03 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 3c8b3884-e756-41d2-a483-29ff7812abf2) desde /192.168.1.24:51493
+2026-05-28 20:05:03 [FileTransfer-3c8b3884] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 3c8b3884-e756-41d2-a483-29ff7812abf2
+2026-05-28 20:05:03 [FileTransfer-3c8b3884] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:05:03 [FileTransfer-3c8b3884] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:05:03 [FileTransfer-3c8b3884] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\8cb8bdc9-6745-4bdc-9dbb-d2b219afe73d.md
+2026-05-28 20:05:03 [FileTransfer-3c8b3884] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:05:03 [FileTransfer-3c8b3884] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 5
+2026-05-28 20:05:03 [FileTransfer-3c8b3884] INFO  replication.ReplicationManager - Evento DOCUMENT_UPLOADED propagado a 1/1 peers
+2026-05-28 20:05:40 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:05:40 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:52236
+2026-05-28 20:05:40 [pool-3-thread-6] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:52236
+2026-05-28 20:05:40 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-1b70aa37-cf0e-4e62-964f-1091a6efea1d) desde /192.168.1.24:52237
+2026-05-28 20:05:40 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-1b70aa37-cf0e-4e62-964f-1091a6efea1d
+2026-05-28 20:05:40 [pool-3-thread-6] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:52236 (User ID: 0)
+2026-05-28 20:05:40 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:06:00 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:06:00 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:52240
+2026-05-28 20:06:00 [pool-3-thread-7] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:52240
+2026-05-28 20:06:00 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-dec49e57-a772-4ee4-ba92-c02b818e8d02) desde /192.168.1.24:52241
+2026-05-28 20:06:00 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-dec49e57-a772-4ee4-ba92-c02b818e8d02
+2026-05-28 20:06:00 [pool-3-thread-7] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:52240
+2026-05-28 20:06:00 [pool-3-thread-7] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:52240 (User ID: 0)
+2026-05-28 20:06:00 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:16:53 [pool-3-thread-5] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:51472
+2026-05-28 20:16:53 [pool-3-thread-5] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51472 (User ID: 2)
+2026-05-28 20:16:53 [pool-3-thread-5] INFO  replication.ReplicationManager - Evento CLIENT_DISCONNECTED propagado a 1/1 peers
+2026-05-28 20:16:56 [PeerHandler-/192.168.1.24:51384] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-2
+2026-05-28 20:16:56 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:16:56 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:51384
+2026-05-28 20:17:15 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 054fbbf9-94fb-4579-894f-08b9eb1f773a) desde /192.168.1.24:51669
+2026-05-28 20:17:15 [FileTransfer-054fbbf9] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 054fbbf9-94fb-4579-894f-08b9eb1f773a
+2026-05-28 20:17:15 [FileTransfer-054fbbf9] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:17:15 [FileTransfer-054fbbf9] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:17:15 [FileTransfer-054fbbf9] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\592e7565-8fe7-4ec0-92e1-3058bde43727
+2026-05-28 20:17:15 [FileTransfer-054fbbf9] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:17:15 [FileTransfer-054fbbf9] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 6
+2026-05-28 20:17:15 [FileTransfer-054fbbf9] INFO  replication.ReplicationManager - Evento DOCUMENT_UPLOADED propagado a 1/1 peers
+2026-05-28 20:18:09 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:18:09 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51686
+2026-05-28 20:18:09 [pool-3-thread-8] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51686
+2026-05-28 20:18:09 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-839c660c-f081-421d-a2ad-c14cc6b648ff) desde /192.168.1.24:51687
+2026-05-28 20:18:09 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-839c660c-f081-421d-a2ad-c14cc6b648ff
+2026-05-28 20:18:09 [pool-3-thread-8] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51686 (User ID: 0)
+2026-05-28 20:18:09 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:18:42 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:18:42 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51703
+2026-05-28 20:18:42 [pool-3-thread-9] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51703
+2026-05-28 20:18:42 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-73a7e7e2-1d87-4a24-92f0-ff8551ba3d50) desde /192.168.1.24:51704
+2026-05-28 20:18:42 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-73a7e7e2-1d87-4a24-92f0-ff8551ba3d50
+2026-05-28 20:18:42 [pool-3-thread-9] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51703 (User ID: 0)
+2026-05-28 20:18:42 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:18:47 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:18:47 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51706
+2026-05-28 20:18:47 [pool-3-thread-10] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51706
+2026-05-28 20:18:47 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-75a65ae6-5877-4105-ae37-00c5fab6fb9d) desde /192.168.1.24:51707
+2026-05-28 20:18:47 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-75a65ae6-5877-4105-ae37-00c5fab6fb9d
+2026-05-28 20:18:47 [pool-3-thread-10] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51706 (User ID: 0)
+2026-05-28 20:18:48 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:18:56 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:18:56 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:51711
+2026-05-28 20:18:56 [pool-3-thread-11] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:51711
+2026-05-28 20:18:56 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-58302143-70ac-4d0e-85d9-186e439fdece) desde /192.168.1.24:51712
+2026-05-28 20:18:56 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-58302143-70ac-4d0e-85d9-186e439fdece
+2026-05-28 20:18:56 [pool-3-thread-11] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51711 (User ID: 0)
+2026-05-28 20:18:56 [PeerHandler-/192.168.1.24:51384] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:51384
+2026-05-28 20:29:40 [pool-4-thread-1] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 20:29:40 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:29:40 [pool-4-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 20:29:46 [pool-4-thread-1] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 20:29:46 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:29:46 [pool-4-thread-1] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:29:46 [pool-4-thread-1] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:29:46 [pool-4-thread-1] INFO  topology.RoutingTable - Eliminados 1 clientes de la tabla — nodo caído: node-2
+2026-05-28 20:29:46 [pool-4-thread-1] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 20:31:44 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo node-2 ha vuelto a estar ALIVE (estado previo: DOWN)
+2026-05-28 20:31:44 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:31:44 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:31:44 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:31:44 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 20:31:44 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 20:31:44 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:31:44 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 20:31:44 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:52246
+2026-05-28 20:31:44 [PeerHandler-/192.168.1.24:52246] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:52246
+2026-05-28 20:31:45 [PeerHandler-/192.168.1.24:52246] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 20:32:05 [PeerHandler-/192.168.1.24:52246] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 20:32:05 [PeerHandler-/192.168.1.24:52246] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:52246
+2026-05-28 20:33:01 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 91ea6563-e12c-4c7f-b20f-6846f27a677e) desde /192.168.1.24:52267
+2026-05-28 20:33:01 [FileTransfer-91ea6563] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 91ea6563-e12c-4c7f-b20f-6846f27a677e
+2026-05-28 20:33:01 [FileTransfer-91ea6563] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:33:01 [FileTransfer-91ea6563] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:33:01 [FileTransfer-91ea6563] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\b39e2647-70f0-4caa-bd10-deff014ce6d3.xml
+2026-05-28 20:33:01 [FileTransfer-91ea6563] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:33:01 [FileTransfer-91ea6563] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 7
+2026-05-28 20:33:01 [FileTransfer-91ea6563] INFO  replication.ReplicationManager - Evento DOCUMENT_UPLOADED propagado a 1/1 peers
+2026-05-28 20:33:36 [PeerHandler-/192.168.1.24:52246] WARN  communication.PeerMessageHandler - Acción peer desconocida: NEW_MESSAGE_ACK desde /192.168.1.24:52246
+2026-05-28 20:33:36 [PeerHandler-/192.168.1.24:52246] INFO  replication.ReplicationManager - Evento de replicación recibido: NEW_MESSAGE desde node-2
+2026-05-28 20:33:36 [PeerHandler-/192.168.1.24:52246] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:33:36 [PeerHandler-/192.168.1.24:52246] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:33:36 [PeerHandler-/192.168.1.24:52246] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\99a14de9-cb20-4b2a-a820-fe0593e50e43.txt
+2026-05-28 20:33:36 [PeerHandler-/192.168.1.24:52246] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:33:36 [PeerHandler-/192.168.1.24:52246] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 8
+2026-05-28 20:33:36 [PeerHandler-/192.168.1.24:52246] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:52246
+2026-05-28 20:33:49 [pool-3-thread-4] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:33:49 [pool-3-thread-4] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:33:49 [pool-3-thread-4] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\5ccda869-c14a-4d06-8d81-ce184efdc716.txt
+2026-05-28 20:33:49 [pool-3-thread-4] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:33:49 [pool-3-thread-4] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 9
+2026-05-28 20:33:49 [pool-3-thread-4] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
+2026-05-28 20:34:24 [pool-4-thread-2] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 20:34:24 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:34:24 [pool-4-thread-2] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 20:34:28 [pool-3-thread-4] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:51468
+2026-05-28 20:34:28 [pool-3-thread-4] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:51468 (User ID: 1)
+2026-05-28 20:34:28 [pool-3-thread-4] INFO  replication.ReplicationManager - Evento CLIENT_DISCONNECTED propagado a 0/0 peers
+2026-05-28 20:34:28 [pool-2-thread-1] WARN  communication.PeerConnectionPool - Fallo broadcast a peer node-2
+2026-05-28 20:34:28 [pool-4-thread-2] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 20:34:28 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:34:30 [pool-2-thread-1] WARN  communication.PeerConnectionPool - Fallo broadcast a peer node-2
+2026-05-28 20:34:30 [pool-4-thread-2] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:34:30 [pool-4-thread-2] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:34:30 [pool-4-thread-2] INFO  topology.RoutingTable - Eliminados 1 clientes de la tabla — nodo caído: node-2
+2026-05-28 20:34:30 [pool-4-thread-2] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 20:34:47 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 20:34:53 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 20:34:53 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 20:34:53 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-28 20:34:53 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-28 20:34:53 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-28 20:34:53 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
+2026-05-28 20:34:53 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 20:34:53 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 20:34:53 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 20:34:54 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 20:34:54 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 20:34:54 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 20:34:54 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 20:34:54 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 20:34:54 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 20:34:54 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-28 20:34:54 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 20:34:54 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 20:34:54 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 20:34:54 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
+2026-05-28 20:34:54 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
+2026-05-28 20:34:54 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 20:34:54 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-28 20:34:54 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-28 20:34:54 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-28 20:34:54 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-28 20:35:16 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:35:16 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:35:16 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:35:16 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:35:16 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 20:35:16 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:35:16 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 20:35:16 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 20:35:18 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:59063
+2026-05-28 20:35:18 [PeerHandler-/192.168.1.24:59063] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:59063
+2026-05-28 20:35:18 [PeerHandler-/192.168.1.24:59063] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 20:35:53 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:59069
+2026-05-28 20:35:53 [pool-3-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:59069
+2026-05-28 20:35:54 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 20:35:58 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:35:58 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:35:58 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\23d42987-5c2d-42b1-a22d-01e6eb2cc0a9.txt
+2026-05-28 20:35:58 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:35:58 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-05-28 20:35:58 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
+2026-05-28 20:36:04 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:36:04 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:36:04 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\a70f012e-936a-4fd5-8467-e713edd29902.txt
+2026-05-28 20:36:04 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:36:04 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 2
+2026-05-28 20:36:04 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
+2026-05-28 20:36:14 [PeerHandler-/192.168.1.24:59063] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 20:36:14 [PeerHandler-/192.168.1.24:59063] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:59063
+2026-05-28 20:37:39 [PeerHandler-/192.168.1.24:59063] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:59063
+2026-05-28 20:37:39 [PeerHandler-/192.168.1.24:59063] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-2
+2026-05-28 20:37:39 [PeerHandler-/192.168.1.24:59063] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:59063
+2026-05-28 20:37:46 [pool-4-thread-1] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 20:37:46 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:37:46 [pool-4-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 20:37:52 [pool-4-thread-1] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 20:37:52 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:37:52 [pool-4-thread-1] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:37:52 [pool-4-thread-1] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:37:52 [pool-4-thread-1] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 20:38:02 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo node-2 ha vuelto a estar ALIVE (estado previo: DOWN)
+2026-05-28 20:38:02 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:38:02 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:38:02 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:38:02 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 20:38:02 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 20:38:02 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:38:02 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:59112
+2026-05-28 20:38:02 [PeerHandler-/192.168.1.24:59112] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:59112
+2026-05-28 20:38:02 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 20:38:02 [PeerHandler-/192.168.1.24:59112] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 20:38:16 [PeerHandler-/192.168.1.24:59112] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 20:38:16 [PeerHandler-/192.168.1.24:59112] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:59112
+2026-05-28 20:38:57 [PeerHandler-/192.168.1.24:59112] WARN  communication.PeerMessageHandler - Acción peer desconocida: NEW_MESSAGE_ACK desde /192.168.1.24:59112
+2026-05-28 20:38:57 [PeerHandler-/192.168.1.24:59112] INFO  replication.ReplicationManager - Evento de replicación recibido: NEW_MESSAGE desde node-2
+2026-05-28 20:38:57 [PeerHandler-/192.168.1.24:59112] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:38:57 [PeerHandler-/192.168.1.24:59112] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:38:57 [PeerHandler-/192.168.1.24:59112] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\aae37c48-11fd-4fd9-8be0-b698e5de38d8.txt
+2026-05-28 20:38:57 [PeerHandler-/192.168.1.24:59112] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:38:57 [PeerHandler-/192.168.1.24:59112] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 3
+2026-05-28 20:38:57 [PeerHandler-/192.168.1.24:59112] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:59112
+2026-05-28 20:39:04 [PeerHandler-/192.168.1.24:59112] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:59112
+2026-05-28 20:39:04 [PeerHandler-/192.168.1.24:59112] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-2
+2026-05-28 20:39:04 [PeerHandler-/192.168.1.24:59112] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:59112
+2026-05-28 20:39:14 [pool-4-thread-2] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 20:39:14 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:39:14 [pool-4-thread-2] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 20:39:18 [pool-4-thread-2] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 20:39:18 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:39:18 [pool-4-thread-2] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:39:18 [pool-4-thread-2] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:39:18 [pool-4-thread-2] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 20:39:18 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo node-2 ha vuelto a estar ALIVE (estado previo: DOWN)
+2026-05-28 20:39:18 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:39:18 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:39:18 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:39:18 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 20:39:18 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 20:39:18 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:39:18 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 20:39:20 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:59152
+2026-05-28 20:39:20 [PeerHandler-/192.168.1.24:59152] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:59152
+2026-05-28 20:39:20 [PeerHandler-/192.168.1.24:59152] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 20:39:32 [PeerHandler-/192.168.1.24:59152] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 20:39:32 [PeerHandler-/192.168.1.24:59152] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:59152
+2026-05-28 20:40:00 [pool-3-thread-1] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:59069
+2026-05-28 20:40:00 [pool-3-thread-1] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:59069 (User ID: 1)
+2026-05-28 20:40:00 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_DISCONNECTED propagado a 1/1 peers
+2026-05-28 20:40:07 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 20:40:32 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 20:40:32 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 20:40:32 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-28 20:40:32 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-28 20:40:32 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-28 20:40:32 [main] INFO  ServerApplication - ║  cluster.seedNodes = 192.168.1.24:9092
+2026-05-28 20:40:32 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 20:40:32 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 20:40:32 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 20:40:32 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 20:40:32 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 20:40:33 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 20:40:33 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 20:40:33 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 20:40:33 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 20:40:33 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-28 20:40:33 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 20:40:33 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 20:40:33 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 20:40:33 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
+2026-05-28 20:40:33 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
+2026-05-28 20:40:33 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 20:40:33 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-28 20:40:33 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-28 20:40:33 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-28 20:40:33 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-28 20:40:33 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:59188
+2026-05-28 20:40:33 [PeerHandler-/192.168.1.24:59188] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:59188
+2026-05-28 20:40:33 [PeerHandler-/192.168.1.24:59188] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 20:40:34 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:40:34 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:40:34 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:40:34 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:40:34 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 20:40:34 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:40:34 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 20:40:35 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 20:41:33 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:59199
+2026-05-28 20:41:33 [pool-3-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:59199
+2026-05-28 20:41:33 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 20:42:11 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 447a7e49-5599-4d14-8f06-1375a226e59f) desde /192.168.1.24:59203
+2026-05-28 20:42:11 [FileTransfer-447a7e49] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 447a7e49-5599-4d14-8f06-1375a226e59f
+2026-05-28 20:42:11 [FileTransfer-447a7e49] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:42:11 [FileTransfer-447a7e49] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:42:11 [FileTransfer-447a7e49] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\4f7bb47e-8078-4f9f-972b-76601560e326.md
+2026-05-28 20:42:11 [FileTransfer-447a7e49] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:42:11 [FileTransfer-447a7e49] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-05-28 20:42:11 [FileTransfer-447a7e49] INFO  replication.ReplicationManager - Evento DOCUMENT_UPLOADED propagado a 1/1 peers
+2026-05-28 20:42:23 [pool-4-thread-2] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 20:42:23 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:23 [pool-4-thread-2] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 20:42:27 [pool-4-thread-2] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 20:42:27 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:27 [pool-4-thread-2] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:27 [pool-4-thread-2] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:27 [pool-4-thread-2] INFO  topology.RoutingTable - Eliminados 1 clientes de la tabla — nodo caído: node-2
+2026-05-28 20:42:27 [pool-4-thread-2] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 20:42:49 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo node-2 ha vuelto a estar ALIVE (estado previo: DOWN)
+2026-05-28 20:42:49 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:49 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:49 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:49 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 20:42:49 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 20:42:49 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:49 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 20:42:55 [pool-4-thread-2] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 20:42:55 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:42:55 [pool-4-thread-2] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 20:43:01 [pool-4-thread-2] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 20:43:01 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:43:01 [pool-4-thread-2] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:43:01 [pool-4-thread-2] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:43:01 [pool-4-thread-2] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 20:46:18 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo node-2 ha vuelto a estar ALIVE (estado previo: DOWN)
+2026-05-28 20:46:18 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:18 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:18 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:18 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 20:46:18 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 20:46:18 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:19 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 20:46:25 [pool-4-thread-1] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 20:46:25 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:25 [pool-4-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 20:46:29 [pool-4-thread-2] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 20:46:29 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:29 [pool-4-thread-2] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:29 [pool-4-thread-2] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:29 [pool-4-thread-2] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 20:46:36 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nodo node-2 ha vuelto a estar ALIVE (estado previo: DOWN)
+2026-05-28 20:46:36 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:36 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:36 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:36 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 20:46:36 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 20:46:36 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 20:46:36 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:61237
+2026-05-28 20:46:36 [PeerHandler-/192.168.1.24:61237] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:61237
+2026-05-28 20:46:36 [PeerHandler-/192.168.1.24:61237] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:61237
+2026-05-28 20:46:37 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 20:46:39 [PeerHandler-/192.168.1.24:61237] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 20:46:41 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:61240
+2026-05-28 20:46:41 [pool-3-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:61240
+2026-05-28 20:46:41 [pool-3-thread-2] ERROR MySqlRepository.MySqlAuditLogDao - Error al registrar log en auditoría: DOWNLOAD_INIT - Detalles: Ticket de descarga (ORG) generado para u2 (ID doc: 1)
+java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`messaging_system`.`logs`, CONSTRAINT `fk_log_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:612)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1467)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at MySqlRepository.MySqlAuditLogDao.registrarLog(MySqlAuditLogDao.java:56)
+	at LogService.LogManager.registrarAccion(LogManager.java:29)
+	at RequestRouter.handlers.DownloadInitHandler.handle(DownloadInitHandler.java:87)
+	at RequestRouter.MainRouter.routeRequest(MainRouter.java:194)
+	at handler.ClientHandler.enviarRespuestaJson(ClientHandler.java:89)
+	at handler.ClientHandler.run(ClientHandler.java:57)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-28 20:46:41 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-466f1c6a-5e58-4f92-8250-5e9d0e81973c) desde /192.168.1.24:61241
+2026-05-28 20:46:41 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-466f1c6a-5e58-4f92-8250-5e9d0e81973c
+2026-05-28 20:46:41 [FileTransfer-DWN-ORG-] ERROR MySqlRepository.MySqlAuditLogDao - Error al registrar log en auditoría: DOWNLOAD_COMPLETE - Detalles: Descarga finalizada en modo: ORIGINAL
+java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`messaging_system`.`logs`, CONSTRAINT `fk_log_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:612)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1467)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at MySqlRepository.MySqlAuditLogDao.registrarLog(MySqlAuditLogDao.java:56)
+	at LogService.LogManager.registrarAccion(LogManager.java:29)
+	at handler.FileTransferHandler.procesarDescarga(FileTransferHandler.java:121)
+	at handler.FileTransferHandler.run(FileTransferHandler.java:60)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-28 20:46:41 [pool-3-thread-2] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:61240 (User ID: 0)
+2026-05-28 20:46:41 [PeerHandler-/192.168.1.24:61237] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:61237
+2026-05-28 20:49:40 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 20:49:40 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 20:49:40 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\4c493f9f-c7fb-403e-b134-141c1dca9d24.txt
+2026-05-28 20:49:40 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 20:49:40 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 2
+2026-05-28 20:49:40 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
+2026-05-28 21:09:17 [pool-4-thread-2] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 21:09:17 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:09:17 [pool-4-thread-2] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
+2026-05-28 21:09:21 [pool-4-thread-2] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
+2026-05-28 21:09:21 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:09:21 [pool-4-thread-2] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:09:21 [pool-4-thread-2] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:09:21 [pool-4-thread-2] INFO  topology.RoutingTable - Eliminados 1 clientes de la tabla — nodo caído: node-2
+2026-05-28 21:09:21 [pool-4-thread-2] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
+2026-05-28 21:09:30 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 21:09:38 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 21:09:38 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 21:09:38 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-28 21:09:38 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-28 21:09:38 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-28 21:09:38 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
+2026-05-28 21:09:38 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 21:09:38 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 21:09:38 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 21:09:38 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 21:09:38 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 21:09:39 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 21:09:39 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 21:09:39 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 21:09:39 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 21:09:39 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-28 21:09:39 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 21:09:39 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 21:09:39 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 21:09:39 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
+2026-05-28 21:09:39 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
+2026-05-28 21:09:39 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 21:09:39 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-28 21:09:39 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-28 21:09:39 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-28 21:09:39 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-28 21:10:14 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:10:14 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:10:14 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:10:14 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:10:14 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 21:10:14 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:10:14 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 21:10:14 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 21:10:15 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:63322
+2026-05-28 21:10:15 [PeerHandler-/192.168.1.24:63322] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:63322
+2026-05-28 21:10:15 [PeerHandler-/192.168.1.24:63322] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 21:10:51 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:52586
+2026-05-28 21:10:51 [pool-3-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:52586
+2026-05-28 21:10:51 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 21:11:04 [PeerHandler-/192.168.1.24:63322] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 21:11:05 [PeerHandler-/192.168.1.24:63322] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:63322
+2026-05-28 21:11:22 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 6863b9b2-d5a6-41ea-ad15-bdbf3ede25b6) desde /192.168.1.24:52591
+2026-05-28 21:11:22 [FileTransfer-6863b9b2] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 6863b9b2-d5a6-41ea-ad15-bdbf3ede25b6
+2026-05-28 21:11:22 [FileTransfer-6863b9b2] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 21:11:22 [FileTransfer-6863b9b2] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 21:11:22 [FileTransfer-6863b9b2] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\804008c3-10f9-42c3-a9ee-a03a3e54dd54.md
+2026-05-28 21:11:22 [FileTransfer-6863b9b2] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 21:11:22 [FileTransfer-6863b9b2] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-05-28 21:11:22 [FileTransfer-6863b9b2] INFO  replication.ReplicationManager - Evento DOCUMENT_UPLOADED propagado a 1/1 peers
+2026-05-28 21:11:22 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:52592
+2026-05-28 21:11:22 [pool-3-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:52592
+2026-05-28 21:11:22 [pool-3-thread-2] ERROR MySqlRepository.MySqlAuditLogDao - Error al registrar log en auditoría: DOWNLOAD_INIT - Detalles: Ticket de descarga (ORG) generado para replicador (ID doc: 1)
+java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`messaging_system`.`logs`, CONSTRAINT `fk_log_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:612)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1467)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at MySqlRepository.MySqlAuditLogDao.registrarLog(MySqlAuditLogDao.java:56)
+	at LogService.LogManager.registrarAccion(LogManager.java:29)
+	at RequestRouter.handlers.DownloadInitHandler.handle(DownloadInitHandler.java:87)
+	at RequestRouter.MainRouter.routeRequest(MainRouter.java:194)
+	at handler.ClientHandler.enviarRespuestaJson(ClientHandler.java:89)
+	at handler.ClientHandler.run(ClientHandler.java:57)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-28 21:11:22 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-ce030a05-95d4-4f83-ab84-26a3ee151eb4) desde /192.168.1.24:52593
+2026-05-28 21:11:22 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-ce030a05-95d4-4f83-ab84-26a3ee151eb4
+2026-05-28 21:11:22 [FileTransfer-DWN-ORG-] ERROR MySqlRepository.MySqlAuditLogDao - Error al registrar log en auditoría: DOWNLOAD_COMPLETE - Detalles: Descarga finalizada en modo: ORIGINAL
+java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`messaging_system`.`logs`, CONSTRAINT `fk_log_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.serverExecute(ServerPreparedStatement.java:612)
+	at com.mysql.cj.jdbc.ServerPreparedStatement.executeInternal(ServerPreparedStatement.java:320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1467)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at MySqlRepository.MySqlAuditLogDao.registrarLog(MySqlAuditLogDao.java:56)
+	at LogService.LogManager.registrarAccion(LogManager.java:29)
+	at handler.FileTransferHandler.procesarDescarga(FileTransferHandler.java:121)
+	at handler.FileTransferHandler.run(FileTransferHandler.java:60)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-05-28 21:11:23 [pool-3-thread-2] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:52592 (User ID: 0)
+2026-05-28 21:18:45 [pool-3-thread-1] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:52586
+2026-05-28 21:18:45 [pool-3-thread-1] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:52586 (User ID: 1)
+2026-05-28 21:18:45 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_DISCONNECTED propagado a 1/1 peers
+2026-05-28 21:18:47 [PeerHandler-/192.168.1.24:63322] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63322
+2026-05-28 21:18:47 [PeerHandler-/192.168.1.24:63322] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-2
+2026-05-28 21:18:47 [PeerHandler-/192.168.1.24:63322] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:63322
+2026-05-28 21:18:54 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 21:22:59 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-28 21:23:33 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-28 21:23:33 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-28 21:23:33 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-28 21:23:33 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-28 21:23:33 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-28 21:23:33 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
+2026-05-28 21:23:33 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-28 21:23:34 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-28 21:23:34 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-28 21:23:34 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-28 21:23:34 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-28 21:23:34 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-28 21:23:34 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-28 21:23:34 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-28 21:23:34 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-28 21:23:34 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-28 21:23:34 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 21:23:34 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-28 21:23:34 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-28 21:23:34 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
+2026-05-28 21:23:34 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
+2026-05-28 21:23:34 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-28 21:23:34 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-28 21:23:34 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-28 21:23:34 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-28 21:23:34 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-28 21:24:02 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:24:02 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:24:02 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:24:02 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:24:02 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
+2026-05-28 21:24:02 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:24:02 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
+2026-05-28 21:24:02 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
+2026-05-28 21:24:02 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:63967
+2026-05-28 21:24:02 [PeerHandler-/192.168.1.24:63967] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:63967
+2026-05-28 21:24:02 [PeerHandler-/192.168.1.24:63967] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
+2026-05-28 21:24:15 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:63974
+2026-05-28 21:24:15 [pool-3-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:63974
+2026-05-28 21:24:15 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
+2026-05-28 21:24:30 [PeerHandler-/192.168.1.24:63967] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 21:24:30 [PeerHandler-/192.168.1.24:63967] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:63967
+2026-05-28 21:24:53 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 21:24:53 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 21:24:53 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\764632e1-9d44-4b20-9fbd-f0d85b0ad9a6.txt
+2026-05-28 21:24:53 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 21:24:53 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
+2026-05-28 21:24:53 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
+2026-05-28 21:25:34 [PeerHandler-/192.168.1.24:63967] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
+2026-05-28 21:25:34 [PeerHandler-/192.168.1.24:63967] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:63967
+2026-05-28 21:26:03 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 69054b89-eeb1-4a83-8355-4a74d668417b) desde /192.168.1.24:64004
+2026-05-28 21:26:03 [FileTransfer-69054b89] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 69054b89-eeb1-4a83-8355-4a74d668417b
+2026-05-28 21:26:03 [FileTransfer-69054b89] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
+2026-05-28 21:26:03 [FileTransfer-69054b89] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
+2026-05-28 21:26:03 [FileTransfer-69054b89] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\d7e71501-0b04-4943-b8d5-a06693e32197.md
+2026-05-28 21:26:03 [FileTransfer-69054b89] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
+2026-05-28 21:26:03 [FileTransfer-69054b89] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 2
+2026-05-28 21:26:03 [FileTransfer-69054b89] INFO  replication.ReplicationManager - Evento DOCUMENT_UPLOADED propagado a 1/1 peers
+2026-05-28 21:26:03 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:64005
+2026-05-28 21:26:03 [pool-3-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:64005
+2026-05-28 21:26:04 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-25bd8246-bd72-4d27-b130-4046356d7e56) desde /192.168.1.24:64006
+2026-05-28 21:26:04 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-25bd8246-bd72-4d27-b130-4046356d7e56
+2026-05-28 21:26:04 [pool-3-thread-2] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:64005 (User ID: 0)
+2026-05-28 21:27:51 [PeerHandler-/192.168.1.24:63967] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63967
+2026-05-28 21:27:51 [PeerHandler-/192.168.1.24:63967] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63967
+2026-05-28 21:28:08 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-4d02f5c9-d7cd-4ef3-9432-f973588bc1f2) desde /192.168.1.24:64036
+2026-05-28 21:28:08 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-4d02f5c9-d7cd-4ef3-9432-f973588bc1f2
+2026-05-28 21:28:16 [PeerHandler-/192.168.1.24:63967] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63967
+2026-05-28 21:28:16 [PeerHandler-/192.168.1.24:63967] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63967
+2026-05-28 21:28:23 [pool-3-thread-1] ERROR handler.ClientHandler - Conexión de CONTROL perdida con /192.168.1.24:63974
+2026-05-28 21:28:23 [pool-3-thread-1] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:63974 (User ID: 1)
+2026-05-28 21:28:24 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_DISCONNECTED propagado a 1/1 peers
+2026-05-28 21:28:24 [PeerHandler-/192.168.1.24:63967] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_DISCONNECTED desde node-2
+2026-05-28 21:28:24 [PeerHandler-/192.168.1.24:63967] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63967
+2026-05-28 21:28:24 [PeerHandler-/192.168.1.24:63967] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:63967
+2026-05-28 21:28:36 [pool-4-thread-1] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
+2026-05-28 21:28:36 [pool-4-thread-1] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
+2026-05-28 21:28:36 [pool-4-thread-1] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
