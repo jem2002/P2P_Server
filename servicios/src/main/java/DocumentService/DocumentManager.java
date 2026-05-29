@@ -146,8 +146,10 @@ public class DocumentManager {
                 // Verificar que el archivo exista en ESTE servidor antes de intentar leerlo.
                 // En un cluster con MySQL compartido, la BD puede tener referencias a archivos
                 // que solo existen en el sistema de archivos de otro nodo.
+                // Los documentos replicados almacenan una ruta proxy del tipo "PEER:host:port:id"
+                // en lugar de una ruta real del sistema de archivos.
                 String pathStr = item.getRutaOriginal();
-                if (pathStr == null) {
+                if (pathStr == null || pathStr.startsWith("PEER:")) {
                     logger.debug("Mensaje omitido (archivo en otro nodo): {}", pathStr);
                     continue;
                 }
@@ -170,15 +172,33 @@ public class DocumentManager {
     /**
      * Extrae el contenido de texto de un archivo de mensaje.
      * Si el archivo no existe (pertenece a otro nodo), retorna un placeholder.
+     *
+     * Notas:
+     *   - Se usa StandardCharsets.UTF_8 explícitamente para evitar dependencia del
+     *     charset por defecto de la JVM.
+     *   - Se captura InvalidPathException para cubrir el caso de rutas proxy PEER:
+     *     que pudieran escapar al filtro de obtenerMensajesDisponibles.
+     *   - Se captura MalformedInputException por si un archivo antiguo fue guardado
+     *     con codificación incorrecta (bug ya corregido en SendMessageHandler).
      */
     private String leerContenidoMensaje(String pathStr) {
         try {
-            return java.nio.file.Files.readString(java.nio.file.Paths.get(pathStr));
+            return java.nio.file.Files.readString(
+                    java.nio.file.Paths.get(pathStr),
+                    java.nio.charset.StandardCharsets.UTF_8);
         } catch (java.nio.file.NoSuchFileException e) {
             // Archivo en otro nodo — no es un error
             return "[Mensaje en otro servidor]";
+        } catch (java.nio.file.InvalidPathException e) {
+            // Ruta proxy PEER: u otra ruta inválida del sistema de archivos
+            logger.debug("Ruta no válida para archivo local, omitiendo: {}", pathStr);
+            return "[Mensaje en otro servidor]";
+        } catch (java.nio.charset.MalformedInputException e) {
+            // El archivo tiene bytes UTF-8 inválidos (archivos guardados con bug anterior)
+            logger.warn("Archivo de mensaje con codificación inválida: {}", pathStr);
+            return "[Error de codificación en el mensaje]";
         } catch (Exception e) {
-            logger.warn("No se pudo leer el archivo de mensaje: {}", pathStr);
+            logger.warn("No se pudo leer el archivo de mensaje: {} ({})", pathStr, e.getClass().getSimpleName());
             return "[Error al leer el contenido del mensaje]";
         }
     }

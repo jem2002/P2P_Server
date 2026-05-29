@@ -93,12 +93,17 @@ public class SendMessageHandler implements ActionHandler {
         // ── Persistencia (broadcasts Y privados, con docType diferenciado) ─────────
         // Broadcasts  → docType = "MESSAGE"           (visible a todos)
         // Privados    → docType = "PRIVATE_TO:{user}" (filtrado por MySqlDao por quién solicita)
+        //
+        // IMPORTANTE: se usa contentBytes.length (bytes UTF-8) y NO content.length() (chars Java).
+        // Para mensajes con caracteres multibyte (é, ñ, á…), content.length() < bytes reales,
+        // lo que truncaría el archivo a mitad de una secuencia UTF-8 y corrompería su contenido.
         {
             String docType = isBroadcast ? "MESSAGE" : "PRIVATE_TO:" + targetUsername;
-            InputStream textStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+            byte[] contentBytes = content.getBytes(StandardCharsets.UTF_8);
+            InputStream textStream = new ByteArrayInputStream(contentBytes);
             String nombreArchivo   = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
             documentManager.procesarRecepcionDocumento(
-                    textStream, nombreArchivo, content.length(), ".txt", "text/plain",
+                    textStream, nombreArchivo, contentBytes.length, ".txt", "text/plain",
                     userId, clientIp, docType);
         }
 

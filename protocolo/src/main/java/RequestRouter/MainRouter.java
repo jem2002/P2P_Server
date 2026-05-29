@@ -73,7 +73,7 @@ public class MainRouter implements IRequestDispatcher {
     }
 
     public MainRouter(UserManager userManager, DocumentManager documentManager, LogManager logManager,
-                      BroadcastManager broadcastManager, TransferManager transferManager) {
+                      BroadcastManager broadcastManager, TransferManager transferManager, int apiPort) {
         this.parser = new JsonInputParser();
         this.serializer = new ResponseBuilder();
         this.userManager = userManager;
@@ -97,6 +97,7 @@ public class MainRouter implements IRequestDispatcher {
         handlers.put(JsonSchema.ACTION_LIST_DOCUMENTS, listDocumentsHandler);
         handlers.put(JsonSchema.ACTION_LIST_MESSAGES, listMessagesHandler);
         handlers.put(JsonSchema.ACTION_LIST_LOGS, listLogsHandler);
+        handlers.put(JsonSchema.ACTION_ANALYZE_MESSAGE, new AnalyzeMessageHandler(serializer, apiPort));
         handlers.put(JsonSchema.ACTION_UPLOAD_INIT,
                 new UploadInitHandler(userManager, transferManager, logManager,
                         broadcastManager, serializer, listLogsHandler));

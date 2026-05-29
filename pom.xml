@@ -18,6 +18,7 @@
         <module>red</module>
         <module>protocolo</module>
         <module>main</module>
+        <module>API_IA</module>
     </modules>
 
     <properties>

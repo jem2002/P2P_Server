@@ -112,9 +112,10 @@ public class ServerApplication {
             BroadcastManager broadcastManager = new BroadcastManager();
             TransferManager transferManager = new TransferManager();
 
+            int apiPort = config.getPort() + 7000;
             // 4. Módulo Protocolo
             MainRouter router = new MainRouter(userManager, documentManager, logManager,
-                    broadcastManager, transferManager);
+                    broadcastManager, transferManager, apiPort);
 
             orchestrators.DisconnectionOrchestrator disconnectionService = new orchestrators.DisconnectionOrchestrator(
                     userManager, logManager, broadcastManager);
@@ -304,6 +305,10 @@ public class ServerApplication {
 
             // 8. Interfaces Expuestas y Consola Administrativa
             ServerAdminAPI adminAPI = new ServerAdminAPI(userRepo, docRepo);
+            
+            // Iniciar API de Inteligencia Artificial (sumamos 7000 al puerto TCP para evitar colisiones)
+            com.universidad.messaging.api.SentimentApi.startApi(apiPort);
+
             InteractiveConsole console = new InteractiveConsole(
                     adminAPI, networkServer, healthService, routingTable, membership);
 
