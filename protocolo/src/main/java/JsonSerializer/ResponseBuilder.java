@@ -28,19 +28,7 @@ public class ResponseBuilder {
         return root.toString();
     }
 
-    public String buildAnalyzeResponse(String sentimiento, double confianzaPorcentaje) {
-        ObjectNode root = mapper.createObjectNode();
-        root.put(JsonSchema.KEY_ACTION, JsonSchema.ACTION_ANALYZE_MESSAGE + "_ACK");
 
-        ObjectNode payload = mapper.createObjectNode();
-        payload.put("status", "SUCCESS");
-        payload.put("sentimiento", sentimiento);
-        payload.put("confianza_porcentaje", confianzaPorcentaje);
-
-        root.set(JsonSchema.KEY_PAYLOAD, payload);
-
-        return root.toString();
-    }
 
     public String buildDownloadInitResponse(String token, long size, long id) {
         ObjectNode root = mapper.createObjectNode();

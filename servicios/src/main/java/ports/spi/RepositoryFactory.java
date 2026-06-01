@@ -10,7 +10,7 @@ public interface RepositoryFactory {
     IDocumentRepository getDocumentRepository();
     ISessionRepository getSessionRepository();
     IAuditLogRepository getAuditLogRepository();
-    
+    ICommentRepository getCommentRepository();
     /**
      * Mueve el mantenimiento (ej. limpieza de conexiones muertas) al SPI.
      */

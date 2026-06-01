@@ -1,3 +1,5 @@
+import APIService.SentimentService;
+import CommentService.CommentManager;
 import CryptoService.CryptoManager;
 import DocumentService.DocumentManager;
 import EncryptionUtils.EncryptionUtils;
@@ -18,16 +20,12 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import pool.ConnectionPoolManager;
+import ports.spi.*;
 import protocolSelector.ProtocolSelector;
 import registry.LocalClientRegistry;
 import replication.ReplicationEvent;
 import routing.RemoteDeliveryStrategy;
 import java.util.ServiceLoader;
-import ports.spi.RepositoryFactory;
-import ports.spi.IUserRepository;
-import ports.spi.IDocumentRepository;
-import ports.spi.IAuditLogRepository;
-import ports.spi.ISessionRepository;
 
 // Imports del módulo Cluster P2P
 import communication.PeerConnectionPool;
@@ -101,6 +99,7 @@ public class ServerApplication {
             IDocumentRepository docRepo = repoFactory.getDocumentRepository();
             IAuditLogRepository logRepo = repoFactory.getAuditLogRepository();
             ISessionRepository sessionRepo = repoFactory.getSessionRepository();
+            ICommentRepository commentRepo = repoFactory.getCommentRepository();
 
             // 3. Módulo Servicios
             UserManager userManager = new UserManager(userRepo, sessionRepo);
@@ -113,10 +112,14 @@ public class ServerApplication {
             BroadcastManager broadcastManager = new BroadcastManager();
             TransferManager transferManager = new TransferManager();
 
-            int apiPort = config.getPort() + 7000;
+
+            int apiPort = config.getSentimentApiPort();
+            SentimentService sentimentService = new SentimentService(apiPort);
+            CommentManager commentManager = new CommentManager(commentRepo, sentimentService);
+
             // 4. Módulo Protocolo
             MainRouter router = new MainRouter(userManager, documentManager, logManager,
-                    broadcastManager, transferManager, apiPort);
+                    broadcastManager, transferManager, commentManager);
 
             orchestrators.DisconnectionOrchestrator disconnectionService = new orchestrators.DisconnectionOrchestrator(
                     userManager, logManager, broadcastManager);

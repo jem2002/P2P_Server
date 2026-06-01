@@ -1,5 +1,6 @@
 package RequestRouter;
 
+import CommentService.CommentManager;
 import JsonSchema.ClientAddress;
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
@@ -73,7 +74,7 @@ public class MainRouter implements IRequestDispatcher {
     }
 
     public MainRouter(UserManager userManager, DocumentManager documentManager, LogManager logManager,
-                      BroadcastManager broadcastManager, TransferManager transferManager, int apiPort) {
+                      BroadcastManager broadcastManager, TransferManager transferManager, CommentManager commentManager) {
         this.parser = new JsonInputParser();
         this.serializer = new ResponseBuilder();
         this.userManager = userManager;
@@ -97,7 +98,6 @@ public class MainRouter implements IRequestDispatcher {
         handlers.put(JsonSchema.ACTION_LIST_DOCUMENTS, listDocumentsHandler);
         handlers.put(JsonSchema.ACTION_LIST_MESSAGES, listMessagesHandler);
         handlers.put(JsonSchema.ACTION_LIST_LOGS, listLogsHandler);
-        handlers.put(JsonSchema.ACTION_ANALYZE_MESSAGE, new AnalyzeMessageHandler(serializer, apiPort));
         handlers.put(JsonSchema.ACTION_UPLOAD_INIT,
                 new UploadInitHandler(userManager, transferManager, logManager,
                         broadcastManager, serializer, listLogsHandler));
@@ -107,6 +107,8 @@ public class MainRouter implements IRequestDispatcher {
         handlers.put(JsonSchema.ACTION_SEND_MESSAGE,
                 new SendMessageHandler(userManager, documentManager, logManager,
                         broadcastManager, serializer, listLogsHandler));
+
+        handlers.put(JsonSchema.ACTION_COMMENT_DOCUMENT, new CommentDocumentHandler(commentManager, serializer));
     }
 
     /**

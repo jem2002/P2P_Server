@@ -1,10 +1,6 @@
 package MySqlRepository;
 
-import ports.spi.IAuditLogRepository;
-import ports.spi.IDocumentRepository;
-import ports.spi.ISessionRepository;
-import ports.spi.IUserRepository;
-import ports.spi.RepositoryFactory;
+import ports.spi.*;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,6 +21,7 @@ public class MySqlRepositoryFactory implements RepositoryFactory {
     private final MySqlDocumentDao documentDao;
     private final MySqlSessionDao sessionDao;
     private final MySqlAuditLogDao auditLogDao;
+    private final MySqlCommentDao commentDao;
     private final ScheduledExecutorService scheduler;
 
     public MySqlRepositoryFactory() {
@@ -38,6 +35,8 @@ public class MySqlRepositoryFactory implements RepositoryFactory {
         this.documentDao = new MySqlDocumentDao(dbManager);
         this.sessionDao = new MySqlSessionDao(dbManager);
         this.auditLogDao = new MySqlAuditLogDao(dbManager);
+        this.commentDao = new MySqlCommentDao(dbManager);
+
 
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -73,6 +72,9 @@ public class MySqlRepositoryFactory implements RepositoryFactory {
     public IAuditLogRepository getAuditLogRepository() {
         return auditLogDao;
     }
+
+    @Override
+    public ICommentRepository getCommentRepository(){return commentDao;}
 
     @Override
     public void cleanup() {

@@ -44,6 +44,8 @@ public class ServerConfig {
         return seeds.split(",");
     }
 
+    public int getSentimentApiPort() { return Integer.parseInt(properties.getProperty("sentiment.api.port","9000"));}
+
     /** URL del API Gateway de este nodo. Vacío si no está configurado. */
     public String getGatewayUrl() {
         return properties.getProperty("gateway.url", "");
