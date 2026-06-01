@@ -1,38 +1,48 @@
-2026-05-29 01:07:23 [main] INFO  ServerApplication - Arrancando Messaging Server...
-2026-05-29 01:07:28 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
-2026-05-29 01:07:28 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
-2026-05-29 01:07:28 [main] INFO  ServerApplication - ║  server.port       = 8081
-2026-05-29 01:07:28 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
-2026-05-29 01:07:28 [main] INFO  ServerApplication - ║  cluster.port      = 9090
-2026-05-29 01:07:28 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
-2026-05-29 01:07:28 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
-2026-05-29 01:07:28 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
-2026-05-29 01:07:28 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
-2026-05-29 01:07:29 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
-2026-05-29 01:07:29 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
-2026-05-29 01:07:29 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
-2026-05-29 01:07:29 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
-2026-05-29 01:07:29 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
-2026-05-29 01:07:29 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
-2026-05-29 01:07:29 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
-2026-05-29 01:07:29 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
-2026-05-29 01:07:29 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
-2026-05-29 01:07:29 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
-2026-05-29 01:07:29 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
-2026-05-29 01:07:29 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
-2026-05-29 01:07:29 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
-2026-05-29 01:07:29 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
-2026-05-29 01:07:29 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
-2026-05-29 01:07:29 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
-2026-05-29 01:07:29 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
-2026-05-29 01:07:29 [main] INFO  c.u.messaging.api.SentimentApi - Iniciando SentimentApi (IA) en el puerto 15081...
-2026-05-29 01:07:30 [main] INFO  io.javalin.Javalin - Starting Javalin ...
-2026-05-29 01:07:30 [main] INFO  org.eclipse.jetty.server.Server - jetty-11.0.20; built: 2024-01-29T21:04:22.394Z; git: 922f8dc188f7011e60d0361de585fd4ac4d63064; jvm 21.0.11+9-LTS-211
-2026-05-29 01:07:30 [main] INFO  o.e.j.s.s.DefaultSessionIdManager - Session workerName=node0
-2026-05-29 01:07:30 [main] INFO  o.e.j.server.handler.ContextHandler - Started o.e.j.s.ServletContextHandler@56193c7d{/,null,AVAILABLE}
-2026-05-29 01:07:30 [main] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@3d526ad9{HTTP/1.1, (http/1.1)}{0.0.0.0:15081}
-2026-05-29 01:07:30 [main] INFO  org.eclipse.jetty.server.Server - Started Server@7cc9ce8{STARTING}[11.0.20,sto=0] @7905ms
-2026-05-29 01:07:30 [main] INFO  io.javalin.Javalin - 
+2026-05-31 22:19:50 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-31 22:20:39 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-31 22:20:39 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-31 22:20:39 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-31 22:20:39 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-31 22:20:39 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-31 22:20:39 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
+2026-05-31 22:20:39 [main] INFO  ServerApplication - ║  gateway.url       = (ninguno)
+2026-05-31 22:20:39 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-31 22:21:31 [main] INFO  ServerApplication - Arrancando Messaging Server...
+2026-05-31 22:21:35 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
+2026-05-31 22:21:35 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
+2026-05-31 22:21:35 [main] INFO  ServerApplication - ║  server.port       = 8081
+2026-05-31 22:21:35 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
+2026-05-31 22:21:35 [main] INFO  ServerApplication - ║  cluster.port      = 9090
+2026-05-31 22:21:35 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
+2026-05-31 22:21:35 [main] INFO  ServerApplication - ║  gateway.url       = (ninguno)
+2026-05-31 22:21:35 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
+2026-05-31 22:21:35 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
+2026-05-31 22:21:35 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
+2026-05-31 22:21:35 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
+2026-05-31 22:21:35 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
+2026-05-31 22:21:36 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
+2026-05-31 22:21:36 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
+2026-05-31 22:21:36 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
+2026-05-31 22:21:36 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
+2026-05-31 22:21:36 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
+2026-05-31 22:21:36 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-31 22:21:36 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
+2026-05-31 22:21:36 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
+2026-05-31 22:21:36 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
+2026-05-31 22:21:36 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
+2026-05-31 22:21:36 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
+2026-05-31 22:21:36 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
+2026-05-31 22:21:36 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
+2026-05-31 22:21:36 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
+2026-05-31 22:21:36 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
+2026-05-31 22:21:36 [main] INFO  c.u.messaging.api.SentimentApi - Iniciando SentimentApi (IA) en el puerto 15081...
+2026-05-31 22:21:37 [main] INFO  io.javalin.Javalin - Starting Javalin ...
+2026-05-31 22:21:37 [main] INFO  org.eclipse.jetty.server.Server - jetty-11.0.20; built: 2024-01-29T21:04:22.394Z; git: 922f8dc188f7011e60d0361de585fd4ac4d63064; jvm 21.0.11+9-LTS-211
+2026-05-31 22:21:37 [main] INFO  o.e.j.s.s.DefaultSessionIdManager - Session workerName=node0
+2026-05-31 22:21:37 [main] INFO  o.e.j.server.handler.ContextHandler - Started o.e.j.s.ServletContextHandler@5652f555{/,null,AVAILABLE}
+2026-05-31 22:21:37 [main] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@308a6984{HTTP/1.1, (http/1.1)}{0.0.0.0:15081}
+2026-05-31 22:21:37 [main] INFO  org.eclipse.jetty.server.Server - Started Server@5bbbdd4b{STARTING}[11.0.20,sto=0] @7285ms
+2026-05-31 22:21:37 [main] INFO  io.javalin.Javalin - 
        __                  ___           _____
       / /___ __   ______ _/ (_)___      / ___/
  __  / / __ `/ | / / __ `/ / / __ \    / __ \
@@ -41,392 +51,7 @@
 
        https://javalin.io/documentation
 
-2026-05-29 01:07:30 [main] INFO  io.javalin.Javalin - Javalin started in 224ms \o/
-2026-05-29 01:07:30 [main] INFO  io.javalin.Javalin - Listening on http://localhost:15081/
-2026-05-29 01:07:30 [main] INFO  io.javalin.Javalin - You are running Javalin 6.1.3 (released March 2, 2024. Your Javalin version is 817 days old. Consider checking for a newer version.).
-2026-05-29 01:07:30 [main] INFO  c.u.messaging.api.SentimentApi - SentimentApi inicializada correctamente en el puerto 15081
-2026-05-29 01:12:02 [main] INFO  ServerApplication - Arrancando Messaging Server...
-2026-05-29 01:12:08 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
-2026-05-29 01:12:08 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
-2026-05-29 01:12:08 [main] INFO  ServerApplication - ║  server.port       = 8081
-2026-05-29 01:12:08 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
-2026-05-29 01:12:08 [main] INFO  ServerApplication - ║  cluster.port      = 9090
-2026-05-29 01:12:08 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
-2026-05-29 01:12:08 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
-2026-05-29 01:12:08 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
-2026-05-29 01:12:08 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
-2026-05-29 01:12:08 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
-2026-05-29 01:12:08 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
-2026-05-29 01:12:09 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
-2026-05-29 01:12:09 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
-2026-05-29 01:12:09 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
-2026-05-29 01:12:09 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
-2026-05-29 01:12:09 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
-2026-05-29 01:12:09 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
-2026-05-29 01:12:09 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
-2026-05-29 01:12:09 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
-2026-05-29 01:12:09 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
-2026-05-29 01:12:09 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
-2026-05-29 01:12:09 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
-2026-05-29 01:12:09 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
-2026-05-29 01:12:09 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
-2026-05-29 01:12:09 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
-2026-05-29 01:12:09 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
-2026-05-29 01:12:09 [main] INFO  c.u.messaging.api.SentimentApi - Iniciando SentimentApi (IA) en el puerto 15081...
-2026-05-29 01:12:09 [main] INFO  io.javalin.Javalin - Starting Javalin ...
-2026-05-29 01:12:09 [main] INFO  org.eclipse.jetty.server.Server - jetty-11.0.20; built: 2024-01-29T21:04:22.394Z; git: 922f8dc188f7011e60d0361de585fd4ac4d63064; jvm 21.0.11+9-LTS-211
-2026-05-29 01:12:09 [main] INFO  o.e.j.s.s.DefaultSessionIdManager - Session workerName=node0
-2026-05-29 01:12:09 [main] INFO  o.e.j.server.handler.ContextHandler - Started o.e.j.s.ServletContextHandler@697446d4{/,null,AVAILABLE}
-2026-05-29 01:12:09 [main] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@50b0bc4c{HTTP/1.1, (http/1.1)}{0.0.0.0:15081}
-2026-05-29 01:12:09 [main] INFO  org.eclipse.jetty.server.Server - Started Server@24528a25{STARTING}[11.0.20,sto=0] @8284ms
-2026-05-29 01:12:09 [main] INFO  io.javalin.Javalin - 
-       __                  ___           _____
-      / /___ __   ______ _/ (_)___      / ___/
- __  / / __ `/ | / / __ `/ / / __ \    / __ \
-/ /_/ / /_/ /| |/ / /_/ / / / / / /   / /_/ /
-\____/\__,_/ |___/\__,_/_/_/_/ /_/    \____/
-
-       https://javalin.io/documentation
-
-2026-05-29 01:12:09 [main] INFO  io.javalin.Javalin - Javalin started in 319ms \o/
-2026-05-29 01:12:09 [main] INFO  io.javalin.Javalin - Listening on http://localhost:15081/
-2026-05-29 01:12:10 [main] INFO  io.javalin.Javalin - You are running Javalin 6.1.3 (released March 2, 2024. Your Javalin version is 817 days old. Consider checking for a newer version.).
-2026-05-29 01:12:10 [main] INFO  c.u.messaging.api.SentimentApi - SentimentApi inicializada correctamente en el puerto 15081
-2026-05-29 01:12:23 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:12:23 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:12:23 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:12:23 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:12:23 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
-2026-05-29 01:12:23 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:12:24 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
-2026-05-29 01:12:24 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
-2026-05-29 01:12:25 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:63991
-2026-05-29 01:12:25 [PeerHandler-/192.168.1.24:63991] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:63991
-2026-05-29 01:12:25 [PeerHandler-/192.168.1.24:63991] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
-2026-05-29 01:13:41 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:64018
-2026-05-29 01:13:41 [pool-3-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:64018
-2026-05-29 01:13:41 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
-2026-05-29 01:13:57 [PeerHandler-/192.168.1.24:63991] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
-2026-05-29 01:13:57 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:63991
-2026-05-29 01:14:13 [PeerHandler-/192.168.1.24:63991] INFO  replication.ReplicationManager - Evento de replicación recibido: NEW_MESSAGE desde node-2
-2026-05-29 01:14:13 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:14:13 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:14:13 [PeerHandler-/192.168.1.24:63991] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\4d9b6aae-b9a4-4605-a7f3-4b6a43560d40.txt
-2026-05-29 01:14:13 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:14:13 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
-2026-05-29 01:14:13 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: NEW_MESSAGE_ACK desde /192.168.1.24:63991
-2026-05-29 01:14:13 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63991
-2026-05-29 01:19:53 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: 1914f30f-1413-44f1-b940-19bab62c17f6) desde /192.168.1.24:50385
-2026-05-29 01:19:53 [FileTransfer-1914f30f] INFO  handler.FileTransferHandler - Recibiendo archivo pesado. Token: 1914f30f-1413-44f1-b940-19bab62c17f6
-2026-05-29 01:19:53 [FileTransfer-1914f30f] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:19:53 [FileTransfer-1914f30f] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:19:53 [FileTransfer-1914f30f] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\540e7488-014b-4669-9983-377f85f94fbd.md
-2026-05-29 01:19:53 [FileTransfer-1914f30f] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:19:53 [FileTransfer-1914f30f] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 2
-2026-05-29 01:19:53 [FileTransfer-1914f30f] INFO  replication.ReplicationManager - Evento DOCUMENT_UPLOADED propagado a 1/1 peers
-2026-05-29 01:19:53 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:50386
-2026-05-29 01:19:53 [pool-3-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:50386
-2026-05-29 01:19:53 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de ARCHIVO (Token: DWN-ORG-21673a2a-32d9-49c2-bb99-e2f47756dd46) desde /192.168.1.24:50387
-2026-05-29 01:19:53 [FileTransfer-DWN-ORG-] INFO  handler.FileTransferHandler - Enviando ARCHIVO ORIGINAL. Token: DWN-ORG-21673a2a-32d9-49c2-bb99-e2f47756dd46
-2026-05-29 01:19:53 [pool-3-thread-2] INFO  UserService.UserManager - Estado actualizado: Sesión cerrada en BD para 192.168.1.24:50386 (User ID: 0)
-2026-05-29 01:23:15 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:23:15 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:23:15 [PeerHandler-/192.168.1.24:63991] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\54cb05c9-0a37-4c51-8840-4391c8dfa3c2.txt
-2026-05-29 01:23:15 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:23:15 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 3
-2026-05-29 01:23:48 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:23:48 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:23:48 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\5b9de55b-d457-4dea-9e1e-42ae40b3dec7.txt
-2026-05-29 01:23:48 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:23:48 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 4
-2026-05-29 01:23:48 [pool-3-thread-1] INFO  routing.RemoteDeliveryStrategy - Mensaje reenviado a peer 'node-2' para usuario 'u2'
-2026-05-29 01:24:51 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63991
-2026-05-29 01:24:51 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63991
-2026-05-29 01:24:53 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63991
-2026-05-29 01:24:53 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63991
-2026-05-29 01:25:29 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:25:29 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:25:29 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\c039da6c-fbc7-43ec-a592-a5049f762ab5.txt
-2026-05-29 01:25:29 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:25:29 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 5
-2026-05-29 01:25:29 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
-2026-05-29 01:25:31 [JettyServerThreadPool-49] WARN  io.javalin.Javalin - Uncaught exception
-ai.onnxruntime.OrtException: Error code - ORT_INVALID_ARGUMENT - message: Non-zero status code returned while running Gather node. Name:'GRU_Attention_1/embedding_4_1/GatherV2' Status Message: indices element out of data bounds, idx=20881 must be within the inclusive range [-20000,19999]
-	at ai.onnxruntime.OrtSession.run(Native Method)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:395)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:242)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:210)
-	at com.universidad.messaging.api.SentimentApi.predecir(SentimentApi.java:96)
-	at com.universidad.messaging.api.SentimentApi.lambda$startApi$3(SentimentApi.java:41)
-	at io.javalin.router.Endpoint.handle(Endpoint.kt:52)
-	at io.javalin.router.ParsedEndpoint.handle(ParsedEndpoint.kt:15)
-	at io.javalin.http.servlet.DefaultTasks.HTTP$lambda$9$lambda$7$lambda$6(DefaultTasks.kt:52)
-	at io.javalin.http.servlet.JavalinServlet.handleTask(JavalinServlet.kt:99)
-	at io.javalin.http.servlet.JavalinServlet.handleSync(JavalinServlet.kt:64)
-	at io.javalin.http.servlet.JavalinServlet.handle(JavalinServlet.kt:50)
-	at io.javalin.http.servlet.JavalinServlet.service(JavalinServlet.kt:30)
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:587)
-	at io.javalin.jetty.JavalinJettyServlet.service(JavalinJettyServlet.kt:52)
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:587)
-	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
-	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:529)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
-	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1580)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
-	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
-	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
-	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1553)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
-	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
-	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
-	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
-	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
-	at org.eclipse.jetty.server.Server.handle(Server.java:563)
-	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
-	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
-	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
-	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
-	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
-	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
-	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-2026-05-29 01:25:31 [pool-3-thread-1] ERROR R.handlers.AnalyzeMessageHandler - Error al consumir SentimentApi. Status: 500, Body: Server Error
-2026-05-29 01:25:52 [PeerHandler-/192.168.1.24:63991] INFO  replication.ReplicationManager - Evento de replicación recibido: NEW_MESSAGE desde node-2
-2026-05-29 01:25:52 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:25:52 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:25:52 [PeerHandler-/192.168.1.24:63991] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\6f33fccb-32e5-4873-874f-a273c7c7f6e7.txt
-2026-05-29 01:25:52 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:25:52 [PeerHandler-/192.168.1.24:63991] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 6
-2026-05-29 01:25:52 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: NEW_MESSAGE_ACK desde /192.168.1.24:63991
-2026-05-29 01:25:52 [PeerHandler-/192.168.1.24:63991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:63991
-2026-05-29 01:25:58 [JettyServerThreadPool-51] WARN  io.javalin.Javalin - Uncaught exception
-ai.onnxruntime.OrtException: Error code - ORT_INVALID_ARGUMENT - message: Non-zero status code returned while running Gather node. Name:'GRU_Attention_1/embedding_4_1/GatherV2' Status Message: indices element out of data bounds, idx=20881 must be within the inclusive range [-20000,19999]
-	at ai.onnxruntime.OrtSession.run(Native Method)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:395)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:242)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:210)
-	at com.universidad.messaging.api.SentimentApi.predecir(SentimentApi.java:96)
-	at com.universidad.messaging.api.SentimentApi.lambda$startApi$3(SentimentApi.java:41)
-	at io.javalin.router.Endpoint.handle(Endpoint.kt:52)
-	at io.javalin.router.ParsedEndpoint.handle(ParsedEndpoint.kt:15)
-	at io.javalin.http.servlet.DefaultTasks.HTTP$lambda$9$lambda$7$lambda$6(DefaultTasks.kt:52)
-	at io.javalin.http.servlet.JavalinServlet.handleTask(JavalinServlet.kt:99)
-	at io.javalin.http.servlet.JavalinServlet.handleSync(JavalinServlet.kt:64)
-	at io.javalin.http.servlet.JavalinServlet.handle(JavalinServlet.kt:50)
-	at io.javalin.http.servlet.JavalinServlet.service(JavalinServlet.kt:30)
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:587)
-	at io.javalin.jetty.JavalinJettyServlet.service(JavalinJettyServlet.kt:52)
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:587)
-	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
-	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:529)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
-	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1580)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
-	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
-	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
-	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1553)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
-	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
-	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
-	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
-	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
-	at org.eclipse.jetty.server.Server.handle(Server.java:563)
-	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
-	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
-	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
-	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
-	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
-	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
-	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
-	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
-	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
-	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
-	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.produce(AdaptiveExecutionStrategy.java:193)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-2026-05-29 01:25:58 [pool-3-thread-1] ERROR R.handlers.AnalyzeMessageHandler - Error al consumir SentimentApi. Status: 500, Body: Server Error
-2026-05-29 01:25:59 [JettyServerThreadPool-50] WARN  io.javalin.Javalin - Uncaught exception
-ai.onnxruntime.OrtException: Error code - ORT_INVALID_ARGUMENT - message: Non-zero status code returned while running Gather node. Name:'GRU_Attention_1/embedding_4_1/GatherV2' Status Message: indices element out of data bounds, idx=37526 must be within the inclusive range [-20000,19999]
-	at ai.onnxruntime.OrtSession.run(Native Method)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:395)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:242)
-	at ai.onnxruntime.OrtSession.run(OrtSession.java:210)
-	at com.universidad.messaging.api.SentimentApi.predecir(SentimentApi.java:96)
-	at com.universidad.messaging.api.SentimentApi.lambda$startApi$3(SentimentApi.java:41)
-	at io.javalin.router.Endpoint.handle(Endpoint.kt:52)
-	at io.javalin.router.ParsedEndpoint.handle(ParsedEndpoint.kt:15)
-	at io.javalin.http.servlet.DefaultTasks.HTTP$lambda$9$lambda$7$lambda$6(DefaultTasks.kt:52)
-	at io.javalin.http.servlet.JavalinServlet.handleTask(JavalinServlet.kt:99)
-	at io.javalin.http.servlet.JavalinServlet.handleSync(JavalinServlet.kt:64)
-	at io.javalin.http.servlet.JavalinServlet.handle(JavalinServlet.kt:50)
-	at io.javalin.http.servlet.JavalinServlet.service(JavalinServlet.kt:30)
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:587)
-	at io.javalin.jetty.JavalinJettyServlet.service(JavalinJettyServlet.kt:52)
-	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:587)
-	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
-	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:529)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
-	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1580)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
-	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
-	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
-	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1553)
-	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
-	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
-	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
-	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
-	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
-	at org.eclipse.jetty.server.Server.handle(Server.java:563)
-	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
-	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
-	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
-	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
-	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
-	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
-	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
-	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
-	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
-	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
-	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
-	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
-	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-2026-05-29 01:25:59 [pool-3-thread-1] ERROR R.handlers.AnalyzeMessageHandler - Error al consumir SentimentApi. Status: 500, Body: Server Error
-2026-05-29 01:27:09 [pool-4-thread-2] WARN  discovery.MembershipList - Nodo node-2 marcado como SUSPECTED
-2026-05-29 01:27:09 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_SUSPECTED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:27:09 [pool-4-thread-2] WARN  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' SUSPECTED
-2026-05-29 01:27:15 [pool-4-thread-2] ERROR discovery.MembershipList - Nodo node-2 marcado como DOWN
-2026-05-29 01:27:15 [pool-4-thread-2] INFO  events.NetworkEventBus - Evento de cluster: NODE_LEFT — Nodo: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:27:15 [pool-4-thread-2] INFO  communication.PeerConnectionPool - Conexión cerrada con peer caído: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:27:15 [pool-4-thread-2] WARN  replication.ReplicationManager - Peer perdido en ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:27:15 [pool-4-thread-2] INFO  topology.RoutingTable - Eliminados 1 clientes de la tabla — nodo caído: node-2
-2026-05-29 01:27:15 [pool-4-thread-2] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' LEFT
-2026-05-29 01:27:33 [main] INFO  ServerApplication - Arrancando Messaging Server...
-2026-05-29 01:27:37 [main] INFO  ServerApplication - ╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════
-2026-05-29 01:27:37 [main] INFO  ServerApplication - ║  server.host       = 192.168.1.24
-2026-05-29 01:27:37 [main] INFO  ServerApplication - ║  server.port       = 8081
-2026-05-29 01:27:37 [main] INFO  ServerApplication - ║  cluster.nodeId    = node-1
-2026-05-29 01:27:37 [main] INFO  ServerApplication - ║  cluster.port      = 9090
-2026-05-29 01:27:37 [main] INFO  ServerApplication - ║  cluster.seedNodes = 
-2026-05-29 01:27:37 [main] INFO  ServerApplication - ╚═══════════════════════════════════════════════════════
-2026-05-29 01:27:37 [main] INFO  MySqlRepository.DatabaseInitializer - Aplicando esquema de tablas desde schema.sql...
-2026-05-29 01:27:37 [main] INFO  MySqlRepository.SqlScriptRunner - Leyendo script SQL: schema.sql
-2026-05-29 01:27:37 [main] INFO  MySqlRepository.SqlScriptRunner - Script schema.sql ejecutado correctamente.
-2026-05-29 01:27:37 [main] INFO  MySqlRepository.DatabaseInitializer - Base de datos lista: Tablas creadas/actualizadas con éxito.
-2026-05-29 01:27:38 [main] INFO  pool.ConnectionPoolManager - ConnectionPoolManager inicializado con 100 conexiones.
-2026-05-29 01:27:38 [main] INFO  executor.ThreadPoolManager - ThreadPoolManager inicializado con 100 hilos.
-2026-05-29 01:27:38 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo TCP...
-2026-05-29 01:27:38 [main] INFO  protocolSelector.ProtocolSelector - Iniciando servicio en modo UDP...
-2026-05-29 01:27:38 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - TCPSocketServer escuchando en el puerto TCP: 8081
-2026-05-29 01:27:38 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
-2026-05-29 01:27:38 [main] INFO  ServerApplication -   MODO CLUSTER P2P HABILITADO
-2026-05-29 01:27:38 [main] INFO  ServerApplication - ═══════════════════════════════════════════════════
-2026-05-29 01:27:38 [main] INFO  ServerApplication - Identidad del nodo: Node[node-1@192.168.1.24:9090]
-2026-05-29 01:27:38 [Thread-UDPServer] INFO  udpsocketserver.UDPSocketServer - udpsocketserver.UDPSocketServer escuchando en el puerto UDP: 8081
-2026-05-29 01:27:38 [main] INFO  MessageParser.BroadcastManager - FederatedBroadcastHook configurado — broadcasts se propagarán a peers.
-2026-05-29 01:27:38 [main] INFO  RequestRouter.MainRouter - MainRouter: integración P2P habilitada para nodo 'node-1'
-2026-05-29 01:27:38 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - GossipProtocol escuchando en UDP:9090 — NodeId: node-1
-2026-05-29 01:27:38 [main] INFO  ServerApplication - Cluster P2P inicializado. Gossip UDP:9090, Peers TCP:9090
-2026-05-29 01:27:38 [Thread-PeerServer] INFO  communication.PeerServer - PeerServer escuchando conexiones de peers en TCP:9090
-2026-05-29 01:27:38 [main] INFO  c.u.messaging.api.SentimentApi - Iniciando SentimentApi (IA) en el puerto 15081...
-2026-05-29 01:27:39 [main] INFO  io.javalin.Javalin - Starting Javalin ...
-2026-05-29 01:27:39 [main] INFO  org.eclipse.jetty.server.Server - jetty-11.0.20; built: 2024-01-29T21:04:22.394Z; git: 922f8dc188f7011e60d0361de585fd4ac4d63064; jvm 21.0.11+9-LTS-211
-2026-05-29 01:27:39 [main] INFO  o.e.j.s.s.DefaultSessionIdManager - Session workerName=node0
-2026-05-29 01:27:39 [main] INFO  o.e.j.server.handler.ContextHandler - Started o.e.j.s.ServletContextHandler@3e6fd0b9{/,null,AVAILABLE}
-2026-05-29 01:27:39 [main] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@6a1ebcff{HTTP/1.1, (http/1.1)}{0.0.0.0:15081}
-2026-05-29 01:27:39 [main] INFO  org.eclipse.jetty.server.Server - Started Server@159e366{STARTING}[11.0.20,sto=0] @6827ms
-2026-05-29 01:27:39 [main] INFO  io.javalin.Javalin - 
-       __                  ___           _____
-      / /___ __   ______ _/ (_)___      / ___/
- __  / / __ `/ | / / __ `/ / / __ \    / __ \
-/ /_/ / /_/ /| |/ / /_/ / / / / / /   / /_/ /
-\____/\__,_/ |___/\__,_/_/_/_/ /_/    \____/
-
-       https://javalin.io/documentation
-
-2026-05-29 01:27:39 [main] INFO  io.javalin.Javalin - Javalin started in 236ms \o/
-2026-05-29 01:27:39 [main] INFO  io.javalin.Javalin - Listening on http://localhost:15081/
-2026-05-29 01:27:39 [main] INFO  io.javalin.Javalin - You are running Javalin 6.1.3 (released March 2, 2024. Your Javalin version is 817 days old. Consider checking for a newer version.).
-2026-05-29 01:27:39 [main] INFO  c.u.messaging.api.SentimentApi - SentimentApi inicializada correctamente en el puerto 15081
-2026-05-29 01:29:28 [Thread-GossipProtocol] INFO  discovery.MembershipList - Nuevo nodo descubierto: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:29:28 [Thread-GossipProtocol] INFO  discovery.GossipProtocol - Nodo descubierto (directo): NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:29:28 [Thread-GossipProtocol] INFO  events.NetworkEventBus - Evento de cluster: NODE_JOINED — Nodo: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:29:28 [Thread-GossipProtocol] INFO  replication.ReplicationManager - Nuevo peer detectado por ReplicationManager: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:29:28 [PeerConnect-node-2] INFO  communication.PeerConnection - Conexión establecida con peer node-2 en 192.168.1.24:9092
-2026-05-29 01:29:28 [PeerConnect-node-2] INFO  communication.PeerConnectionPool - Conexión TCP establecida con nuevo peer: NodeInfo[node-2@192.168.1.24:9092]
-2026-05-29 01:29:28 [Thread-GossipProtocol] INFO  events.ClusterNotifier - Notificado a clientes: servidor 'node-2' JOINED
-2026-05-29 01:29:28 [BootstrapSync-node-2] INFO  ServerApplication - RoutingTable enviada a nuevo nodo 'node-2' (bootstrap sync)
-2026-05-29 01:29:30 [Thread-PeerServer] INFO  communication.PeerServer - Conexión peer entrante desde /192.168.1.24:52991
-2026-05-29 01:29:30 [PeerHandler-/192.168.1.24:52991] INFO  communication.PeerMessageHandler - Procesando conexión peer desde /192.168.1.24:52991
-2026-05-29 01:29:30 [PeerHandler-/192.168.1.24:52991] INFO  topology.RoutingTable - Tabla de enrutamiento sincronizada con nodo 'node-2'
-2026-05-29 01:29:48 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:52993
-2026-05-29 01:29:48 [pool-3-thread-1] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:52993
-2026-05-29 01:29:48 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
-2026-05-29 01:30:04 [PeerHandler-/192.168.1.24:52991] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
-2026-05-29 01:30:04 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:52991
-2026-05-29 01:30:16 [Thread-TCPServer] INFO  tcpsocketserver.TCPSocketServer - Detectada conexión de CONTROL desde /192.168.1.24:52997
-2026-05-29 01:30:16 [pool-3-thread-2] INFO  handler.ClientHandler - Atendiendo conexión de CONTROL desde /192.168.1.24:52997
-2026-05-29 01:30:16 [pool-3-thread-2] INFO  replication.ReplicationManager - Evento CLIENT_CONNECTED propagado a 1/1 peers
-2026-05-29 01:30:34 [pool-3-thread-2] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:30:34 [pool-3-thread-2] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:30:34 [pool-3-thread-2] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\aa6c0db6-71b0-48c5-99e8-9ba28eddbf40.txt
-2026-05-29 01:30:34 [pool-3-thread-2] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:30:34 [pool-3-thread-2] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 1
-2026-05-29 01:30:34 [pool-3-thread-2] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
-2026-05-29 01:31:01 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:31:01 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:31:01 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\7d61e48c-d8b9-4694-adfe-52928efbfb46.txt
-2026-05-29 01:31:01 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:31:01 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 2
-2026-05-29 01:31:01 [pool-3-thread-1] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
-2026-05-29 01:31:45 [pool-3-thread-2] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:31:45 [pool-3-thread-2] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:31:45 [pool-3-thread-2] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\dcb35038-dbd7-49c9-a2c2-5fd97efd49e9.txt
-2026-05-29 01:31:45 [pool-3-thread-2] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:31:45 [pool-3-thread-2] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 3
-2026-05-29 01:31:45 [pool-3-thread-2] INFO  replication.ReplicationManager - Evento NEW_MESSAGE propagado a 1/1 peers
-2026-05-29 01:36:47 [PeerHandler-/192.168.1.24:52991] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
-2026-05-29 01:36:47 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:52991
-2026-05-29 01:39:52 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:52991
-2026-05-29 01:39:52 [PeerHandler-/192.168.1.24:52991] INFO  replication.ReplicationManager - Evento de replicación recibido: DOCUMENT_UPLOADED desde node-2
-2026-05-29 01:39:52 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_DOCUMENTS_ACK desde /192.168.1.24:52991
-2026-05-29 01:39:52 [ReplicationDownloader] INFO  o.ReplicationEventApplier - Iniciando descarga física en background del documento remoto 4 desde 192.168.1.24:8082
-2026-05-29 01:39:52 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_MESSAGES_ACK desde /192.168.1.24:52991
-2026-05-29 01:39:52 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:52991
-2026-05-29 01:39:52 [ReplicationDownloader] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:39:52 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:52991
-2026-05-29 01:39:52 [ReplicationDownloader] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:39:52 [ReplicationDownloader] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\a5e2e18f-4948-4d9c-93a6-ccc1bf19d034.md
-2026-05-29 01:39:52 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:52991
-2026-05-29 01:39:52 [ReplicationDownloader] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:39:52 [ReplicationDownloader] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 4
-2026-05-29 01:39:52 [ReplicationDownloader] INFO  o.ReplicationEventApplier - Descarga física de replicación completada con éxito para README.md
-2026-05-29 01:39:52 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:52991
-2026-05-29 01:40:40 [PeerHandler-/192.168.1.24:52991] INFO  replication.ReplicationManager - Evento de replicación recibido: CLIENT_CONNECTED desde node-2
-2026-05-29 01:40:40 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_CLIENTS_ACK desde /192.168.1.24:52991
-2026-05-29 01:40:54 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:52991
-2026-05-29 01:40:54 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:52991
-2026-05-29 01:41:42 [PeerHandler-/192.168.1.24:52991] INFO  replication.ReplicationManager - Evento de replicación recibido: NEW_MESSAGE desde node-2
-2026-05-29 01:41:42 [PeerHandler-/192.168.1.24:52991] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:41:42 [PeerHandler-/192.168.1.24:52991] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:41:42 [PeerHandler-/192.168.1.24:52991] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\6e4af2cb-b75b-401b-9ca6-2b1c4a5e6751.txt
-2026-05-29 01:41:42 [PeerHandler-/192.168.1.24:52991] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:41:42 [PeerHandler-/192.168.1.24:52991] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 5
-2026-05-29 01:41:42 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: NEW_MESSAGE_ACK desde /192.168.1.24:52991
-2026-05-29 01:41:42 [PeerHandler-/192.168.1.24:52991] WARN  communication.PeerMessageHandler - Acción peer desconocida: LIST_LOGS_ACK desde /192.168.1.24:52991
-2026-05-29 01:42:21 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 1. Guardando original en disco...
-2026-05-29 01:42:21 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 2. Generando Hash y cifrando...
-2026-05-29 01:42:21 [pool-3-thread-1] INFO  CryptoService.CryptoManager - Iniciando Hash y Cifrado en un solo pase para: C:\Users\daniel MC\Documents\P2P_Server\.\storage\original\2b05ae5b-823e-4790-80e2-0e55e3bc3a38.txt
-2026-05-29 01:42:21 [pool-3-thread-1] INFO  DocumentService.DocumentManager - 3. Guardando metadatos en MySQL...
-2026-05-29 01:42:21 [pool-3-thread-1] INFO  DocumentService.DocumentManager - ¡Documento procesado al 100%! ID asignado: 6
-2026-05-29 01:42:21 [pool-3-thread-1] INFO  routing.RemoteDeliveryStrategy - Mensaje reenviado a peer 'node-2' para usuario 'u5'
+2026-05-31 22:21:37 [main] INFO  io.javalin.Javalin - Javalin started in 421ms \o/
+2026-05-31 22:21:37 [main] INFO  io.javalin.Javalin - Listening on http://localhost:15081/
+2026-05-31 22:21:37 [main] INFO  io.javalin.Javalin - You are running Javalin 6.1.3 (released March 2, 2024. Your Javalin version is 820 days old. Consider checking for a newer version.).
+2026-05-31 22:21:37 [main] INFO  c.u.messaging.api.SentimentApi - SentimentApi inicializada correctamente en el puerto 15081

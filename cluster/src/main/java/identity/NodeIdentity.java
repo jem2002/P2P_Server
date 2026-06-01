@@ -16,17 +16,20 @@ public final class NodeIdentity {
     private final String host;
     private final int clientPort;
     private final int clusterPort;
+    /** URL del API Gateway de este nodo (puede ser cadena vacía si no aplica). */
+    private final String gatewayUrl;
 
     /**
      * Crea una identidad de nodo con un ID auto-generado si se pasa "auto".
      */
-    public NodeIdentity(String nodeId, String host, int clientPort, int clusterPort) {
+    public NodeIdentity(String nodeId, String host, int clientPort, int clusterPort, String gatewayUrl) {
         this.nodeId = "auto".equalsIgnoreCase(nodeId)
                 ? UUID.randomUUID().toString().substring(0, 8)
                 : nodeId;
         this.host = Objects.requireNonNull(host, "host no puede ser null");
         this.clientPort = clientPort;
         this.clusterPort = clusterPort;
+        this.gatewayUrl = gatewayUrl == null ? "" : gatewayUrl;
     }
 
     public String getNodeId() {
@@ -43,6 +46,11 @@ public final class NodeIdentity {
 
     public int getClusterPort() {
         return clusterPort;
+    }
+
+    /** URL del API Gateway asociado a este nodo. Cadena vacía si no está configurado. */
+    public String getGatewayUrl() {
+        return gatewayUrl;
     }
 
     /**

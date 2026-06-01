@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 public class GossipProtocol implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(GossipProtocol.class);
-    private static final int HEARTBEAT_BUFFER_SIZE = 2048; // ampliado para la lista de miembros
+    private static final int HEARTBEAT_BUFFER_SIZE = 4096; // ampliado para la lista de miembros + URLs
 
     private final NodeIdentity self;
     private final MembershipList membershipList;
@@ -100,27 +100,29 @@ public class GossipProtocol implements Runnable {
     // ── Envío ──────────────────────────────────────────────────────────────
 
     /**
-     * Construye el heartbeat incluyendo la lista de miembros conocidos.
+     * Construye el heartbeat incluyendo la URL del gateway propio y la lista de miembros conocidos.
      *
      * Formato:
-     *   HEARTBEAT|selfId|selfHost|selfPort[|memberId:memberHost:memberPort]*
+     *   HEARTBEAT|selfId|selfHost|selfPort|selfGatewayUrl[|memberId:memberHost:memberPort:memberGateway]*
      *
-     * El sufijo de miembros permite que el receptor descubra nodos que no
-     * conoce aún (propagación de membresía transitiva).
+     * La posición 4 transporta la URL del API Gateway del remitente.
+     * Cada miembro usa 4 campos separados por ":" (split con límite 4 para preservar "http://").
      */
     private String buildHeartbeatMessage() {
         StringBuilder sb = new StringBuilder();
         sb.append("HEARTBEAT|")
           .append(self.getNodeId()).append("|")
           .append(self.getHost()).append("|")
-          .append(self.getClusterPort());
+          .append(self.getClusterPort()).append("|")
+          .append(self.getGatewayUrl()); // posición 4: URL del gateway propio
 
         // Añadir lista de miembros ALIVE conocidos (excluirse a sí mismo)
         for (NodeInfo node : membershipList.getAliveNodes()) {
             sb.append("|")
               .append(node.getNodeId()).append(":")
               .append(node.getHost()).append(":")
-              .append(node.getClusterPort());
+              .append(node.getClusterPort()).append(":")
+              .append(node.getGatewayUrl()); // gateway del miembro propagado
         }
         return sb.toString();
     }
@@ -170,8 +172,11 @@ public class GossipProtocol implements Runnable {
     /**
      * Procesa un heartbeat entrante.
      *
-     * Parsea el remitente directo (partes 1-3) y la lista de miembros
-     * incluida en el mensaje (partes 4+). Cualquier miembro desconocido
+     * Formato esperado:
+     *   HEARTBEAT|nodeId|host|clusterPort|gatewayUrl[|memberId:memberHost:memberPort:memberGateway]*
+     *
+     * Parsea el remitente directo (partes 1-4) y la lista de miembros
+     * incluida en el mensaje (partes 5+). Cualquier miembro desconocido
      * se agrega a la MembershipList y dispara onNodeJoined en el EventBus.
      */
     private void processIncomingHeartbeat(DatagramPacket packet) {
@@ -180,45 +185,50 @@ public class GossipProtocol implements Runnable {
                     packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8).trim();
             String[] parts = message.split("\\|");
 
-            if (parts.length < 4 || !"HEARTBEAT".equals(parts[0])) {
+            if (parts.length < 5 || !"HEARTBEAT".equals(parts[0])) {
                 return;
             }
 
-            // ── 1. Procesar el remitente directo ──────────────────────────
+            // ── 1. Procesar el remitente directo ───────────────────────────────────────
             String nodeId     = parts[1];
             String host       = parts[2];
             int clusterPort   = Integer.parseInt(parts[3]);
+            String gatewayUrl = parts[4]; // nuevo campo: URL del API Gateway
 
             if (!nodeId.equals(self.getNodeId())) {
-                NodeInfo sender = new NodeInfo(nodeId, host, clusterPort);
+                NodeInfo sender = new NodeInfo(nodeId, host, clusterPort, gatewayUrl);
                 boolean isNew = membershipList.addOrUpdate(sender);
                 if (isNew) {
-                    logger.info("Nodo descubierto (directo): {}", sender);
+                    logger.info("Nodo descubierto (directo): {} gateway={}", sender, gatewayUrl.isEmpty() ? "(ninguno)" : gatewayUrl);
                     eventBus.publish(ClusterEvent.NODE_JOINED, sender);
                 }
             }
 
-            // ── 2. Procesar miembros incluidos en el heartbeat ────────────
+            // ── 2. Procesar miembros incluidos en el heartbeat ────────────────────
             //    IMPORTANTE: usar addIfAbsent (NO addOrUpdate) para los miembros
             //    propagados via gossip. Solo el heartbeat DIRECTO de un nodo
             //    renueva su timer; un nodo muerto no debe quedar "vivo" porque
             //    otro nodo lo mencione en su lista de miembros.
-            for (int i = 4; i < parts.length; i++) {
-                String[] m = parts[i].split(":");
+            for (int i = 5; i < parts.length; i++) {
+                // Formato: "nodeId:host:port:gatewayUrl"
+                // split con límite 4 para preservar "http://" en la URL
+                String[] m = parts[i].split(":", 4);
                 if (m.length < 3) continue;
 
-                String mId   = m[0];
-                String mHost = m[1];
+                String mId      = m[0];
+                String mHost    = m[1];
                 int    mPort;
                 try { mPort = Integer.parseInt(m[2]); } catch (NumberFormatException e) { continue; }
+                String mGateway = m.length >= 4 ? m[3] : "";
 
                 // Ignorarse a sí mismo
                 if (mId.equals(self.getNodeId())) continue;
 
-                NodeInfo memberNode = new NodeInfo(mId, mHost, mPort);
+                NodeInfo memberNode = new NodeInfo(mId, mHost, mPort, mGateway);
                 boolean isNewMember = membershipList.addIfAbsent(memberNode);
                 if (isNewMember) {
-                    logger.info("Nodo descubierto (via gossip de '{}'): {}", nodeId, memberNode);
+                    logger.info("Nodo descubierto (via gossip de '{}'): {} gateway={}",
+                            nodeId, memberNode, mGateway.isEmpty() ? "(ninguno)" : mGateway);
                     eventBus.publish(ClusterEvent.NODE_JOINED, memberNode);
                 }
             }

@@ -13,11 +13,19 @@ public final class NodeInfo {
     private final String nodeId;
     private final String host;
     private final int clusterPort;
+    /** URL del API Gateway de este nodo. Cadena vacía si no está configurado. */
+    private final String gatewayUrl;
 
-    public NodeInfo(String nodeId, String host, int clusterPort) {
+    public NodeInfo(String nodeId, String host, int clusterPort, String gatewayUrl) {
         this.nodeId = Objects.requireNonNull(nodeId);
         this.host = Objects.requireNonNull(host);
         this.clusterPort = clusterPort;
+        this.gatewayUrl = gatewayUrl == null ? "" : gatewayUrl;
+    }
+
+    /** Constructor de retrocompatibilidad sin gateway (gateway = ""). */
+    public NodeInfo(String nodeId, String host, int clusterPort) {
+        this(nodeId, host, clusterPort, "");
     }
 
     public String getNodeId() {
@@ -30,6 +38,11 @@ public final class NodeInfo {
 
     public int getClusterPort() {
         return clusterPort;
+    }
+
+    /** URL del API Gateway de este nodo. Cadena vacía si no está configurado. */
+    public String getGatewayUrl() {
+        return gatewayUrl;
     }
 
     public String getAddress() {

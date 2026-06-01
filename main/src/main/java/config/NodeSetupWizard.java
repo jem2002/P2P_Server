@@ -24,6 +24,7 @@ public class NodeSetupWizard {
     private static final String CYAN  = "\u001B[36m";
     private static final String GREEN = "\u001B[32m";
     private static final String YELLOW= "\u001B[33m";
+    private static final String RED   = "\u001B[31m";
     private static final String DIM   = "\u001B[2m";
 
     /**
@@ -57,8 +58,12 @@ public class NodeSetupWizard {
             config.overrideProperty("cluster.seedNodes","");
 
             System.out.println();
+            String gateway = askGateway(scanner, config);
+            config.overrideProperty("gateway.url", gateway);
+
+            System.out.println();
             System.out.println(GREEN + "✔  Configuración de nodo primario aplicada:" + RESET);
-            printSummary(host, "8081", "node-1", "9090", "(ninguno — este es el primer nodo)");
+            printSummary(host, "8081", "node-1", "9090", "(ninguno — este es el primer nodo)", gateway);
 
         } else {
             // ── Nodo adicional: pedir cada parámetro ──────────────────────
@@ -80,9 +85,13 @@ public class NodeSetupWizard {
             config.overrideProperty("cluster.seedNodes", seedNodes);
 
             System.out.println();
+            String gateway = askGateway(scanner, config);
+            config.overrideProperty("gateway.url", gateway);
+
+            System.out.println();
             System.out.println(GREEN + "✔  Configuración aplicada:" + RESET);
             printSummary(host, serverPort, nodeId, clusterPort,
-                    seedNodes.isEmpty() ? "(ninguno)" : seedNodes);
+                    seedNodes.isEmpty() ? "(ninguno)" : seedNodes, gateway);
         }
 
         System.out.println();
@@ -110,14 +119,30 @@ public class NodeSetupWizard {
         return input.isEmpty() ? defaultSeeds : input;
     }
 
-    private static void printSummary(String host, String port, String nodeId, String clusterPort, String seeds) {
-        System.out.println(DIM + "  ┌──────────────────────────────────────────────");
+    /**
+     * Pide la dirección del API Gateway externo.
+     * Ejemplo: http://192.168.1.10:9000
+     * Puede dejarse en blanco si este nodo no tiene gateway asociado.
+     */
+    private static String askGateway(Scanner scanner, ServerConfig config) {
+        String defaultGw = config.getGatewayUrl();
+        System.out.println("  " + BOLD + RED + "URL del API Gateway" + RESET
+                + "  " + DIM + "(ej: http://192.168.1.10:9000 — Enter para omitir)" + RESET);
+        System.out.print("  Gateway [" + YELLOW + (defaultGw.isEmpty() ? "ninguno" : defaultGw) + RESET + "]: ");
+        String input = scanner.nextLine().trim();
+        return input.isEmpty() ? defaultGw : input;
+    }
+
+    private static void printSummary(String host, String port, String nodeId,
+                                     String clusterPort, String seeds, String gateway) {
+        System.out.println(DIM + "  ┌────────────────────────────────────────────");
         System.out.println("  │  server.host       = " + host);
         System.out.println("  │  server.port       = " + port);
         System.out.println("  │  cluster.nodeId    = " + nodeId);
         System.out.println("  │  cluster.port      = " + clusterPort);
         System.out.println("  │  cluster.seedNodes = " + seeds);
-        System.out.println("  └──────────────────────────────────────────────" + RESET);
+        System.out.println("  │  gateway.url       = " + (gateway.isEmpty() ? "(ninguno)" : gateway));
+        System.out.println("  └────────────────────────────────────────────" + RESET);
     }
 
     private static void printBanner() {

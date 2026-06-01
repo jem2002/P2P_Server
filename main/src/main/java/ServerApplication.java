@@ -92,6 +92,7 @@ public class ServerApplication {
             logger.info("║  cluster.nodeId    = {}", config.getNodeId());
             logger.info("║  cluster.port      = {}", config.getClusterPort());
             logger.info("║  cluster.seedNodes = {}", String.join(",", config.getSeedNodes()));
+            logger.info("║  gateway.url       = {}", config.getGatewayUrl().isEmpty() ? "(ninguno)" : config.getGatewayUrl());
             logger.info("╚═══════════════════════════════════════════════════════");
 
             // 2. Módulo Persistencia (ServiceLoader)
@@ -156,7 +157,8 @@ public class ServerApplication {
                 // 7a. Identidad del nodo
                 NodeIdentity identity = new NodeIdentity(
                         config.getNodeId(), config.getHost(),
-                        config.getPort(), config.getClusterPort());
+                        config.getPort(), config.getClusterPort(),
+                        config.getGatewayUrl());
                 logger.info("Identidad del nodo: {}", identity);
 
                 // 7b. Componentes de membresía y eventos
