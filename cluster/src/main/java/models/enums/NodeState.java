@@ -1,4 +1,4 @@
-package discovery;
+package models.enums;
 
 /**
  * Estado de un nodo en el protocolo de membresía (Gossip).

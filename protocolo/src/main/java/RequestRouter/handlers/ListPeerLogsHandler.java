@@ -5,9 +5,9 @@ import JsonSerializer.ResponseBuilder;
 import RequestRouter.ActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import communication.InterServerProtocol;
+import util.InterServerProtocol;
 import discovery.MembershipList;
-import events.NodeInfo;
+import models.RemoteNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +67,7 @@ public class ListPeerLogsHandler implements ActionHandler {
         allLogs.add(localEntry);
 
         // 2. Solicitar logs a cada peer ALIVE
-        for (NodeInfo peer : membershipList.getAliveNodes()) {
+        for (RemoteNodeInfo peer : membershipList.getAliveNodes()) {
             String peerLogs = requestLogsFromPeer(peer);
             Map<String, Object> peerEntry = new HashMap<>();
             peerEntry.put("nodeId", peer.getNodeId());
@@ -83,7 +83,7 @@ public class ListPeerLogsHandler implements ActionHandler {
      * Abre una conexión TCP temporal al peer, envía PEER_LOGS_REQUEST y espera
      * PEER_LOGS_RESPONSE. Timeout: PEER_TIMEOUT_MS ms.
      */
-    private String requestLogsFromPeer(NodeInfo peer) {
+    private String requestLogsFromPeer(RemoteNodeInfo peer) {
         try (Socket socket = new Socket(peer.getHost(), peer.getClusterPort())) {
             socket.setSoTimeout(PEER_TIMEOUT_MS);
 

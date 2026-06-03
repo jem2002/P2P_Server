@@ -1,5 +1,6 @@
-package registry;
+package delivery.Impl;
 
+import delivery.PrivateMessageDeliveryStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * Principio aplicado: Information Expert (GRASP) — esta clase es la única que conoce
  * la correlación username → socket de salida.
  */
-public class LocalClientRegistry {
+public class LocalDeliveryStrategyPrivate implements PrivateMessageDeliveryStrategy {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalClientRegistry.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocalDeliveryStrategyPrivate.class);
 
     /** username → OutputStream del socket del cliente */
     private final ConcurrentHashMap<String, OutputStream> clientStreams = new ConcurrentHashMap<>();
@@ -43,14 +44,14 @@ public class LocalClientRegistry {
     /**
      * Entrega un mensaje JSON directamente al socket de un cliente local.
      *
-     * @param username Nombre del cliente destino
+     * @param targetUsername Nombre del cliente destino
      * @param jsonMessage Mensaje JSON a entregar
      * @return true si se entregó correctamente, false si el cliente no está registrado o el stream falló
      */
-    public boolean deliver(String username, String jsonMessage) {
-        OutputStream out = clientStreams.get(username);
+    public boolean deliver(String jsonMessage, String targetUsername, String fromUser, String rawContent, String clientIp) {
+        OutputStream out = clientStreams.get(targetUsername);
         if (out == null) {
-            logger.warn("Intento de entrega directa a '{}' pero no está registrado localmente", username);
+            logger.warn("Intento de entrega directa a '{}' pero no está registrado localmente", targetUsername);
             return false;
         }
         try {
@@ -59,11 +60,11 @@ public class LocalClientRegistry {
                 out.write(bytes);
                 out.flush();
             }
-            logger.debug("Mensaje entregado directamente a '{}'", username);
+            logger.debug("Mensaje entregado directamente a '{}'", targetUsername);
             return true;
         } catch (Exception e) {
-            logger.error("Error entregando mensaje directamente a '{}': {}", username, e.getMessage());
-            clientStreams.remove(username); // Stream muerto, limpiar
+            logger.error("Error entregando mensaje directamente a '{}': {}", targetUsername, e.getMessage());
+            clientStreams.remove(targetUsername); // Stream muerto, limpiar
             return false;
         }
     }

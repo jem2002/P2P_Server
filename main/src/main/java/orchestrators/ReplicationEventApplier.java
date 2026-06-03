@@ -1,7 +1,6 @@
 package orchestrators;
 
 import DocumentService.DocumentManager;
-import LogService.LogManager;
 import UserService.UserManager;
 import MessageParser.BroadcastManager;
 import replication.ReplicationEvent;
@@ -81,7 +80,7 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
         routingTable.registerRemoteClient(username, sourceNode);
         // Enviar lista actualizada SOLO a clientes locales (no federar de vuelta)
         try {
-            broadcastManager.broadcastLocalOnly(clientsListSupplier.get());
+            broadcastManager.broadcast(clientsListSupplier.get());
         } catch (Exception ignored) {}
     }
 
@@ -90,27 +89,33 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
         String username = event.getPayload().get("username").asText();
         routingTable.unregisterClient(username);
         try {
-            broadcastManager.broadcastLocalOnly(clientsListSupplier.get());
+            broadcastManager.broadcast(clientsListSupplier.get());
         } catch (Exception ignored) {}
     }
 
     private void handleNewMessage(ReplicationEvent event) {
         // Un mensaje fue enviado en otro servidor → retransmitir a clientes locales
         String fromUser = event.getPayload().get("username").asText();
+        String targetUsername = event.getPayload().get("targetUsername").asText();
         String content  = event.getPayload().get("content").asText();
+
 
         try {
             long userId = userManager.obtenerIdUsuario(fromUser);
             java.io.InputStream textStream = new java.io.ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
             String nombreArchivo = "msg_" + fromUser + "_" + System.currentTimeMillis() + ".txt";
-            documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", "MESSAGE");
-        } catch (Exception e) {
+
+            String docType = targetUsername.equals("ALL") ? "MESSAGE" : "PRIVATE_TO:" + targetUsername;
+
+            documentManager.procesarRecepcionDocumento(textStream, nombreArchivo, content.length(), ".txt", "text/plain", userId, "replicado", docType);
+
+            } catch (Exception e) {
             logger.error("Error guardando mensaje replicado de {}", fromUser, e);
         }
 
         String msgJson  = "{\"action\":\"NEW_MESSAGE\",\"payload\":{\"message\":\"["
                           + event.getSourceNodeId() + "] De " + fromUser + ": " + content + "\"}}";
-        broadcastManager.broadcastLocalOnly(msgJson);
+        broadcastManager.broadcast(msgJson);
     }
 
     private void handleDocumentUploaded(ReplicationEvent event) {
@@ -166,7 +171,7 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
                             java.io.InputStream peerIn = dataSocket.getInputStream();
                             documentManager.procesarRecepcionDocumento(peerIn, filename, sizeBytes, extension, mimeType, localUserId, "replicado", docType);
                             logger.info("Descarga física de replicación completada con éxito para {}", filename);
-                            broadcastManager.broadcastLocalOnly(documentsListSupplier.get());
+                            broadcastManager.broadcast(documentsListSupplier.get());
                         }
                     } else {
                         logger.error("Error en proxy P2P de replicación: No se obtuvo token del peer");

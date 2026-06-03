@@ -1,7 +1,6 @@
 package topology;
 
-import events.NetworkEventListener;
-import events.NodeInfo;
+import models.RemoteNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * Implementa NetworkEventListener para limpiar entradas cuando un nodo cae.
  */
-public class RoutingTable implements NetworkEventListener {
+public class RoutingTable {
 
     private static final Logger logger = LoggerFactory.getLogger(RoutingTable.class);
 
@@ -84,6 +83,27 @@ public class RoutingTable implements NetworkEventListener {
     }
 
     /**
+     * Cuando un nodo cae, eliminamos todos sus clientes de la tabla.
+     */
+    public void removeClientsFromNode(RemoteNodeInfo node) {
+        String downNodeId = node.getNodeId();
+        int removedCount = 0;
+
+        Iterator<Map.Entry<String, String>> it = clientToNode.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> entry = it.next();
+            if (downNodeId.equals(entry.getValue())) {
+                it.remove();
+                removedCount++;
+            }
+        }
+
+        if (removedCount > 0) {
+            logger.info("Eliminados {} clientes del nodo caído: {}", removedCount, downNodeId);
+        }
+    }
+
+    /**
      * Retorna una copia del snapshot actual de la tabla (para enviar a peers).
      */
     public Map<String, String> getSnapshot() {
@@ -120,25 +140,4 @@ public class RoutingTable implements NetworkEventListener {
                 clientToNode.size(), getLocalClients().size());
     }
 
-    // ============ NetworkEventListener ============
-
-    /**
-     * Cuando un nodo cae, eliminamos todos sus clientes de la tabla.
-     */
-    @Override
-    public void onNodeLeft(NodeInfo node) {
-        String downNodeId = node.getNodeId();
-        int removed = 0;
-        Iterator<Map.Entry<String, String>> it = clientToNode.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> entry = it.next();
-            if (downNodeId.equals(entry.getValue())) {
-                it.remove();
-                removed++;
-            }
-        }
-        if (removed > 0) {
-            logger.info("Eliminados {} clientes de la tabla — nodo caído: {}", removed, downNodeId);
-        }
-    }
 }

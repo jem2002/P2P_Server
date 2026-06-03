@@ -37,17 +37,14 @@ public class ListClientsHandler implements ActionHandler {
     private final UserManager userManager;
     private final ResponseBuilder serializer;
 
-    // Nullable — solo disponible si cluster está habilitado
-    private RoutingTable routingTable;
-    private String localNodeId;
+    // Dependencias de clúster obligatorias e inmutables
+    private final RoutingTable routingTable;
+    private final String localNodeId;
 
-    public ListClientsHandler(UserManager userManager, ResponseBuilder serializer) {
+    public ListClientsHandler(UserManager userManager, ResponseBuilder serializer,
+                              RoutingTable routingTable, String localNodeId) {
         this.userManager = userManager;
         this.serializer = serializer;
-    }
-
-    /** Inyecta la tabla de enrutamiento para incluir clientes remotos. */
-    public void enableFederatedList(RoutingTable routingTable, String localNodeId) {
         this.routingTable = routingTable;
         this.localNodeId = localNodeId;
     }
@@ -56,51 +53,39 @@ public class ListClientsHandler implements ActionHandler {
     public String handle(JsonNode payload, String clientIp) throws Exception {
         List<Map<String, String>> result = new ArrayList<>();
 
-        if (routingTable == null) {
-            // ── Modo standalone: todos los activos de la BD son locales ──────
-            for (ActiveClient c : userManager.obtenerClientesActivos()) {
-                result.add(buildLocal(c, "local"));
-            }
-        } else {
-            // ── Modo cluster: RoutingTable es la fuente de verdad ─────────────
-            //
-            // La BD compartida puede tener usuarios de TODOS los nodos, por lo
-            // que NO podemos confiar en ella para saber si un cliente es LOCAL.
-            // Usamos la RoutingTable que cada nodo mantiene en memoria.
+        // ── Modo clúster: RoutingTable es la fuente de verdad absoluta ─────────────
+        // 1. Snapshot de la tabla en memoria: username → nodeId
+        Map<String, String> snapshot = routingTable.getSnapshot();
 
-            // 1. Snapshot de la tabla: username → nodeId
-            Map<String, String> snapshot = routingTable.getSnapshot();
+        // 2. Índice de metadatos desde la BD (para enriquecer únicamente a los locales)
+        //    Construimos un Map<username, ActiveClient> para acceso O(1)
+        Map<String, ActiveClient> dbIndex = buildDbIndex();
 
-            // 2. Índice de metadatos desde BD (para enriquecer a los locales)
-            //    Construimos Map<username, ActiveClient> para acceso O(1)
-            Map<String, ActiveClient> dbIndex = buildDbIndex();
+        // 3. Clasificar secuencialmente cada entrada de la RoutingTable
+        for (Map.Entry<String, String> entry : snapshot.entrySet()) {
+            String username = entry.getKey();
+            String nodeId   = entry.getValue();
 
-            // 3. Clasificar cada entrada de la RoutingTable
-            for (Map.Entry<String, String> entry : snapshot.entrySet()) {
-                String username = entry.getKey();
-                String nodeId   = entry.getValue();
-
-                if (localNodeId.equals(nodeId)) {
-                    // LOCAL — buscar metadatos en la BD
-                    ActiveClient dbRecord = dbIndex.get(username);
-                    if (dbRecord != null) {
-                        result.add(buildLocal(dbRecord, localNodeId));
-                    } else {
-                        // Registrado en RoutingTable pero sin registro de BD aún
-                        // (puede ocurrir en la fracción de segundo del CONNECT)
-                        result.add(buildLocalStub(username, localNodeId));
-                    }
+            if (localNodeId.equals(nodeId)) {
+                // CLIENTE LOCAL — buscar metadatos extendidos en la BD
+                ActiveClient dbRecord = dbIndex.get(username);
+                if (dbRecord != null) {
+                    result.add(buildLocal(dbRecord, localNodeId));
                 } else {
-                    // REMOTO — no tenemos metadatos de BD; usamos lo que sabemos
-                    result.add(buildRemote(username, nodeId));
+                    // Registrado en RoutingTable pero sin registro físico en BD aún
+                    // (Sincronización en la fracción de segundo del CONNECT)
+                    result.add(buildLocalStub(username, localNodeId));
                 }
+            } else {
+                // CLIENTE REMOTO — no consultamos su BD local, usamos los datos del clúster
+                result.add(buildRemote(username, nodeId));
             }
         }
 
         return serializer.buildListResponse(JsonSchema.ACTION_LIST_CLIENTS, result, "clientes");
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // ── Helpers de Procesamiento ─────────────────────────────────────────────
 
     private Map<String, ActiveClient> buildDbIndex() {
         Map<String, ActiveClient> index = new HashMap<>();

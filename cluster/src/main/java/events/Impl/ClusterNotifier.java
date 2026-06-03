@@ -1,7 +1,9 @@
-package events;
+package events.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import events.NetworkEventListener;
+import models.RemoteNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,21 +38,21 @@ public class ClusterNotifier implements NetworkEventListener {
     }
 
     @Override
-    public void onNodeJoined(NodeInfo node) {
+    public void onNodeJoined(RemoteNodeInfo node) {
         String json = buildServerEvent("SERVER_JOINED", node, "El servidor se ha unido a la red");
         broadcaster.accept(json);
         logger.info("Notificado a clientes: servidor '{}' JOINED", node.getNodeId());
     }
 
     @Override
-    public void onNodeLeft(NodeInfo node) {
+    public void onNodeLeft(RemoteNodeInfo node) {
         String json = buildServerEvent("SERVER_LEFT", node, "El servidor se ha desconectado de la red");
         broadcaster.accept(json);
         logger.info("Notificado a clientes: servidor '{}' LEFT", node.getNodeId());
     }
 
     @Override
-    public void onNodeSuspected(NodeInfo node) {
+    public void onNodeSuspected(RemoteNodeInfo node) {
         String json = buildServerEvent("SERVER_SUSPECTED", node, "El servidor no responde (posiblemente caído)");
         broadcaster.accept(json);
         logger.warn("Notificado a clientes: servidor '{}' SUSPECTED", node.getNodeId());
@@ -60,7 +62,7 @@ public class ClusterNotifier implements NetworkEventListener {
      * Construye el mensaje JSON de notificación de evento de servidor.
      * Formato: {"action":"SERVER_JOINED","payload":{"nodeId":"...","host":"...","clusterPort":9090,"message":"..."}}
      */
-    private String buildServerEvent(String action, NodeInfo node, String message) {
+    private String buildServerEvent(String action, RemoteNodeInfo node, String message) {
         try {
             ObjectNode root = mapper.createObjectNode();
             root.put("action", action);

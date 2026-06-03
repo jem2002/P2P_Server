@@ -1,4 +1,4 @@
-package events;
+package models;
 
 import java.util.Objects;
 
@@ -8,7 +8,7 @@ import java.util.Objects;
  *
  * Principio aplicado: Value Object (DDD) — igualdad por nodeId.
  */
-public final class NodeInfo {
+public final class RemoteNodeInfo {
 
     private final String nodeId;
     private final String host;
@@ -16,7 +16,7 @@ public final class NodeInfo {
     /** URL del API Gateway de este nodo. Cadena vacía si no está configurado. */
     private final String gatewayUrl;
 
-    public NodeInfo(String nodeId, String host, int clusterPort, String gatewayUrl) {
+    public RemoteNodeInfo(String nodeId, String host, int clusterPort, String gatewayUrl) {
         this.nodeId = Objects.requireNonNull(nodeId);
         this.host = Objects.requireNonNull(host);
         this.clusterPort = clusterPort;
@@ -24,7 +24,7 @@ public final class NodeInfo {
     }
 
     /** Constructor de retrocompatibilidad sin gateway (gateway = ""). */
-    public NodeInfo(String nodeId, String host, int clusterPort) {
+    public RemoteNodeInfo(String nodeId, String host, int clusterPort) {
         this(nodeId, host, clusterPort, "");
     }
 
@@ -53,7 +53,7 @@ public final class NodeInfo {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NodeInfo that = (NodeInfo) o;
+        RemoteNodeInfo that = (RemoteNodeInfo) o;
         return Objects.equals(nodeId, that.nodeId);
     }
 

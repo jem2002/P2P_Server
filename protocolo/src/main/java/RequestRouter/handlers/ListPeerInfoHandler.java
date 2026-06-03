@@ -6,9 +6,8 @@ import RequestRouter.ActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import discovery.MemberEntry;
 import discovery.MembershipList;
-import discovery.NodeState;
 import health.ClusterHealthService;
-import identity.NodeIdentity;
+import models.LocalNodeInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,12 +28,12 @@ public class ListPeerInfoHandler implements ActionHandler {
 
     private final ResponseBuilder serializer;
     private final ClusterHealthService healthService;
-    private final NodeIdentity localIdentity;
+    private final LocalNodeInfo localIdentity;
     private final MembershipList membershipList;
 
     public ListPeerInfoHandler(ResponseBuilder serializer,
                                 ClusterHealthService healthService,
-                                NodeIdentity localIdentity,
+                                LocalNodeInfo localIdentity,
                                 MembershipList membershipList) {
         this.serializer = serializer;
         this.healthService = healthService;

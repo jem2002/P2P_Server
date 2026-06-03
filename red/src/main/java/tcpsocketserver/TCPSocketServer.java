@@ -41,8 +41,8 @@ public class TCPSocketServer implements Runnable {
     private final LogService.LogManager logManager;
 
     public TCPSocketServer(int port, IConnectionPool pool, ThreadPoolManager threadPool, IRequestDispatcher router,
-            IBroadcastManager broadcastManager, ITransferDispatcher transferManager, DocumentManager documentManager,
-            LogService.LogManager logManager) {
+                           IBroadcastManager broadcastManager, ITransferDispatcher transferManager, DocumentManager documentManager,
+                           LogService.LogManager logManager) {
         this.port = port;
         this.pool = pool;
         this.threadPool = threadPool;

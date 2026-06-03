@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import registry.LocalClientRegistry;
+import delivery.Impl.LocalDeliveryStrategyPrivate;
 import replication.ReplicationEvent;
 import replication.ReplicationManager;
 import topology.RoutingTable;
+import util.InterServerProtocol;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -39,49 +40,29 @@ public class PeerMessageHandler {
 
     private final ReplicationManager replicationManager;
     private final RoutingTable routingTable;
-    private final LocalClientRegistry localClientRegistry;
+    private final LocalDeliveryStrategyPrivate localDeliveryStrategy;
 
-    /** Proveedor de logs locales para responder a PEER_LOGS_REQUEST. */
-    private volatile Supplier<String> localLogsSupplier;
-
-    /** Callback para hacer broadcast a clientes locales (PEER_BROADCAST). */
-    private volatile java.util.function.Consumer<String> localBroadcast;
-
-    /** Callback que se invoca al recibir PEER_LOGS_RESPONSE, con (nodeId, logsJson). */
-    private volatile java.util.function.BiConsumer<String, String> peerLogsReceiver;
 
     public interface RouteDeliveryListener {
         void onDelivered(String targetUser, String fromUser, String rawContent, String clientIp);
     }
-    
+
     /**
      * Callback que se invoca cuando un PEER_ROUTE es entregado exitosamente al cliente local.
      */
     private volatile RouteDeliveryListener onRouteDelivered;
 
     public PeerMessageHandler(ReplicationManager replicationManager, RoutingTable routingTable,
-                               LocalClientRegistry localClientRegistry) {
+                              LocalDeliveryStrategyPrivate localDeliveryStrategy) {
         this.replicationManager = replicationManager;
         this.routingTable = routingTable;
-        this.localClientRegistry = localClientRegistry;
+        this.localDeliveryStrategy = localDeliveryStrategy;
     }
 
-    /** Inyecta el proveedor de logs locales (para responder a peticiones PEER_LOGS_REQUEST). */
-    public void setLocalLogsSupplier(Supplier<String> supplier) {
-        this.localLogsSupplier = supplier;
-    }
 
-    /** Inyecta el callback de broadcast local (para PEER_BROADCAST). */
-    public void setLocalBroadcast(java.util.function.Consumer<String> broadcast) {
-        this.localBroadcast = broadcast;
-    }
-
-    /** Inyecta el receptor de logs remotos (para LIST_PEER_LOGS). */
-    public void setPeerLogsReceiver(java.util.function.BiConsumer<String, String> receiver) {
-        this.peerLogsReceiver = receiver;
-    }
-
-    /** Inyecta el callback de persistencia para mensajes enrutados (PEER_ROUTE). */
+    /**
+     * Inyecta el callback de persistencia para mensajes enrutados (PEER_ROUTE).
+     */
     public void setOnRouteDelivered(RouteDeliveryListener callback) {
         this.onRouteDelivered = callback;
     }
@@ -116,7 +97,8 @@ public class PeerMessageHandler {
         } finally {
             try {
                 if (!peerSocket.isClosed()) peerSocket.close();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -136,20 +118,8 @@ public class PeerMessageHandler {
                 case "PEER_SYNC":
                     handleSync(payload);
                     break;
-                case "PEER_HEALTH":
-                    logger.debug("Health check recibido de {}", peerAddress);
-                    break;
                 case "PEER_ROUTE":
                     handleRoute(payload);
-                    break;
-                case "PEER_BROADCAST":
-                    handleBroadcast(payload);
-                    break;
-                case "PEER_LOGS_REQUEST":
-                    handleLogsRequest(payload, peerOut);
-                    break;
-                case "PEER_LOGS_RESPONSE":
-                    handleLogsResponse(payload);
                     break;
                 default:
                     logger.warn("Acción peer desconocida: {} desde {}", action, peerAddress);
@@ -159,8 +129,6 @@ public class PeerMessageHandler {
             logger.error("Error procesando mensaje peer desde {}", peerAddress, e);
         }
     }
-
-    // ============ Handlers individuales ============
 
     private void handleReplicate(JsonNode payload) {
         if (payload == null) return;
@@ -190,11 +158,7 @@ public class PeerMessageHandler {
         }
     }
 
-    /**
-     * PEER_ROUTE: entrega un mensaje directamente al socket del cliente local destino.
-     * Si el cliente no está en este servidor, descarta (ya no debería llegar aquí).
-     * Si la entrega es exitosa, invoca onRouteDelivered para persistir copia local.
-     */
+
     private void handleRoute(JsonNode payload) {
         if (payload == null) return;
         try {
@@ -204,7 +168,7 @@ public class PeerMessageHandler {
             String rawContent = payload.has("rawContent") ? payload.get("rawContent").asText() : "";
             String clientIp = payload.has("clientIp") ? payload.get("clientIp").asText() : "unknown";
 
-            boolean delivered = localClientRegistry.deliver(targetUsername, originalMessage);
+            boolean delivered = localDeliveryStrategy.deliver(originalMessage, targetUsername, fromUser, rawContent, clientIp);
             if (!delivered) {
                 logger.warn("PEER_ROUTE: cliente '{}' no encontrado localmente", targetUsername);
                 return;
@@ -225,56 +189,4 @@ public class PeerMessageHandler {
         }
     }
 
-    /**
-     * PEER_BROADCAST: retransmite el mensaje a todos los clientes locales.
-     * Esto es lo que reciben los peers cuando se hace un broadcast federado.
-     */
-    private void handleBroadcast(JsonNode payload) {
-        if (payload == null) return;
-        try {
-            String message = payload.get("message").asText();
-            if (localBroadcast != null) {
-                localBroadcast.accept(message);
-            }
-        } catch (Exception e) {
-            logger.error("Error procesando PEER_BROADCAST", e);
-        }
-    }
-
-    /**
-     * PEER_LOGS_REQUEST: responde con los logs locales serializados en JSON.
-     */
-    private void handleLogsRequest(JsonNode payload, OutputStream peerOut) {
-        if (peerOut == null || localLogsSupplier == null) return;
-        try {
-            String requestingNodeId = payload != null && payload.has("requestingNodeId")
-                    ? payload.get("requestingNodeId").asText() : "unknown";
-
-            String logsJson = localLogsSupplier.get();
-            // Construir respuesta y enviarla por el mismo socket
-            String response = InterServerProtocol.buildLogsResponse("local", logsJson);
-            byte[] bytes = (response + "\n").getBytes(StandardCharsets.UTF_8);
-            peerOut.write(bytes);
-            peerOut.flush();
-            logger.info("Logs enviados al peer '{}' (PEER_LOGS_REQUEST)", requestingNodeId);
-        } catch (Exception e) {
-            logger.error("Error respondiendo PEER_LOGS_REQUEST", e);
-        }
-    }
-
-    /**
-     * PEER_LOGS_RESPONSE: notifica al receptor (LIST_PEER_LOGS) con los logs recibidos.
-     */
-    private void handleLogsResponse(JsonNode payload) {
-        if (payload == null || peerLogsReceiver == null) return;
-        try {
-            String sourceNodeId = payload.has("sourceNodeId")
-                    ? payload.get("sourceNodeId").asText() : "unknown";
-            String logsJson = payload.has("logsJson")
-                    ? payload.get("logsJson").asText() : "{}";
-            peerLogsReceiver.accept(sourceNodeId, logsJson);
-        } catch (Exception e) {
-            logger.error("Error procesando PEER_LOGS_RESPONSE", e);
-        }
-    }
 }

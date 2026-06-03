@@ -1,6 +1,6 @@
 package health;
 
-import discovery.NodeState;
+import models.enums.NodeState;
 
 /**
  * DTO inmutable con el reporte de salud de un nodo individual.

@@ -1,5 +1,7 @@
 package events;
 
+import models.RemoteNodeInfo;
+
 /**
  * Contrato Observer para componentes que reaccionan a cambios en la red P2P.
  *
@@ -7,25 +9,25 @@ package events;
  * de la reacción a los mismos. Cada componente implementa solo los callbacks
  * que necesita (los métodos default permiten implementación selectiva).
  */
-public interface NetworkEventListener {
+    public interface NetworkEventListener {
 
-    /**
-     * Invocado cuando un nuevo nodo se une a la red.
-     */
-    default void onNodeJoined(NodeInfo node) {}
+        /**
+         * Invocado cuando un nuevo nodo se une a la red.
+         */
+        default void onNodeJoined(RemoteNodeInfo node) {}
 
-    /**
-     * Invocado cuando un nodo abandona la red (confirmado como DOWN).
-     */
-    default void onNodeLeft(NodeInfo node) {}
+        /**
+         * Invocado cuando un nodo abandona la red (confirmado como DOWN).
+         */
+        default void onNodeLeft(RemoteNodeInfo node) {}
 
-    /**
-     * Invocado cuando un nodo se sospecha caído (heartbeats perdidos).
-     */
-    default void onNodeSuspected(NodeInfo node) {}
+        /**
+         * Invocado cuando un nodo se sospecha caído (heartbeats perdidos).
+         */
+        default void onNodeSuspected(RemoteNodeInfo node) {}
 
-    /**
-     * Invocado cuando la topología de la red ha cambiado.
-     */
-    default void onTopologyChanged() {}
-}
+        /**
+         * Invocado cuando la topología de la red ha cambiado.
+         */
+        default void onTopologyChanged() {}
+    }

@@ -2,8 +2,7 @@ package replication;
 
 import communication.PeerConnectionPool;
 import discovery.MembershipList;
-import events.NetworkEventListener;
-import events.NodeInfo;
+import models.RemoteNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *     el evento al dominio se delega a callbacks específicos.
  *   - Observer: implementa NetworkEventListener para reaccionar a cambios de topología.
  */
-public class ReplicationManager implements NetworkEventListener {
+public class ReplicationManager {
 
     private static final Logger logger = LoggerFactory.getLogger(ReplicationManager.class);
     private static final int MAX_EVENT_CACHE = 10000;
@@ -57,7 +56,7 @@ public class ReplicationManager implements NetworkEventListener {
         String wrappedMessage = "{\"action\":\"PEER_REPLICATE\",\"payload\":" + json + "}";
 
         int sent = 0;
-        for (NodeInfo peer : membership.getAliveNodes()) {
+        for (RemoteNodeInfo peer : membership.getAliveNodes()) {
             try {
                 peerPool.sendToPeer(peer.getNodeId(), wrappedMessage);
                 sent++;
@@ -93,43 +92,8 @@ public class ReplicationManager implements NetworkEventListener {
                 logger.error("Error aplicando evento replicado: {}", event, e);
             }
         }
-
-        // Re-propagar a otros peers (Gossip fan-out)
-        // Solo re-propagar si no somos el origen
-        if (!localNodeId.equals(event.getSourceNodeId())) {
-            rePropagateToOtherPeers(event);
-        }
     }
 
-    /**
-     * Re-propaga un evento a peers que no sean el origen.
-     */
-    private void rePropagateToOtherPeers(ReplicationEvent event) {
-        String json = event.toJson();
-        String wrappedMessage = "{\"action\":\"PEER_REPLICATE\",\"payload\":" + json + "}";
-
-        for (NodeInfo peer : membership.getAliveNodes()) {
-            if (!peer.getNodeId().equals(event.getSourceNodeId())) {
-                try {
-                    peerPool.sendToPeer(peer.getNodeId(), wrappedMessage);
-                } catch (Exception e) {
-                    logger.trace("No se pudo re-propagar a {}", peer.getNodeId());
-                }
-            }
-        }
-    }
-
-    // ============ NetworkEventListener ============
-
-    @Override
-    public void onNodeJoined(NodeInfo node) {
-        logger.info("Nuevo peer detectado por ReplicationManager: {}", node);
-    }
-
-    @Override
-    public void onNodeLeft(NodeInfo node) {
-        logger.warn("Peer perdido en ReplicationManager: {}", node);
-    }
 
     /**
      * Interfaz funcional para aplicar eventos replicados al dominio local.

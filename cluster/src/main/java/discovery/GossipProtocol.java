@@ -1,9 +1,10 @@
 package discovery;
 
-import events.ClusterEvent;
+import models.enums.ClusterEvent;
 import events.NetworkEventBus;
-import events.NodeInfo;
-import identity.NodeIdentity;
+import models.RemoteNodeInfo;
+import models.LocalNodeInfo;
+import models.enums.NodeState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,7 @@ public class GossipProtocol implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(GossipProtocol.class);
     private static final int HEARTBEAT_BUFFER_SIZE = 4096; // ampliado para la lista de miembros + URLs
 
-    private final NodeIdentity self;
+    private final LocalNodeInfo self;
     private final MembershipList membershipList;
     private final NetworkEventBus eventBus;
     private final List<String> seedNodes;
@@ -56,7 +57,7 @@ public class GossipProtocol implements Runnable {
     private DatagramSocket socket;
     private ScheduledExecutorService scheduler;
 
-    public GossipProtocol(NodeIdentity self, MembershipList membershipList,
+    public GossipProtocol(LocalNodeInfo self, MembershipList membershipList,
                           NetworkEventBus eventBus, List<String> seedNodes,
                           long heartbeatIntervalMs, long failureTimeoutMs) {
         this.self = self;
@@ -108,21 +109,22 @@ public class GossipProtocol implements Runnable {
      * La posición 4 transporta la URL del API Gateway del remitente.
      * Cada miembro usa 4 campos separados por ":" (split con límite 4 para preservar "http://").
      */
+
     private String buildHeartbeatMessage() {
         StringBuilder sb = new StringBuilder();
+        // 4 campos base en la cabecera: HEARTBEAT | nodeId | host | clusterPort
         sb.append("HEARTBEAT|")
-          .append(self.getNodeId()).append("|")
-          .append(self.getHost()).append("|")
-          .append(self.getClusterPort()).append("|")
-          .append(self.getGatewayUrl()); // posición 4: URL del gateway propio
+                .append(self.getNodeId()).append("|")
+                .append(self.getHost()).append("|")
+                .append(self.getClusterPort());
 
-        // Añadir lista de miembros ALIVE conocidos (excluirse a sí mismo)
-        for (NodeInfo node : membershipList.getAliveNodes()) {
+        // El 5to campo en adelante representa la lista de miembros ALIVE conocidos (excluirse a sí mismo)
+        for (RemoteNodeInfo node : membershipList.getAliveNodes()) {
             sb.append("|")
-              .append(node.getNodeId()).append(":")
-              .append(node.getHost()).append(":")
-              .append(node.getClusterPort()).append(":")
-              .append(node.getGatewayUrl()); // gateway del miembro propagado
+                    .append(node.getNodeId()).append(":")
+                    .append(node.getHost()).append(":")
+                    .append(node.getClusterPort()).append(":")
+                    .append(node.getGatewayUrl()); // gateway del miembro propagado
         }
         return sb.toString();
     }
@@ -142,7 +144,7 @@ public class GossipProtocol implements Runnable {
         }
 
         // Todos los miembros conocidos que no están caídos
-        for (NodeInfo node : membershipList.getNonDownNodes()) {
+        for (RemoteNodeInfo node : membershipList.getNonDownNodes()) {
             sendUdpPacket(data, node.getAddress());
         }
     }
@@ -167,16 +169,16 @@ public class GossipProtocol implements Runnable {
         }
     }
 
-    // ── Recepción ──────────────────────────────────────────────────────────
+// ── Recepción ──────────────────────────────────────────────────────────
 
     /**
      * Procesa un heartbeat entrante.
      *
-     * Formato esperado:
-     *   HEARTBEAT|nodeId|host|clusterPort|gatewayUrl[|memberId:memberHost:memberPort:memberGateway]*
+     * Formato esperado de 4 campos base + N miembros:
+     * HEARTBEAT|nodeId|host|clusterPort[|memberId:memberHost:memberPort:memberGateway]*
      *
-     * Parsea el remitente directo (partes 1-4) y la lista de miembros
-     * incluida en el mensaje (partes 5+). Cualquier miembro desconocido
+     * Parsea el remitente directo (partes 1-3) y la lista de miembros
+     * incluida en el mensaje (partes 4+). Cualquier miembro desconocido
      * se agrega a la MembershipList y dispara onNodeJoined en el EventBus.
      */
     private void processIncomingHeartbeat(DatagramPacket packet) {
@@ -185,46 +187,49 @@ public class GossipProtocol implements Runnable {
                     packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8).trim();
             String[] parts = message.split("\\|");
 
-            if (parts.length < 5 || !"HEARTBEAT".equals(parts[0])) {
+            // Al tener 4 campos obligatorios iniciales (índices 0, 1, 2, 3), la longitud mínima debe ser 4
+            if (parts.length < 4 || !"HEARTBEAT".equals(parts[0])) {
                 return;
             }
 
-            // ── 1. Procesar el remitente directo ───────────────────────────────────────
+            // ── 1. Procesar el remitente directo (Campos 0 a 3) ───────────────────────
             String nodeId     = parts[1];
             String host       = parts[2];
             int clusterPort   = Integer.parseInt(parts[3]);
-            String gatewayUrl = parts[4]; // nuevo campo: URL del API Gateway
 
+            // Nota: Si el remitente es directo, extraemos el gateway que tengamos en su registro o asumimos vacío
+            // si aún no se ha recibido mediante gossip, ya que no viaja en la cabecera pura de 4 campos.
             if (!nodeId.equals(self.getNodeId())) {
-                NodeInfo sender = new NodeInfo(nodeId, host, clusterPort, gatewayUrl);
+                // Inicialmente se asume vacío o se busca en una resolución previa si aplica
+                RemoteNodeInfo sender = new RemoteNodeInfo(nodeId, host, clusterPort, "");
                 boolean isNew = membershipList.addOrUpdate(sender);
                 if (isNew) {
-                    logger.info("Nodo descubierto (directo): {} gateway={}", sender, gatewayUrl.isEmpty() ? "(ninguno)" : gatewayUrl);
+                    logger.info("Nodo descubierto (directo): {}", sender);
                     eventBus.publish(ClusterEvent.NODE_JOINED, sender);
                 }
             }
 
-            // ── 2. Procesar miembros incluidos en el heartbeat ────────────────────
+            // ── 2. Procesar miembros incluidos en el heartbeat (A partir del índice 4) ──
             //    IMPORTANTE: usar addIfAbsent (NO addOrUpdate) para los miembros
             //    propagados via gossip. Solo el heartbeat DIRECTO de un nodo
             //    renueva su timer; un nodo muerto no debe quedar "vivo" porque
             //    otro nodo lo mencione en su lista de miembros.
-            for (int i = 5; i < parts.length; i++) {
-                // Formato: "nodeId:host:port:gatewayUrl"
-                // split con límite 4 para preservar "http://" en la URL
+            for (int i = 4; i < parts.length; i++) {
+                // Formato de cada miembro: "nodeId:host:port:gatewayUrl"
+                // Se usa split con límite 4 para preservar el formato "http://" si viniera en la URL del gateway
                 String[] m = parts[i].split(":", 4);
-                if (m.length < 3) continue;
+                if (m.length < 3) continue; // Al menos requiere nodeId, host y port
 
                 String mId      = m[0];
                 String mHost    = m[1];
                 int    mPort;
                 try { mPort = Integer.parseInt(m[2]); } catch (NumberFormatException e) { continue; }
-                String mGateway = m.length >= 4 ? m[3] : "";
+                String mGateway = m.length == 4 ? m[3] : "";
 
                 // Ignorarse a sí mismo
                 if (mId.equals(self.getNodeId())) continue;
 
-                NodeInfo memberNode = new NodeInfo(mId, mHost, mPort, mGateway);
+                RemoteNodeInfo memberNode = new RemoteNodeInfo(mId, mHost, mPort, mGateway);
                 boolean isNewMember = membershipList.addIfAbsent(memberNode);
                 if (isNewMember) {
                     logger.info("Nodo descubierto (via gossip de '{}'): {} gateway={}",
@@ -243,19 +248,19 @@ public class GossipProtocol implements Runnable {
     private void checkForFailures() {
         for (MemberEntry entry : membershipList.getAllEntries()) {
             long elapsed = entry.getTimeSinceLastHeartbeatMs();
-            NodeInfo nodeInfo = entry.getNodeInfo();
+            RemoteNodeInfo remoteNodeInfo = entry.getNodeInfo();
             NodeState state = entry.getState();
 
             if (elapsed > failureTimeoutMs && state != NodeState.DOWN) {
                 // ALIVE / JOINING / SUSPECTED  → DOWN
-                if (membershipList.markDown(nodeInfo.getNodeId())) {
-                    eventBus.publish(ClusterEvent.NODE_LEFT, nodeInfo);
+                if (membershipList.markDown(remoteNodeInfo.getNodeId())) {
+                    eventBus.publish(ClusterEvent.NODE_LEFT, remoteNodeInfo);
                 }
             } else if (elapsed > suspectTimeoutMs
                     && (state == NodeState.ALIVE || state == NodeState.JOINING)) {
                 // ALIVE / JOINING  → SUSPECTED
-                if (membershipList.markSuspected(nodeInfo.getNodeId())) {
-                    eventBus.publish(ClusterEvent.NODE_SUSPECTED, nodeInfo);
+                if (membershipList.markSuspected(remoteNodeInfo.getNodeId())) {
+                    eventBus.publish(ClusterEvent.NODE_SUSPECTED, remoteNodeInfo);
                 }
             }
         }

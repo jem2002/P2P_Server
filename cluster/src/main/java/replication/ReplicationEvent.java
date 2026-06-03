@@ -38,12 +38,22 @@ public class ReplicationEvent {
 
     // ============ Factory Methods ============
 
-    public static ReplicationEvent newMessage(String sourceNodeId, String username, String content, String ip) {
+    public static ReplicationEvent newMessage(String sourceNodeId, String username, String targetUsername, String content, String ip) {
         ObjectNode payload = mapper.createObjectNode();
         payload.put("username", username);
         payload.put("content", content);
+        payload.put("targetUsername", targetUsername);
         payload.put("ip", ip);
         return create(sourceNodeId, "NEW_MESSAGE", payload);
+    }
+
+    public static ReplicationEvent newPublicMessage(String sourceNodeId, String username, String content, String originalJson, String ip) {
+        ObjectNode payload = mapper.createObjectNode();
+        payload.put("username", username);
+        payload.put("content", content);
+        payload.put("originalJson", originalJson);
+        payload.put("ip", ip);
+        return create(sourceNodeId, "NEW_PUBLIC_MESSAGE", payload);
     }
 
     public static ReplicationEvent clientConnected(String sourceNodeId, String username, String ip) {

@@ -10,19 +10,11 @@ import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import replication.ReplicationEvent;
 import replication.ReplicationManager;
-import registry.LocalClientRegistry;
+import delivery.Impl.LocalDeliveryStrategyPrivate;
 import topology.RoutingTable;
 
 import java.io.OutputStream;
 
-/**
- * Maneja la acción CONNECT: registra o recupera un usuario, crea su sesión activa
- * y, en modo cluster, registra al cliente en la RoutingTable y propaga el evento
- * de conexión a todos los peers (para que actualicen su vista de clientes).
- *
- * Requerimiento cumplido: "Cada servidor deberá actualizar la información de los
- * clientes disponibles, deben incluir los clientes y los clientes de otros servidores."
- */
 public class ConnectHandler implements ActionHandler {
 
     private final UserManager userManager;
@@ -31,29 +23,28 @@ public class ConnectHandler implements ActionHandler {
     private final BroadcastManager broadcastManager;
     private final ListClientsHandler listClientsHandler;
 
-    // Componentes de cluster (null si cluster deshabilitado)
-    private RoutingTable routingTable;
-    private ReplicationManager replicationManager;
-    private LocalClientRegistry localClientRegistry;
-    private String localNodeId;
+    // Dependencias de clúster obligatorias e inmutables
+    private final RoutingTable routingTable;
+    private final ReplicationManager replicationManager;
+    private final LocalDeliveryStrategyPrivate localDeliveryStrategy;
+    private final String localNodeId;
+
+    // Mantiene el stream del cliente actual mapeado al hilo de ejecución de la solicitud
     private final ThreadLocal<OutputStream> clientOut = new ThreadLocal<>();
 
     public ConnectHandler(UserManager userManager, LogManager logManager,
                           ResponseBuilder serializer, BroadcastManager broadcastManager,
-                          ListClientsHandler listClientsHandler) {
+                          ListClientsHandler listClientsHandler, RoutingTable routingTable,
+                          ReplicationManager replicationManager, LocalDeliveryStrategyPrivate localDeliveryStrategy,
+                          String localNodeId) {
         this.userManager = userManager;
         this.logManager = logManager;
         this.serializer = serializer;
         this.broadcastManager = broadcastManager;
         this.listClientsHandler = listClientsHandler;
-    }
-
-    /** Inyecta dependencias de cluster (llamado desde ServerApplication si cluster habilitado). */
-    public void enableCluster(RoutingTable routingTable, ReplicationManager replicationManager,
-                               LocalClientRegistry localClientRegistry, String localNodeId) {
         this.routingTable = routingTable;
         this.replicationManager = replicationManager;
-        this.localClientRegistry = localClientRegistry;
+        this.localDeliveryStrategy = localDeliveryStrategy;
         this.localNodeId = localNodeId;
     }
 
@@ -74,31 +65,30 @@ public class ConnectHandler implements ActionHandler {
         String username = payload.get(JsonSchema.PAYLOAD_USERNAME).asText();
         ClientAddress address = ClientAddress.parse(clientIp);
 
+        // 1. Persistencia y login en la base de datos local
         long userId = userManager.conectarUsuario(username, address.getIp(), address.getPort());
 
+        // 2. Registro en la bitácora interna de auditoría
         logManager.registrarAccion(null, userId, "CONNECT", "SUCCESS",
                 "Usuario " + username + " conectado desde " + address);
 
-        // --- Integración con cluster P2P ---
-        if (routingTable != null) {
-            // 1. Registrar como cliente local en la tabla de enrutamiento
-            routingTable.registerLocalClient(username);
+        // ── 3. INTEGRACIÓN CON CLÚSTER P2P (Siempre activo) ───────────────────
 
-            // 2. Registrar el OutputStream para entrega directa de mensajes
-            OutputStream currentOut = clientOut.get();
-            if (localClientRegistry != null && currentOut != null) {
-                localClientRegistry.register(username, currentOut);
-            }
+        // Registrar como cliente local en la tabla de enrutamiento en memoria
+        routingTable.registerLocalClient(username);
 
-            // 3. Propagar evento de conexión a todos los peers
-            if (replicationManager != null && localNodeId != null) {
-                ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp());
-                replicationManager.propagate(event);
-            }
-
-            // 4. Broadcast de lista actualizada (incluye cliente recién conectado)
-            broadcastManager.broadcast(listClientsHandler.handle(null, null));
+        // Registrar el OutputStream en la estrategia local para poder enviarle mensajes directos
+        OutputStream currentOut = clientOut.get();
+        if (currentOut != null) {
+            localDeliveryStrategy.register(username, currentOut);
         }
+
+        // Propagar de forma inmediata el evento de conexión a todos los peers del clúster
+        ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp());
+        replicationManager.propagate(event);
+
+        // Broadcast global a la red para refrescar las listas de clientes en las UI
+        broadcastManager.broadcast(listClientsHandler.handle(null, null));
 
         return serializer.buildSuccessResponse(JsonSchema.ACTION_CONNECT, "Usuario ID: " + userId);
     }

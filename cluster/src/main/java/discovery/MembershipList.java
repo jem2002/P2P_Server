@@ -1,6 +1,7 @@
 package discovery;
 
-import events.NodeInfo;
+import models.RemoteNodeInfo;
+import models.enums.NodeState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +27,8 @@ public class MembershipList {
      *
      * @return true si el nodo es nuevo (recién descubierto), false si ya existía.
      */
-    public boolean addOrUpdate(NodeInfo nodeInfo) {
-        MemberEntry existing = members.get(nodeInfo.getNodeId());
+    public boolean addOrUpdate(RemoteNodeInfo remoteNodeInfo) {
+        MemberEntry existing = members.get(remoteNodeInfo.getNodeId());
 
         if (existing != null) {
             NodeState previousState = existing.getState();
@@ -35,16 +36,16 @@ public class MembershipList {
 
             if (previousState == NodeState.SUSPECTED || previousState == NodeState.DOWN) {
                 logger.info("Nodo {} ha vuelto a estar ALIVE (estado previo: {})",
-                        nodeInfo.getNodeId(), previousState);
+                        remoteNodeInfo.getNodeId(), previousState);
                 return true; // Tratarlo como reingreso
             }
             return false;
         }
 
-        MemberEntry newEntry = new MemberEntry(nodeInfo);
+        MemberEntry newEntry = new MemberEntry(remoteNodeInfo);
         newEntry.refreshHeartbeat();
-        members.put(nodeInfo.getNodeId(), newEntry);
-        logger.info("Nuevo nodo descubierto: {}", nodeInfo);
+        members.put(remoteNodeInfo.getNodeId(), newEntry);
+        logger.info("Nuevo nodo descubierto: {}", remoteNodeInfo);
         return true;
     }
 
@@ -55,14 +56,14 @@ public class MembershipList {
      *
      * @return true si el nodo era completamente desconocido.
      */
-    public boolean addIfAbsent(NodeInfo nodeInfo) {
-        if (members.containsKey(nodeInfo.getNodeId())) {
+    public boolean addIfAbsent(RemoteNodeInfo remoteNodeInfo) {
+        if (members.containsKey(remoteNodeInfo.getNodeId())) {
             return false; // ya lo conocemos — no tocar su timer
         }
-        MemberEntry newEntry = new MemberEntry(nodeInfo);
+        MemberEntry newEntry = new MemberEntry(remoteNodeInfo);
         // Iniciar su timer desde ahora para darle tiempo de mandar su propio heartbeat
-        members.put(nodeInfo.getNodeId(), newEntry);
-        logger.info("Nodo descubierto via gossip (indirecto): {}", nodeInfo);
+        members.put(remoteNodeInfo.getNodeId(), newEntry);
+        logger.info("Nodo descubierto via gossip (indirecto): {}", remoteNodeInfo);
         return true;
     }
 
@@ -106,8 +107,8 @@ public class MembershipList {
     /**
      * Retorna la lista de nodos actualmente vivos (ALIVE).
      */
-    public List<NodeInfo> getAliveNodes() {
-        List<NodeInfo> alive = new ArrayList<>();
+    public List<RemoteNodeInfo> getAliveNodes() {
+        List<RemoteNodeInfo> alive = new ArrayList<>();
         for (MemberEntry entry : members.values()) {
             if (entry.getState() == NodeState.ALIVE) {
                 alive.add(entry.getNodeInfo());
@@ -122,8 +123,8 @@ public class MembershipList {
      * y darles la oportunidad de responder con su propio heartbeat directo,
      * lo que los promovería a ALIVE.
      */
-    public List<NodeInfo> getNonDownNodes() {
-        List<NodeInfo> reachable = new ArrayList<>();
+    public List<RemoteNodeInfo> getNonDownNodes() {
+        List<RemoteNodeInfo> reachable = new ArrayList<>();
         for (MemberEntry entry : members.values()) {
             if (entry.getState() != NodeState.DOWN) {
                 reachable.add(entry.getNodeInfo());

@@ -1,4 +1,4 @@
-package identity;
+package models;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -10,7 +10,7 @@ import java.util.UUID;
  *
  * Principio aplicado: Value Object (DDD) — identidad por nodeId, inmutable.
  */
-public final class NodeIdentity {
+public final class LocalNodeInfo {
 
     private final String nodeId;
     private final String host;
@@ -22,7 +22,7 @@ public final class NodeIdentity {
     /**
      * Crea una identidad de nodo con un ID auto-generado si se pasa "auto".
      */
-    public NodeIdentity(String nodeId, String host, int clientPort, int clusterPort, String gatewayUrl) {
+    public LocalNodeInfo(String nodeId, String host, int clientPort, int clusterPort, String gatewayUrl) {
         this.nodeId = "auto".equalsIgnoreCase(nodeId)
                 ? UUID.randomUUID().toString().substring(0, 8)
                 : nodeId;
@@ -64,7 +64,7 @@ public final class NodeIdentity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NodeIdentity that = (NodeIdentity) o;
+        LocalNodeInfo that = (LocalNodeInfo) o;
         return Objects.equals(nodeId, that.nodeId);
     }
 

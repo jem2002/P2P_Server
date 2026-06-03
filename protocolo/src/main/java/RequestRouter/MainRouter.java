@@ -1,7 +1,6 @@
 package RequestRouter;
 
 import CommentService.CommentManager;
-import JsonSchema.ClientAddress;
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
@@ -11,13 +10,13 @@ import MessageParser.JsonInputParser;
 import MessageParser.MessageWrapper;
 import RequestRouter.handlers.*;
 import UserService.UserManager;
-import com.fasterxml.jackson.databind.JsonNode;
+import models.LocalNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import registry.LocalClientRegistry;
-import replication.ReplicationEvent;
+import delivery.Impl.LocalDeliveryStrategyPrivate;
+import ports.api.IBroadcastManager;
 import replication.ReplicationManager;
-import routing.RemoteDeliveryStrategy;
+import delivery.Impl.RemoteDeliveryStrategyPrivate;
 import topology.RoutingTable;
 
 import java.io.OutputStream;
@@ -31,15 +30,15 @@ import ports.api.IRequestDispatcher;
  * Despacha las solicitudes entrantes al ActionHandler correspondiente.
  *
  * Principios aplicados:
- *   - OCP: agregar una nueva acción = crear una nueva clase ActionHandler
- *          y registrarla en el Map, sin modificar este archivo.
- *   - SRP: esta clase SOLO hace routing (dispatch). La lógica de negocio
- *          vive en cada handler individual.
- *   - Controller (GRASP): punto de entrada coordinador del protocolo.
+ * - OCP: agregar una nueva acción = crear una nueva clase ActionHandler
+ * y registrarla en el Map, sin modificar este archivo.
+ * - SRP: esta clase SOLO hace routing (dispatch). La lógica de negocio
+ * vive en cada handler individual.
+ * - Controller (GRASP): punto de entrada coordinador del protocolo.
  *
- * Extensión P2P: acepta dependencias de cluster opcionales (null si deshabilitado).
- * Cuando el cluster está habilitado, ConnectHandler, SendMessageHandler y
- * ListClientsHandler trabajan de forma federada.
+ * Arquitectura Clúster:
+ * - El clúster siempre está habilitado. Las dependencias se exigen en el constructor,
+ * garantizando inmutabilidad y eliminando estados incompletos.
  */
 public class MainRouter implements IRequestDispatcher {
 
@@ -58,11 +57,11 @@ public class MainRouter implements IRequestDispatcher {
     private final BroadcastManager broadcastManager;
     private final LogManager logManager;
 
-    // Dependencias de cluster (null si deshabilitado)
-    private RoutingTable routingTable;
-    private LocalClientRegistry localClientRegistry;
-    private ReplicationManager replicationManager;
-    private String localNodeId;
+    // Dependencias de cluster obligatorias e inmutables (FINAL)
+    private final RoutingTable routingTable;
+    private final LocalDeliveryStrategyPrivate localDeliveryStrategy;
+    private final ReplicationManager replicationManager;
+    private final String localNodeId;
 
     // Handler de conexión (referencia necesaria para inyección de OutputStream)
     private final ConnectHandler connectHandler;
@@ -73,100 +72,82 @@ public class MainRouter implements IRequestDispatcher {
         this.disconnectionService = ds;
     }
 
+    /**
+     * Constructor único con inyección completa y obligatoria de componentes locales y de red.
+     */
     public MainRouter(UserManager userManager, DocumentManager documentManager, LogManager logManager,
-                      BroadcastManager broadcastManager, TransferManager transferManager, CommentManager commentManager) {
+                      BroadcastManager broadcastManager, TransferManager transferManager, CommentManager commentManager,
+                      RoutingTable routingTable, LocalDeliveryStrategyPrivate localDeliveryStrategy,
+                      ReplicationManager replicationManager, RemoteDeliveryStrategyPrivate remoteDelivery,
+                      String localNodeId,
+                      discovery.MembershipList membershipList, health.ClusterHealthService healthService,
+                      LocalNodeInfo localIdentity) {
+
         this.parser = new JsonInputParser();
         this.serializer = new ResponseBuilder();
         this.userManager = userManager;
         this.broadcastManager = broadcastManager;
         this.logManager = logManager;
 
-        // Crear handlers reutilizables
-        this.listClientsHandler = new ListClientsHandler(userManager, serializer);
+        // Asignación directa de dependencias del clúster
+        this.routingTable = routingTable;
+        this.localDeliveryStrategy = localDeliveryStrategy;
+        this.replicationManager = replicationManager;
+        this.localNodeId = localNodeId;
+
+        // ── 1. CREACIÓN DE HANDLERS CON INYECCIÓN UNIFICADA ───────────────────
         this.listLogsHandler = new ListLogsHandler(logManager, serializer);
+
+        // Instanciación limpia usando las variables listas del constructor
+        this.listClientsHandler = new ListClientsHandler(userManager, serializer, routingTable, localNodeId);
 
         ListDocumentsHandler listDocumentsHandler = new ListDocumentsHandler(documentManager, serializer);
         ListMessagesHandler listMessagesHandler = new ListMessagesHandler(documentManager, serializer);
 
         this.connectHandler = new ConnectHandler(userManager, logManager, serializer,
-                broadcastManager, listClientsHandler);
+                broadcastManager, listClientsHandler, routingTable, replicationManager,
+                localDeliveryStrategy, localNodeId);
 
-        // Registrar todos los handlers en el Map (OCP)
+        // ── 2. REGISTRO DE HANDLERS EN EL MAPA (OCP) ──────────────────────────
         this.handlers = new HashMap<>();
         handlers.put(JsonSchema.ACTION_CONNECT, connectHandler);
         handlers.put(JsonSchema.ACTION_LIST_CLIENTS, listClientsHandler);
         handlers.put(JsonSchema.ACTION_LIST_DOCUMENTS, listDocumentsHandler);
         handlers.put(JsonSchema.ACTION_LIST_MESSAGES, listMessagesHandler);
         handlers.put(JsonSchema.ACTION_LIST_LOGS, listLogsHandler);
+
         handlers.put(JsonSchema.ACTION_UPLOAD_INIT,
                 new UploadInitHandler(userManager, transferManager, logManager,
                         broadcastManager, serializer, listLogsHandler));
+
         handlers.put(JsonSchema.ACTION_DOWNLOAD_INIT,
                 new DownloadInitHandler(userManager, documentManager, transferManager,
                         logManager, broadcastManager, serializer, listLogsHandler));
+
+        // Mensajería basada en estrategias con dependencias completas
         handlers.put(JsonSchema.ACTION_SEND_MESSAGE,
                 new SendMessageHandler(userManager, documentManager, logManager,
-                        broadcastManager, serializer, listLogsHandler));
+                        broadcastManager, serializer, listLogsHandler, routingTable,
+                        localDeliveryStrategy, replicationManager, remoteDelivery,
+                        localNodeId));
 
         handlers.put(JsonSchema.ACTION_COMMENT_DOCUMENT, new CommentDocumentHandler(commentManager, serializer));
-    }
 
-    /**
-     * Activa la integración con el cluster P2P.
-     * Se llama desde ServerApplication cuando cluster.enabled=true.
-     *
-     * @param routingTable         Tabla de enrutamiento cliente→nodo
-     * @param localClientRegistry  Registro de streams locales (para entrega directa)
-     * @param replicationManager   Gestor de replicación de eventos
-     * @param remoteDelivery       Estrategia de entrega a clientes remotos
-     * @param localNodeId          Identificador de este nodo
-     * @param membershipList       Lista de membresía (para LIST_PEER_INFO)
-     * @param healthService        Servicio de salud del cluster
-     * @param localIdentity        Identidad de este nodo (para LIST_PEER_INFO)
-     */
-    public void enableCluster(RoutingTable routingTable,
-                               LocalClientRegistry localClientRegistry,
-                               ReplicationManager replicationManager,
-                               RemoteDeliveryStrategy remoteDelivery,
-                               String localNodeId,
-                               discovery.MembershipList membershipList,
-                               health.ClusterHealthService healthService,
-                               identity.NodeIdentity localIdentity) {
-        this.routingTable = routingTable;
-        this.localClientRegistry = localClientRegistry;
-        this.replicationManager = replicationManager;
-        this.localNodeId = localNodeId;
+        // Handlers de Clúster e Información P2P registrados de manera estática
+        handlers.put(JsonSchema.ACTION_LIST_PEER_INFO,
+                new ListPeerInfoHandler(serializer, healthService, localIdentity, membershipList));
 
-        // Activar vista federada de clientes
-        listClientsHandler.enableFederatedList(routingTable, localNodeId);
+        handlers.put(JsonSchema.ACTION_LIST_PEER_LOGS,
+                new ListPeerLogsHandler(serializer, membershipList, localNodeId,
+                        () -> {
+                            try {
+                                return listLogsHandler.handle(null, null);
+                            } catch (Exception e) {
+                                return "{}";
+                            }
+                        }));
 
-        // Activar cluster en ConnectHandler
-        connectHandler.enableCluster(routingTable, replicationManager,
-                localClientRegistry, localNodeId);
-
-        // Activar entrega dirigida en SendMessageHandler
-        SendMessageHandler sendHandler = (SendMessageHandler) handlers.get(JsonSchema.ACTION_SEND_MESSAGE);
-        sendHandler.enableCluster(routingTable, localClientRegistry,
-                replicationManager, remoteDelivery, localNodeId);
-
-        // Registrar handler de info de peers
-        ListPeerInfoHandler listPeerInfoHandler = new ListPeerInfoHandler(
-                serializer, healthService, localIdentity, membershipList);
-        handlers.put(JsonSchema.ACTION_LIST_PEER_INFO, listPeerInfoHandler);
-
-        // Registrar handler de logs de peers
-        ListPeerLogsHandler listPeerLogsHandler = new ListPeerLogsHandler(
-                serializer, membershipList, localNodeId,
-                () -> {
-                    try {
-                        return listLogsHandler.handle(null, null);
-                    } catch (Exception e) {
-                        return "{}";
-                    }
-                });
-        handlers.put(JsonSchema.ACTION_LIST_PEER_LOGS, listPeerLogsHandler);
-
-        logger.info("MainRouter: integración P2P habilitada para nodo '{}'", localNodeId);
+        logger.info("MainRouter: Arquitectura federada inicializada correctamente para el nodo '{}'", localNodeId);
     }
 
     /**
@@ -179,7 +160,6 @@ public class MainRouter implements IRequestDispatcher {
 
     /**
      * Despacha una solicitud JSON al handler correspondiente.
-     * El switch monolítico original fue reemplazado por un Map lookup (OCP).
      */
     public String routeRequest(String rawJson, String clientIp) {
         MessageWrapper request = parser.parse(rawJson);
@@ -203,8 +183,6 @@ public class MainRouter implements IRequestDispatcher {
 
     /**
      * Procesa la desconexión física de un cliente.
-     * Cierra la sesión en BD, notifica a los demás y actualiza logs.
-     * En modo cluster: elimina de RoutingTable y LocalClientRegistry, propaga evento.
      */
     public void notificarDesconexionFisica(String rawClientIp, OutputStream out) {
         if (disconnectionService != null) {

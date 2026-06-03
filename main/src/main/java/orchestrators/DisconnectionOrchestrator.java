@@ -4,7 +4,7 @@ import JsonSchema.ClientAddress;
 import LogService.LogManager;
 import UserService.UserManager;
 import MessageParser.BroadcastManager;
-import registry.LocalClientRegistry;
+import delivery.Impl.LocalDeliveryStrategyPrivate;
 import replication.ReplicationEvent;
 import replication.ReplicationManager;
 import topology.RoutingTable;
@@ -29,7 +29,7 @@ public class DisconnectionOrchestrator implements IDisconnectionHandler {
 
     // Dependencias de cluster (null si deshabilitado)
     private RoutingTable routingTable;
-    private LocalClientRegistry localClientRegistry;
+    private LocalDeliveryStrategyPrivate localDeliveryStrategy;
     private ReplicationManager replicationManager;
     private String localNodeId;
 
@@ -43,10 +43,10 @@ public class DisconnectionOrchestrator implements IDisconnectionHandler {
         this.broadcastManager = broadcastManager;
     }
 
-    public void enableCluster(RoutingTable rt, LocalClientRegistry lcr,
+    public void enableCluster(RoutingTable rt, LocalDeliveryStrategyPrivate lcr,
                               ReplicationManager rm, String nodeId) {
         this.routingTable = rt;
-        this.localClientRegistry = lcr;
+        this.localDeliveryStrategy = lcr;
         this.replicationManager = rm;
         this.localNodeId = nodeId;
     }
@@ -67,8 +67,8 @@ public class DisconnectionOrchestrator implements IDisconnectionHandler {
 
             // Fallback: si MySQL no encontró la sesión por IP/Puerto (puede pasar con IPv6 o NAT local),
             // buscamos el username directamente en el LocalClientRegistry usando el OutputStream.
-            if (("UsuarioDesconocido".equals(username) || username == null) && localClientRegistry != null && out != null) {
-                String fallbackName = localClientRegistry.getUsernameByStream(out);
+            if (("UsuarioDesconocido".equals(username) || username == null) && localDeliveryStrategy != null && out != null) {
+                String fallbackName = localDeliveryStrategy.getUsernameByStream(out);
                 if (fallbackName != null) {
                     username = fallbackName;
                     logger.info("Resolución de usuario por fallback (Stream) exitosa: {}", username);
@@ -92,8 +92,8 @@ public class DisconnectionOrchestrator implements IDisconnectionHandler {
                 if (routingTable != null) {
                     routingTable.unregisterClient(username);
                 }
-                if (localClientRegistry != null) {
-                    localClientRegistry.unregister(username);
+                if (localDeliveryStrategy != null) {
+                    localDeliveryStrategy.unregister(username);
                 }
                 if (replicationManager != null && localNodeId != null) {
                     replicationManager.propagate(

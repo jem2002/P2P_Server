@@ -10,6 +10,4 @@ public interface IBroadcastManager {
     void addStream(OutputStream clientOut);
     void removeStream(OutputStream clientOut);
     void broadcast(String message);
-    void broadcastLocalOnly(String message);
-    void setFederatedHook(Consumer<String> hook);
 }

@@ -1,7 +1,6 @@
 package RequestRouter.handlers;
 
 import JsonSchema.DownloadDetails;
-import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;

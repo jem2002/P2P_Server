@@ -1,5 +1,7 @@
 package events;
 
+import models.enums.ClusterEvent;
+import models.RemoteNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +36,7 @@ public class NetworkEventBus {
      * Publica un evento a todos los listeners registrados.
      * Los errores en un listener no detienen la propagación a los demás.
      */
-    public void publish(ClusterEvent event, NodeInfo node) {
+    public void publish(ClusterEvent event, RemoteNodeInfo node) {
         logger.info("Evento de cluster: {} — Nodo: {}", event, node);
 
         for (NetworkEventListener listener : listeners) {

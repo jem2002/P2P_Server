@@ -1,7 +1,6 @@
 package communication;
 
-import events.NetworkEventListener;
-import events.NodeInfo;
+import models.RemoteNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,21 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Pool de conexiones TCP a los servidores peer.
  * Mantiene una conexión persistente a cada nodo vivo.
- *
- * Implementa NetworkEventListener para abrir/cerrar conexiones
- * automáticamente cuando los nodos se unen o abandonan la red.
- *
- * Principio aplicado: Observer (GoF) — reacciona a eventos del cluster.
  */
-public class PeerConnectionPool implements NetworkEventListener {
+public class PeerConnectionPool {
 
     private static final Logger logger = LoggerFactory.getLogger(PeerConnectionPool.class);
     private final ConcurrentHashMap<String, PeerConnection> connections = new ConcurrentHashMap<>();
 
-    /**
-     * Envía un mensaje a un peer específico.
-     * Si la conexión no existe o está rota, intenta reconectar.
-     */
     public void sendToPeer(String nodeId, String jsonMessage) throws Exception {
         PeerConnection conn = connections.get(nodeId);
         if (conn == null) {
@@ -46,9 +36,6 @@ public class PeerConnectionPool implements NetworkEventListener {
         }
     }
 
-    /**
-     * Envía un mensaje a todos los peers conectados.
-     */
     public void broadcastToPeers(String jsonMessage) {
         for (PeerConnection conn : connections.values()) {
             try {
@@ -59,16 +46,10 @@ public class PeerConnectionPool implements NetworkEventListener {
         }
     }
 
-    /**
-     * Obtiene la conexión a un peer específico.
-     */
     public PeerConnection getConnection(String nodeId) {
         return connections.get(nodeId);
     }
 
-    /**
-     * Número de conexiones activas.
-     */
     public int activeCount() {
         int count = 0;
         for (PeerConnection conn : connections.values()) {
@@ -77,19 +58,21 @@ public class PeerConnectionPool implements NetworkEventListener {
         return count;
     }
 
-    // ============ NetworkEventListener ============
+    // ============ MÉTODOS DE CONEXIÓN / DESCONEXIÓN ============
 
-    @Override
-    public void onNodeJoined(NodeInfo node) {
+    /**
+     * Agrega un nuevo peer al pool y lanza la conexión.
+     */
+    public boolean connectToPeer(RemoteNodeInfo node) {
         String nodeId = node.getNodeId();
         if (connections.containsKey(nodeId)) {
-            return; // Ya existe conexión
+            return false; // Ya existe conexión
         }
 
         PeerConnection conn = new PeerConnection(nodeId, node.getHost(), node.getClusterPort());
         connections.put(nodeId, conn);
 
-        // Conectar en un hilo separado para no bloquear el EventBus
+        // Conectar en un hilo separado para no bloquear
         new Thread(() -> {
             try {
                 conn.connect();
@@ -98,20 +81,23 @@ public class PeerConnectionPool implements NetworkEventListener {
                 logger.warn("No se pudo conectar al peer recién detectado: {}", node);
             }
         }, "PeerConnect-" + nodeId).start();
+
+        return true;
     }
 
-    @Override
-    public void onNodeLeft(NodeInfo node) {
+    /**
+     * Remueve un peer del pool y cierra su conexión.
+     */
+    public boolean disconnectFromPeer(RemoteNodeInfo node) {
         PeerConnection conn = connections.remove(node.getNodeId());
         if (conn != null) {
             conn.close();
             logger.info("Conexión cerrada con peer caído: {}", node);
+            return true;
         }
+        return false;
     }
 
-    /**
-     * Cierra todas las conexiones (para shutdown).
-     */
     public void closeAll() {
         for (PeerConnection conn : connections.values()) {
             conn.close();

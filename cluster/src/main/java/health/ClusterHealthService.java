@@ -3,8 +3,8 @@ package health;
 import communication.PeerConnectionPool;
 import discovery.MemberEntry;
 import discovery.MembershipList;
-import discovery.NodeState;
-import identity.NodeIdentity;
+import models.enums.NodeState;
+import models.LocalNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +22,12 @@ public class ClusterHealthService {
 
     private static final Logger logger = LoggerFactory.getLogger(ClusterHealthService.class);
 
-    private final NodeIdentity localNode;
+    private final LocalNodeInfo localNode;
     private final MembershipList membership;
     private final PeerConnectionPool peerPool;
 
-    public ClusterHealthService(NodeIdentity localNode, MembershipList membership,
-                                 PeerConnectionPool peerPool) {
+    public ClusterHealthService(LocalNodeInfo localNode, MembershipList membership,
+                                PeerConnectionPool peerPool) {
         this.localNode = localNode;
         this.membership = membership;
         this.peerPool = peerPool;

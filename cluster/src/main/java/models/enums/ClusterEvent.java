@@ -1,4 +1,4 @@
-package events;
+package models.enums;
 
 /**
  * Tipos de evento que ocurren en la red de servidores P2P.

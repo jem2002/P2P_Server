@@ -1,6 +1,7 @@
 package discovery;
 
-import events.NodeInfo;
+import models.RemoteNodeInfo;
+import models.enums.NodeState;
 
 /**
  * Entrada en la lista de membresía para un nodo remoto.
@@ -11,18 +12,18 @@ import events.NodeInfo;
  */
 public class MemberEntry {
 
-    private final NodeInfo nodeInfo;
+    private final RemoteNodeInfo remoteNodeInfo;
     private volatile NodeState state;
     private volatile long lastHeartbeatMs;
 
-    public MemberEntry(NodeInfo nodeInfo) {
-        this.nodeInfo = nodeInfo;
+    public MemberEntry(RemoteNodeInfo remoteNodeInfo) {
+        this.remoteNodeInfo = remoteNodeInfo;
         this.state = NodeState.JOINING;
         this.lastHeartbeatMs = System.currentTimeMillis();
     }
 
-    public NodeInfo getNodeInfo() {
-        return nodeInfo;
+    public RemoteNodeInfo getNodeInfo() {
+        return remoteNodeInfo;
     }
 
     public NodeState getState() {
