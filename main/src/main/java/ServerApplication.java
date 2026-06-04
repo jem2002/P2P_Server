@@ -40,7 +40,6 @@ import events.NetworkEventBus;
 import health.ClusterHealthService;
 import models.LocalNodeInfo;
 import replication.ReplicationManager;
-import topology.RoutingTable;
 
 import java.util.Arrays;
 
@@ -97,15 +96,14 @@ public class ServerApplication {
             PeerConnectionPool peerPool = new PeerConnectionPool();
 
             ReplicationManager replicator = new ReplicationManager(identity.getNodeId(), membership, peerPool);
-            RoutingTable routingTable = new RoutingTable(identity.getNodeId());
 
 
             ClusterHealthService healthService = new ClusterHealthService(identity, membership, peerPool);
 
             // ── 4. CONSTRUCCIÓN DE ROUTERS (INMUTABLE) ───────────────────────
             ClientRouter clientRouter = new ClientRouter(
-                    userManager, documentManager, logManager, broadcastManager, transferManager, commentManager,
-                    routingTable, replicator,
+                    userManager, documentManager, logManager, broadcastManager, transferManager, commentManager
+                    , replicator,
                     identity.getNodeId(), membership, healthService, identity
             );
 
@@ -126,10 +124,10 @@ public class ServerApplication {
                     broadcastManager, transferManager, fileRouter);
 
             // ── 7. SUBSCRIPCIÓN DE EVENTOS DE RED Y REPLICACIÓN ──────────────────
-            NodeConnector nodeConnector = new NodeConnector(peerPool, identity.getNodeId(), routingTable);
+            NodeConnector nodeConnector = new NodeConnector(peerPool, identity.getNodeId());
             eventBus.subscribe(nodeConnector);
 
-            NodeDisconnector nodeDisconnector = new NodeDisconnector(peerPool, routingTable);
+            NodeDisconnector nodeDisconnector = new NodeDisconnector(peerPool);
             eventBus.subscribe(nodeDisconnector);
 
             ClusterNotifier clusterNotifier = new ClusterNotifier(broadcastManager::broadcast);
@@ -139,13 +137,12 @@ public class ServerApplication {
                     userManager, documentManager, broadcastManager,
                     clientRouter.getHandler(JsonSchema.ACTION_NEW_MESSAGE),
                     clientRouter.getHandler(JsonSchema.ACTION_LIST_CLIENTS),
-                    clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS),
-                    routingTable
+                    clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS)
                     );
             replicator.setEventHandler(eventApplier);
 
             // ── 8. CONFIGURACIÓN DE PEER MESSAGE HANDLER ────────────────────────
-            PeerMessageHandler peerHandler = new PeerMessageHandler(replicator, routingTable);
+            PeerMessageHandler peerHandler = new PeerMessageHandler(replicator);
 
             // ── 9. HILOS DE INFRAESTRUCTURA P2P (Gossip & Servidor entre Nodos) ─
             GossipProtocol gossip = new GossipProtocol(
@@ -160,7 +157,7 @@ public class ServerApplication {
             ServerAdminAPI adminAPI = new ServerAdminAPI(userRepo, docRepo);
             com.universidad.messaging.api.SentimentApi.startApi(apiPort);
 
-            InteractiveConsole console = new InteractiveConsole(adminAPI, networkServer, healthService, routingTable, membership);
+            InteractiveConsole console = new InteractiveConsole(adminAPI, networkServer, healthService, membership);
             console.run();
 
         } catch (Exception e) {

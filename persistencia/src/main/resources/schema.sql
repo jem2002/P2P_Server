@@ -53,6 +53,7 @@ CREATE TABLE client_connections (
                                     id              BIGINT       AUTO_INCREMENT PRIMARY KEY,
                                     user_id         BIGINT       NOT NULL,
                                     ip_address      VARCHAR(45)  NOT NULL,
+                                    node_id         VARCHAR(100) NOT NULL,
                                     port            INT          NOT NULL,
                                     connected_at    DATETIME     NOT NULL,
                                     disconnected_at DATETIME,

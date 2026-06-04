@@ -1,12 +1,13 @@
 package events.Impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import communication.PeerConnectionPool;
 import events.NetworkEventListener;
 import models.RemoteNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import topology.RoutingTable;
-import util.InterServerProtocol;
+
 
 /**
  * Escucha eventos de la red y orquesta la conexión/desconexión
@@ -19,12 +20,11 @@ public class NodeConnector implements NetworkEventListener {
 
     private final PeerConnectionPool peerConnectionPool;
     private final String identityNodeId;
-    private final RoutingTable routingTable;
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    public NodeConnector(PeerConnectionPool peerConnectionPool, String identityNodeId, RoutingTable routingTable){
+    public NodeConnector(PeerConnectionPool peerConnectionPool, String identityNodeId){
         this.peerConnectionPool = peerConnectionPool;
         this.identityNodeId = identityNodeId;
-        this.routingTable = routingTable;
     }
 
     @Override
@@ -51,8 +51,7 @@ public class NodeConnector implements NetworkEventListener {
                     // Espera inicial/entre reintentos
                     Thread.sleep(delay);
 
-                    String syncMsg = InterServerProtocol
-                            .buildSyncMessage(identityNodeId, routingTable);
+                    String syncMsg = buildSyncMessage(identityNodeId);
                     peerConnectionPool.sendToPeer(node.getNodeId(), syncMsg);
 
                     logger.info("RoutingTable enviada exitosamente a '{}' (bootstrap sync en intento {})",
@@ -79,6 +78,16 @@ public class NodeConnector implements NetworkEventListener {
             }
         }, "BootstrapSync-" + node.getNodeId()).start();
 
+    }
+
+    public static String buildSyncMessage(String sourceNodeId) {
+        ObjectNode root = mapper.createObjectNode();
+        root.put("action", "PEER_SYNC");
+
+        ObjectNode payload = mapper.createObjectNode();
+        payload.put("sourceNodeId", sourceNodeId);
+
+        return root.toString();
     }
 
 

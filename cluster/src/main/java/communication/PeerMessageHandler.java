@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import replication.ReplicationEvent;
 import replication.ReplicationManager;
-import topology.RoutingTable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -37,7 +36,6 @@ public class PeerMessageHandler {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private final ReplicationManager replicationManager;
-    private final RoutingTable routingTable;
 
 
     public interface RouteDeliveryListener {
@@ -49,9 +47,8 @@ public class PeerMessageHandler {
      */
     private volatile RouteDeliveryListener onRouteDelivered;
 
-    public PeerMessageHandler(ReplicationManager replicationManager, RoutingTable routingTable) {
+    public PeerMessageHandler(ReplicationManager replicationManager) {
         this.replicationManager = replicationManager;
-        this.routingTable = routingTable;
     }
 
 
@@ -128,20 +125,7 @@ public class PeerMessageHandler {
 
     @SuppressWarnings("unchecked")
     private void handleSync(JsonNode payload) {
-        if (payload == null) return;
-        try {
-            String sourceNodeId = payload.has("sourceNodeId")
-                    ? payload.get("sourceNodeId").asText() : "";
-            JsonNode tableNode = payload.has("routingTable")
-                    ? payload.get("routingTable") : null;
 
-            if (tableNode != null && !sourceNodeId.isEmpty()) {
-                Map<String, String> peerTable = mapper.convertValue(tableNode, Map.class);
-                routingTable.syncFromPeer(sourceNodeId, peerTable);
-            }
-        } catch (Exception e) {
-            logger.error("Error sincronizando tabla de enrutamiento", e);
-        }
     }
 
 

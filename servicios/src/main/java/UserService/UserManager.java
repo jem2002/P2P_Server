@@ -27,9 +27,9 @@ public class UserManager {
         this.sessionRepository = sessionRepository;
     }
 
-    public long conectarUsuario(String username, String ipAddress, int port) throws Exception {
+    public long conectarUsuario(String username, String ipAddress, int port, String nodeId) throws Exception {
         long userId = userRepository.obtenerORegistrarUsuario(username, ipAddress);
-        sessionRepository.registrarSesionActiva(userId, ipAddress, port, "TCP");
+        sessionRepository.registrarSesionActiva(userId, ipAddress, port, "TCP", nodeId);
         return userId;
     }
 

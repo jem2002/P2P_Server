@@ -10,7 +10,6 @@ import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import replication.ReplicationEvent;
 import replication.ReplicationManager;
-import topology.RoutingTable;
 
 import java.io.OutputStream;
 
@@ -23,7 +22,6 @@ public class ConnectHandlerClient implements ClientActionHandler {
     private final ClientActionHandler listClientsHandler;
 
     // Dependencias de clúster obligatorias e inmutables
-    private final RoutingTable routingTable;
     private final ReplicationManager replicationManager;
     private final String localNodeId;
 
@@ -32,7 +30,7 @@ public class ConnectHandlerClient implements ClientActionHandler {
 
     public ConnectHandlerClient(UserManager userManager, LogManager logManager,
                                 ResponseBuilder serializer, BroadcastManager broadcastManager,
-                                ClientActionHandler listClientsHandler, RoutingTable routingTable,
+                                ClientActionHandler listClientsHandler,
                                 ReplicationManager replicationManager,
                                 String localNodeId) {
         this.userManager = userManager;
@@ -40,7 +38,6 @@ public class ConnectHandlerClient implements ClientActionHandler {
         this.serializer = serializer;
         this.broadcastManager = broadcastManager;
         this.listClientsHandler = listClientsHandler;
-        this.routingTable = routingTable;
         this.replicationManager = replicationManager;
         this.localNodeId = localNodeId;
     }
@@ -56,17 +53,11 @@ public class ConnectHandlerClient implements ClientActionHandler {
         ClientAddress address = ClientAddress.parse(clientIp);
 
         // 1. Persistencia y login en la base de datos local
-        long userId = userManager.conectarUsuario(username, address.getIp(), address.getPort());
+        long userId = userManager.conectarUsuario(username, address.getIp(), address.getPort(), localNodeId);
 
         // 2. Registro en la bitácora interna de auditoría
         logManager.registrarAccion(null, userId, "CONNECT", "SUCCESS",
                 "Usuario " + username + " conectado desde " + address);
-
-        // ── 3. INTEGRACIÓN CON CLÚSTER P2P (Siempre activo) ───────────────────
-
-        // Registrar como cliente local en la tabla de enrutamiento en memoria
-        routingTable.registerLocalClient(username);
-
 
         // Propagar de forma inmediata el evento de conexión a todos los peers del clúster
         ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp(), address.getPort());

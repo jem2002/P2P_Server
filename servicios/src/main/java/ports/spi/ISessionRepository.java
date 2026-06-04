@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 public interface ISessionRepository {
 
-    long registrarSesionActiva(long userId, String ipAddress, int port, String protocol) throws SQLException;
+    long registrarSesionActiva(long userId, String ipAddress, int port, String protocol, String nodeId) throws SQLException;
 
     void cerrarSesionActiva(long sessionId) throws SQLException;
 

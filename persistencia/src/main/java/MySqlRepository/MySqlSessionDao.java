@@ -25,16 +25,21 @@ public class MySqlSessionDao implements ISessionRepository {
     }
 
     @Override
-    public long registrarSesionActiva(long userId, String ipAddress, int port, String protocol) throws SQLException {
-        String sql = "INSERT INTO client_connections (user_id, ip_address, port, protocol, is_active, connected_at) VALUES (?, ?, ?, ?, TRUE, NOW())";
+    public long registrarSesionActiva(long userId, String ipAddress, int port, String protocol, String nodeId) throws SQLException {
+        // 1. Añadimos 'node_id' a los campos y un '?' adicional a los valores
+        String sql = "INSERT INTO client_connections (user_id, ip_address, port, protocol, node_id, is_active, connected_at) VALUES (?, ?, ?, ?, ?, TRUE, NOW())";
 
         try (Connection conn = dbManager.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setLong(1, userId);
             stmt.setString(2, ipAddress);
             stmt.setInt(3, port);
             stmt.setString(4, protocol);
+
+            // 2. Asignamos el valor del nodo al quinto parámetro
+            stmt.setString(5, nodeId);
+
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();

@@ -5,7 +5,6 @@ import discovery.MemberEntry;
 import discovery.MembershipList;
 import health.ClusterHealthService;
 import protocolSelector.ProtocolSelector;
-import topology.RoutingTable;
 import java.util.Scanner;
 
 /**
@@ -25,16 +24,14 @@ public class InteractiveConsole implements Runnable {
     private final ServerAdminAPI adminAPI;
     private final ProtocolSelector networkServer;
     private final ClusterHealthService healthService;   // Nullable
-    private final RoutingTable routingTable;             // Nullable
     private final MembershipList membershipList;         // Nullable
 
     public InteractiveConsole(ServerAdminAPI adminAPI, ProtocolSelector networkServer,
-                              ClusterHealthService healthService, RoutingTable routingTable,
+                              ClusterHealthService healthService,
                               MembershipList membershipList) {
         this.adminAPI = adminAPI;
         this.networkServer = networkServer;
         this.healthService = healthService;
-        this.routingTable = routingTable;
         this.membershipList = membershipList;
     }
 
@@ -68,15 +65,6 @@ public class InteractiveConsole implements Runnable {
                         System.out.println("Cluster P2P no habilitado. Configure cluster.enabled=true");
                     }
                     break;
-
-                case "topology":
-                    if (routingTable != null) {
-                        routingTable.printTable();
-                    } else {
-                        System.out.println("Cluster P2P no habilitado. Configure cluster.enabled=true");
-                    }
-                    break;
-
                 case "peer-info":
                     // Requerimiento: "Detección de servidores amigos: listar servidores conectados y desconectados"
                     if (membershipList != null) {
@@ -139,7 +127,6 @@ public class InteractiveConsole implements Runnable {
         System.out.println("  logs        — Mostrar logs de auditoría");
         if (healthService != null) {
             System.out.println("  peers       — Estado del cluster P2P (resumen: vivos/sospechosos/caídos)");
-            System.out.println("  topology    — Tabla de enrutamiento (cliente → servidor)");
             System.out.println("  peer-info   — Información detallada de todos los servidores conocidos");
         }
         System.out.println("  stop        — Apagar servidor de forma segura");

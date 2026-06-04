@@ -1,6 +1,7 @@
 package MySqlRepository;
 
 import JsonSchema.ActiveClient;
+import JsonSchema.ClientConnectionRecord;
 import JsonSchema.UserRecord;
 import ports.spi.IUserRepository;
 import org.slf4j.Logger;
@@ -15,9 +16,9 @@ import java.util.List;
  * Extraída de MySqlDao para cumplir SRP — cada DAO implementa una sola interfaz.
  *
  * Principios aplicados:
- *   - SRP: solo operaciones de usuarios.
- *   - DIP: DatabaseConnectionManager inyectado por constructor.
- *   - ISP: implementa únicamente IUserRepository.
+ * - SRP: solo operaciones de usuarios y sus conexiones.
+ * - DIP: DatabaseConnectionManager inyectado por constructor.
+ * - ISP: implementa únicamente IUserRepository.
  */
 public class MySqlUserDao implements IUserRepository {
 
@@ -78,7 +79,7 @@ public class MySqlUserDao implements IUserRepository {
     public long obtenerIdUsuarioPorUsername(String username) throws Exception {
         String sql = "SELECT id FROM users WHERE username = ?";
         try (Connection conn = dbManager.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, username);
 
@@ -95,20 +96,23 @@ public class MySqlUserDao implements IUserRepository {
     @Override
     public List<ActiveClient> listarClientesActivos() throws Exception {
         List<ActiveClient> activos = new ArrayList<>();
-        String sql = "SELECT u.username, c.ip_address, c.connected_at " +
+        // Modificado para extraer también la columna 'node_id'
+        String sql = "SELECT u.username, c.ip_address, c.connected_at, c.node_id " +
                 "FROM users u " +
                 "JOIN client_connections c ON u.id = c.user_id " +
                 "WHERE c.is_active = TRUE";
 
         try (Connection conn = dbManager.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+                // Modificado para pasar el node_id al constructor de ActiveClient
                 activos.add(new ActiveClient(
                         rs.getString("username"),
                         rs.getString("ip_address"),
-                        rs.getString("connected_at")
+                        rs.getString("connected_at"),
+                        rs.getString("node_id") // Extraemos el nodo guardado
                 ));
             }
         }
@@ -116,14 +120,15 @@ public class MySqlUserDao implements IUserRepository {
         return activos;
     }
 
+
     @Override
     public List<UserRecord> listarUsuariosRegistrados() throws SQLException {
         List<UserRecord> usuarios = new ArrayList<>();
         String sql = "SELECT id, username, ip_address, created_at FROM users ORDER BY id ASC";
 
         try (Connection conn = dbManager.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 usuarios.add(new UserRecord(

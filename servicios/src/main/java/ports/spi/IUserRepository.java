@@ -1,6 +1,7 @@
 package ports.spi;
 
 import JsonSchema.ActiveClient;
+import JsonSchema.ClientConnectionRecord;
 import JsonSchema.UserRecord;
 
 import java.sql.SQLException;
@@ -23,4 +24,5 @@ public interface IUserRepository {
     List<ActiveClient> listarClientesActivos() throws Exception;
 
     List<UserRecord> listarUsuariosRegistrados() throws SQLException;
+
 }

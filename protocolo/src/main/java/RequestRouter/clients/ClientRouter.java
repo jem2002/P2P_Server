@@ -14,7 +14,6 @@ import models.LocalNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import replication.ReplicationManager;
-import topology.RoutingTable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +50,6 @@ public class ClientRouter implements IClientRequestDispatcher {
      */
     public ClientRouter(UserManager userManager, DocumentManager documentManager, LogManager logManager,
                         BroadcastManager broadcastManager, DocumentService.TransferManager transferManager, CommentManager commentManager,
-                        RoutingTable routingTable,
                         ReplicationManager replicationManager,
                         String localNodeId,
                         discovery.MembershipList membershipList, health.ClusterHealthService healthService,
@@ -61,15 +59,15 @@ public class ClientRouter implements IClientRequestDispatcher {
         this.serializer = new ResponseBuilder();
 
         clientHandlers.put(JsonSchema.ACTION_LIST_CLIENTS,
-                new ListClientsHandlerClient(userManager, serializer, routingTable, localNodeId));
+                new ListClientsHandlerClient(userManager, serializer, localNodeId));
 
         clientHandlers.put(JsonSchema.ACTION_CONNECT,
                 new ConnectHandlerClient(userManager, logManager, serializer,
-                broadcastManager, clientHandlers.get(JsonSchema.ACTION_LIST_CLIENTS), routingTable, replicationManager, localNodeId));
+                broadcastManager, clientHandlers.get(JsonSchema.ACTION_LIST_CLIENTS), replicationManager, localNodeId));
 
         clientHandlers.put(JsonSchema.ACTION_DISCONNECT,
                 new DisconnectHandlerClient(userManager, logManager, serializer,
-                broadcastManager, clientHandlers.get(JsonSchema.ACTION_LIST_CLIENTS), routingTable, replicationManager, localNodeId));
+                broadcastManager, clientHandlers.get(JsonSchema.ACTION_LIST_CLIENTS), replicationManager, localNodeId));
 
         clientHandlers.put(JsonSchema.ACTION_LIST_DOCUMENTS,
                 new ListDocumentsHandlerClient(documentManager, serializer));
@@ -97,13 +95,6 @@ public class ClientRouter implements IClientRequestDispatcher {
 
         clientHandlers.put(JsonSchema.ACTION_COMMENT_DOCUMENT,
                 new CommentDocumentHandlerClient(commentManager, serializer));
-
-        clientHandlers.put(JsonSchema.ACTION_LIST_PEER_INFO,
-                new ListPeerInfoHandlerClient(serializer, healthService, localIdentity, membershipList));
-
-        clientHandlers.put(JsonSchema.ACTION_LIST_PEER_LOGS,
-                new ListPeerLogsHandlerClient(serializer, membershipList, localNodeId,
-                        clientHandlers.get(JsonSchema.ACTION_LIST_LOGS)));
 
         logger.info("MainRouter: Arquitectura federada inicializada correctamente para el nodo '{}'", localNodeId);
     }

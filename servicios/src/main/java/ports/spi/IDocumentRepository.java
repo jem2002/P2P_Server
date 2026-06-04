@@ -1,5 +1,6 @@
 package ports.spi;
 
+import JsonSchema.DocumentFullInfo;
 import JsonSchema.DocumentInfo;
 import JsonSchema.DownloadDetails;
 
@@ -37,4 +38,5 @@ public interface IDocumentRepository {
 
     /** Filtra archivos visibles para el usuario solicitante (broadcasts + sus privados). */
     List<DocumentInfo> listarDocumentosDisponibles(String requestingUsername) throws Exception;
+
 }

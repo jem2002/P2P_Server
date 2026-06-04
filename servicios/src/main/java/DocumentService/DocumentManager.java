@@ -2,6 +2,7 @@ package DocumentService;
 
 import CryptoService.CryptoManager;
 import FileSystemStorage.LocalFileManager;
+import JsonSchema.DocumentFullInfo;
 import JsonSchema.DocumentInfo;
 import JsonSchema.DownloadDetails;
 import LogService.LogManager;
@@ -125,9 +126,6 @@ public class DocumentManager {
         }
     }
 
-    public List<Map<String, String>> obtenerMensajesDisponibles() {
-        return obtenerMensajesDisponibles(null);
-    }
 
     /**
      * Retorna mensajes visibles para el usuario solicitante:

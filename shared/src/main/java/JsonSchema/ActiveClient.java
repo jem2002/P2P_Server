@@ -9,11 +9,13 @@ public final class ActiveClient {
     private final String username;
     private final String ip;
     private final String connectedAt;
+    private final String nodeId; // Identificador del nodo/servidor al que se conecta
 
-    public ActiveClient(String username, String ip, String connectedAt) {
+    public ActiveClient(String username, String ip, String connectedAt, String nodeId) {
         this.username = username;
         this.ip = ip;
         this.connectedAt = connectedAt;
+        this.nodeId = nodeId;
     }
 
     public String getUsername() {
@@ -26,5 +28,9 @@ public final class ActiveClient {
 
     public String getConnectedAt() {
         return connectedAt;
+    }
+
+    public String getNodeId() {
+        return nodeId;
     }
 }

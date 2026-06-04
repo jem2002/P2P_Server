@@ -23,22 +23,19 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
     private final ClientActionHandler listMessagesHandler;
     private final ClientActionHandler listClientsHandler;
     private final ClientActionHandler listDocumentsHandler;
-    private final topology.RoutingTable routingTable;
 
     public ReplicationEventApplier(UserManager userManager,
                                    DocumentManager documentManager,
                                    BroadcastManager broadcastManager,
                                    ClientActionHandler listMessagesHandler,
                                    ClientActionHandler listClientsHandler,
-                                   ClientActionHandler listDocumentsHandler,
-                                   topology.RoutingTable routingTable) {
+                                   ClientActionHandler listDocumentsHandler) {
         this.userManager = userManager;
         this.documentManager = documentManager;
         this.broadcastManager = broadcastManager;
         this.listMessagesHandler = listMessagesHandler;
         this.listClientsHandler = listClientsHandler;
         this.listDocumentsHandler = listDocumentsHandler;
-        this.routingTable = routingTable;
     }
 
     @Override
@@ -70,8 +67,7 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
         int clientPort =  event.getPayload().has("port") ? event.getPayload().get("port").asInt() : 0;
 
         try {
-            userManager.conectarUsuario(username, clientIp, clientPort);
-            routingTable.registerRemoteClient(username, sourceNode);
+            userManager.conectarUsuario(username, clientIp, clientPort, sourceNode);
         } catch (Exception e) {
             logger.error("Error registrando usuario conectado {}", username, e);
         }
@@ -86,7 +82,6 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
         String username = event.getPayload().get("username").asText();
 
         userManager.cerrarSesionPorUsername(username);
-        routingTable.unregisterClient(username);
 
         try {
             broadcastManager.broadcast(listClientsHandler.handle(null, null));
