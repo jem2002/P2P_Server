@@ -112,6 +112,7 @@ public class MySqlUserDao implements IUserRepository {
                 ));
             }
         }
+
         return activos;
     }
 

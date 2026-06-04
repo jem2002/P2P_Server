@@ -132,7 +132,9 @@ public class ServerApplication {
                     userManager, documentManager, broadcastManager,
                     router.getHandler(JsonSchema.ACTION_NEW_MESSAGE),
                     router.getHandler(JsonSchema.ACTION_LIST_CLIENTS),
-                    router.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS));
+                    router.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS),
+                    routingTable
+                    );
             replicator.setEventHandler(eventApplier);
 
             // ── 8. CONFIGURACIÓN DE PEER MESSAGE HANDLER ────────────────────────

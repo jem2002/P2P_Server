@@ -69,7 +69,7 @@ public class ConnectHandler implements ActionHandler {
 
 
         // Propagar de forma inmediata el evento de conexión a todos los peers del clúster
-        ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp());
+        ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp(), address.getPort());
         replicationManager.propagate(event);
 
         // Broadcast global a la red para refrescar las listas de clientes en las UI

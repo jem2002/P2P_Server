@@ -230,7 +230,7 @@ public class DocumentManager {
                     "Archivo subido exitosamente por: " + username);
 
             logger.info("¡Documento procesado al 100%! ID asignado: {}", docId);
-            
+
             if (onLocalDocumentUploaded != null) {
                 String ownerUsername = userRepository.obtenerNombreUsuario(ownerUserId);
                 onLocalDocumentUploaded.onUploaded(docId, nombre, sizeBytes, extension, mimeType, ownerUsername, ownerIp, docType);

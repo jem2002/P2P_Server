@@ -56,10 +56,11 @@ public class ReplicationEvent {
         return create(sourceNodeId, "NEW_PUBLIC_MESSAGE", payload);
     }
 
-    public static ReplicationEvent clientConnected(String sourceNodeId, String username, String ip) {
+    public static ReplicationEvent clientConnected(String sourceNodeId, String username, String ip, int port) {
         ObjectNode payload = mapper.createObjectNode();
         payload.put("username", username);
         payload.put("ip", ip);
+        payload.put("port", port);
         return create(sourceNodeId, "CLIENT_CONNECTED", payload);
     }
 

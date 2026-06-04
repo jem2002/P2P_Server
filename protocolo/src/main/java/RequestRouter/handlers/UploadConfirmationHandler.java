@@ -21,6 +21,8 @@ public class UploadConfirmationHandler implements ActionHandler {
 
     @Override
     public String handle(JsonNode payload, String clientIp) throws Exception {
+
+
         String filename = payload.has("filename") ? payload.get("filename").asText() : "";
         long sizeBytes = payload.has("sizeBytes") ? payload.get("sizeBytes").asLong() : 
                          (payload.has("size") ? payload.get("size").asLong() : 0);

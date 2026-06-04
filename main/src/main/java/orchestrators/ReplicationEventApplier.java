@@ -23,19 +23,22 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
     private final ActionHandler listMessagesHandler;
     private final ActionHandler listClientsHandler;
     private final ActionHandler listDocumentsHandler;
+    private final topology.RoutingTable routingTable;
 
     public ReplicationEventApplier(UserManager userManager,
                                    DocumentManager documentManager,
                                    BroadcastManager broadcastManager,
                                    ActionHandler listMessagesHandler,
                                    ActionHandler listClientsHandler,
-                                   ActionHandler listDocumentsHandler) {
+                                   ActionHandler listDocumentsHandler,
+                                   topology.RoutingTable routingTable) {
         this.userManager = userManager;
         this.documentManager = documentManager;
         this.broadcastManager = broadcastManager;
         this.listMessagesHandler = listMessagesHandler;
         this.listClientsHandler = listClientsHandler;
         this.listDocumentsHandler = listDocumentsHandler;
+        this.routingTable = routingTable;
     }
 
     @Override
@@ -64,9 +67,11 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
         String username = event.getPayload().get("username").asText();
         String sourceNode = event.getSourceNodeId();
         String clientIp = event.getPayload().has("ip") ? event.getPayload().get("ip").asText() : "unknown";
+        int clientPort =  event.getPayload().has("port") ? event.getPayload().get("port").asInt() : 0;
 
         try {
-            userManager.obtenerORegistrarUsuario(username, clientIp);
+            userManager.conectarUsuario(username, clientIp, clientPort);
+            routingTable.registerRemoteClient(username, sourceNode);
         } catch (Exception e) {
             logger.error("Error registrando usuario conectado {}", username, e);
         }
@@ -81,6 +86,7 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
         String username = event.getPayload().get("username").asText();
 
         userManager.cerrarSesionPorUsername(username);
+        routingTable.unregisterClient(username);
 
         try {
             broadcastManager.broadcast(listClientsHandler.handle(null, null));

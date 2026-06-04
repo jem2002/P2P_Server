@@ -129,22 +129,9 @@ public class FileTransferHandler implements Runnable {
         if (exito) {
             broadcastManager.broadcast(listDocumentsHandler.handle(null, null));
             broadcastManager.broadcast(listLogsHandler.handle(null, null));
-        }
-
-        String status;
-        if (exito) {
-            status = String.format("{\"status\":\"UPLOAD_SUCCESS\",\"payload\":{\"filename\":\"%s\",\"size\":%d,\"extension\":\"%s\",\"mimeType\":\"%s\",\"username\":\"%s\"}}\n",
-                    ticket.getFilename() != null ? ticket.getFilename() : "",
-                    ticket.getSizeBytes(),
-                    ticket.getExtension() != null ? ticket.getExtension() : "",
-                    ticket.getMimeType() != null ? ticket.getMimeType() : "",
-                    ticket.getOwnerUsername() != null ? ticket.getOwnerUsername() : "");
         } else {
-            status = "{\"status\":\"UPLOAD_FAILED\"}\n";
+            logger.info("Error al subir archivo {}", token);
         }
-        
-        out.write(status.getBytes(StandardCharsets.UTF_8));
-        out.flush();
     }
 
     private void cerrarSocket() {
