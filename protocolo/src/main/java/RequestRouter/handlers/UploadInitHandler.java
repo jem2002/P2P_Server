@@ -4,7 +4,7 @@ import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import RequestRouter.TransferManager;
 import ports.api.TransferTicket;
 import UserService.UserManager;
@@ -20,11 +20,11 @@ public class UploadInitHandler implements ActionHandler {
     private final LogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ResponseBuilder serializer;
-    private final ListLogsHandler listLogsHandler;
+    private final ActionHandler listLogsHandler;
 
     public UploadInitHandler(UserManager userManager, TransferManager transferManager,
                              LogManager logManager, BroadcastManager broadcastManager,
-                             ResponseBuilder serializer, ListLogsHandler listLogsHandler) {
+                             ResponseBuilder serializer, ActionHandler listLogsHandler) {
         this.userManager = userManager;
         this.transferManager = transferManager;
         this.logManager = logManager;
@@ -52,7 +52,7 @@ public class UploadInitHandler implements ActionHandler {
         long userId = userManager.obtenerIdUsuario(username);
 
         String token = java.util.UUID.randomUUID().toString();
-        TransferTicket ticket = new TransferTicket(token, filename, size, extension, mimeType, userId, clientIp, targetUsername);
+        TransferTicket ticket = new TransferTicket(token, filename, size, extension, mimeType, userId, clientIp, targetUsername, username);
         transferManager.registrarTicket(ticket);
 
         logManager.registrarAccion(null, userId, "UPLOAD_INIT", "SUCCESS",

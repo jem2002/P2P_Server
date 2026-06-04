@@ -1,6 +1,7 @@
 package tcpsocketserver;
 
 import DocumentService.DocumentManager;
+import JsonSchema.JsonSchema;
 import ports.api.IBroadcastManager;
 import ports.api.IRequestDispatcher;
 import ports.api.ITransferDispatcher;
@@ -152,7 +153,7 @@ public class TCPSocketServer implements Runnable {
                 clientSocket.getRemoteSocketAddress());
 
         FileTransferHandler fileHandler = new FileTransferHandler(clientSocket, token,
-                transferManager, documentManager, router, broadcastManager, logManager);
+                transferManager, documentManager, router.getHandler(JsonSchema.ACTION_LIST_LOGS), router.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS), broadcastManager, logManager);
         new Thread(fileHandler,
                 "FileTransfer-" + token.substring(0, Math.min(8, token.length()))).start();
     }

@@ -2,7 +2,7 @@ package RequestRouter.handlers;
 
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import discovery.MemberEntry;
 import discovery.MembershipList;

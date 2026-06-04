@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import delivery.Impl.LocalDeliveryStrategyPrivate;
 import replication.ReplicationEvent;
 import replication.ReplicationManager;
 import topology.RoutingTable;
-import util.InterServerProtocol;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -40,7 +38,6 @@ public class PeerMessageHandler {
 
     private final ReplicationManager replicationManager;
     private final RoutingTable routingTable;
-    private final LocalDeliveryStrategyPrivate localDeliveryStrategy;
 
 
     public interface RouteDeliveryListener {
@@ -52,20 +49,12 @@ public class PeerMessageHandler {
      */
     private volatile RouteDeliveryListener onRouteDelivered;
 
-    public PeerMessageHandler(ReplicationManager replicationManager, RoutingTable routingTable,
-                              LocalDeliveryStrategyPrivate localDeliveryStrategy) {
+    public PeerMessageHandler(ReplicationManager replicationManager, RoutingTable routingTable) {
         this.replicationManager = replicationManager;
         this.routingTable = routingTable;
-        this.localDeliveryStrategy = localDeliveryStrategy;
     }
 
 
-    /**
-     * Inyecta el callback de persistencia para mensajes enrutados (PEER_ROUTE).
-     */
-    public void setOnRouteDelivered(RouteDeliveryListener callback) {
-        this.onRouteDelivered = callback;
-    }
 
     /**
      * Gestiona una conexión peer entrante. Lee mensajes JSON línea por línea
@@ -118,9 +107,6 @@ public class PeerMessageHandler {
                 case "PEER_SYNC":
                     handleSync(payload);
                     break;
-                case "PEER_ROUTE":
-                    handleRoute(payload);
-                    break;
                 default:
                     logger.warn("Acción peer desconocida: {} desde {}", action, peerAddress);
                     break;
@@ -158,35 +144,5 @@ public class PeerMessageHandler {
         }
     }
 
-
-    private void handleRoute(JsonNode payload) {
-        if (payload == null) return;
-        try {
-            String targetUsername  = payload.get("targetUsername").asText();
-            String originalMessage = payload.get("originalMessage").asText();
-            String fromUser = payload.has("fromUser") ? payload.get("fromUser").asText() : "unknown";
-            String rawContent = payload.has("rawContent") ? payload.get("rawContent").asText() : "";
-            String clientIp = payload.has("clientIp") ? payload.get("clientIp").asText() : "unknown";
-
-            boolean delivered = localDeliveryStrategy.deliver(originalMessage, targetUsername, fromUser, rawContent, clientIp);
-            if (!delivered) {
-                logger.warn("PEER_ROUTE: cliente '{}' no encontrado localmente", targetUsername);
-                return;
-            }
-
-            // Persistir copia local en el servidor receptor para que aparezca en LIST_MESSAGES
-            if (onRouteDelivered != null) {
-                try {
-                    if (!rawContent.isBlank()) {
-                        onRouteDelivered.onDelivered(targetUsername, fromUser, rawContent, clientIp);
-                    }
-                } catch (Exception e) {
-                    logger.warn("No se pudo persistir copia local del mensaje enrutado: {}", e.getMessage());
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Error procesando PEER_ROUTE", e);
-        }
-    }
 
 }

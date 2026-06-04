@@ -1,15 +1,13 @@
 package orchestrators;
 
 import DocumentService.DocumentManager;
+import ports.api.ActionHandler;
 import UserService.UserManager;
 import MessageParser.BroadcastManager;
 import replication.ReplicationEvent;
 import replication.ReplicationManager;
-import topology.RoutingTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.Supplier;
 
 /**
  * Aplica eventos de replicación recibidos de otros nodos al dominio local.
@@ -22,26 +20,22 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
     private final UserManager userManager;
     private final DocumentManager documentManager;
     private final BroadcastManager broadcastManager;
-    private final RoutingTable routingTable;
-    private final String localNodeId;
-    // Supplier para obtener listas actualizadas sin acoplamiento circular
-    private final Supplier<String> clientsListSupplier;
-    private final Supplier<String> documentsListSupplier;
+    private final ActionHandler listMessagesHandler;
+    private final ActionHandler listClientsHandler;
+    private final ActionHandler listDocumentsHandler;
 
     public ReplicationEventApplier(UserManager userManager,
                                    DocumentManager documentManager,
                                    BroadcastManager broadcastManager,
-                                   RoutingTable routingTable,
-                                   String localNodeId,
-                                   Supplier<String> clientsListSupplier,
-                                   Supplier<String> documentsListSupplier) {
+                                   ActionHandler listMessagesHandler,
+                                   ActionHandler listClientsHandler,
+                                   ActionHandler listDocumentsHandler) {
         this.userManager = userManager;
         this.documentManager = documentManager;
         this.broadcastManager = broadcastManager;
-        this.routingTable = routingTable;
-        this.localNodeId = localNodeId;
-        this.clientsListSupplier = clientsListSupplier;
-        this.documentsListSupplier = documentsListSupplier;
+        this.listMessagesHandler = listMessagesHandler;
+        this.listClientsHandler = listClientsHandler;
+        this.listDocumentsHandler = listDocumentsHandler;
     }
 
     @Override
@@ -77,19 +71,19 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
             logger.error("Error registrando usuario conectado {}", username, e);
         }
 
-        routingTable.registerRemoteClient(username, sourceNode);
-        // Enviar lista actualizada SOLO a clientes locales (no federar de vuelta)
         try {
-            broadcastManager.broadcast(clientsListSupplier.get());
+            broadcastManager.broadcast(listClientsHandler.handle(null, null));
         } catch (Exception ignored) {}
     }
 
     private void handleClientDisconnected(ReplicationEvent event) {
         // Un cliente se desconectó de otro servidor
         String username = event.getPayload().get("username").asText();
-        routingTable.unregisterClient(username);
+
+        userManager.cerrarSesionPorUsername(username);
+
         try {
-            broadcastManager.broadcast(clientsListSupplier.get());
+            broadcastManager.broadcast(listClientsHandler.handle(null, null));
         } catch (Exception ignored) {}
     }
 
@@ -112,10 +106,10 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
             } catch (Exception e) {
             logger.error("Error guardando mensaje replicado de {}", fromUser, e);
         }
+        try {
+        broadcastManager.broadcast(listMessagesHandler.handle(null, null));
+        } catch (Exception ignored) {}
 
-        String msgJson  = "{\"action\":\"NEW_MESSAGE\",\"payload\":{\"message\":\"["
-                          + event.getSourceNodeId() + "] De " + fromUser + ": " + content + "\"}}";
-        broadcastManager.broadcast(msgJson);
     }
 
     private void handleDocumentUploaded(ReplicationEvent event) {
@@ -130,15 +124,14 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
                 String mimeType = p.get("mimeType").asText();
                 String docType = p.get("docType").asText();
                 String ownerUsername = p.get("ownerUsername").asText();
-                String ownerIp = p.get("ownerIp").asText();
                 String host = p.get("host").asText();
-                int clientPort = p.get("clientPort").asInt();
+                int hostPort = p.get("hostPort").asInt();
 
                 long localUserId = userManager.obtenerIdUsuario(ownerUsername);
 
-                logger.info("Iniciando descarga física en background del documento remoto {} desde {}:{}", docId, host, clientPort);
+                logger.info("Iniciando descarga física en background del documento remoto {} desde {}:{}", docId, host, hostPort);
 
-                try (java.net.Socket controlSocket = new java.net.Socket(host, clientPort)) {
+                try (java.net.Socket controlSocket = new java.net.Socket(host, hostPort)) {
                     String req = "{\"action\":\"DOWNLOAD_INIT\", \"payload\":{\"document_id\":" + docId + ", \"format\":\"ORG\", \"username\":\"replicador\"}}\n";
                     controlSocket.getOutputStream().write(req.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                     controlSocket.getOutputStream().flush();
@@ -164,14 +157,14 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
                     }
                     
                     if (remoteToken != null) {
-                        try (java.net.Socket dataSocket = new java.net.Socket(host, clientPort)) {
+                        try (java.net.Socket dataSocket = new java.net.Socket(host, hostPort)) {
                             dataSocket.getOutputStream().write((remoteToken + "\n").getBytes(java.nio.charset.StandardCharsets.UTF_8));
                             dataSocket.getOutputStream().flush();
                             
                             java.io.InputStream peerIn = dataSocket.getInputStream();
                             documentManager.procesarRecepcionDocumento(peerIn, filename, sizeBytes, extension, mimeType, localUserId, "replicado", docType);
                             logger.info("Descarga física de replicación completada con éxito para {}", filename);
-                            broadcastManager.broadcast(documentsListSupplier.get());
+                            broadcastManager.broadcast(listDocumentsHandler.handle(null, null));
                         }
                     } else {
                         logger.error("Error en proxy P2P de replicación: No se obtuvo token del peer");

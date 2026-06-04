@@ -2,8 +2,8 @@ package handler;
 
 import DocumentService.DocumentManager;
 import JsonSchema.DownloadMode;
+import ports.api.ActionHandler;
 import ports.api.IBroadcastManager;
-import ports.api.IRequestDispatcher;
 import ports.api.ITransferDispatcher;
 import ports.api.TransferTicket;
 import org.slf4j.Logger;
@@ -28,18 +28,21 @@ public class FileTransferHandler implements Runnable {
     private final String token;
     private final ITransferDispatcher transferManager;
     private final DocumentManager documentManager;
-    private final IRequestDispatcher router;
+    private final ActionHandler listLogsHandler;
+    private final ActionHandler listDocumentsHandler;
     private final IBroadcastManager broadcastManager;
     private final LogService.LogManager logManager;
 
     public FileTransferHandler(Socket socket, String token, ITransferDispatcher transferManager,
-            DocumentManager documentManager, IRequestDispatcher router, IBroadcastManager broadcastManager,
+            DocumentManager documentManager, ActionHandler listLogsHandler,ActionHandler listDocumentsHandler, IBroadcastManager broadcastManager,
             LogService.LogManager logManager) {
         this.socket = socket;
         this.token = token;
         this.transferManager = transferManager;
         this.documentManager = documentManager;
-        this.router = router;
+        this.listLogsHandler = listLogsHandler;
+        this.listDocumentsHandler = listDocumentsHandler;
+
         this.broadcastManager = broadcastManager;
         this.logManager = logManager;
     }
@@ -77,21 +80,6 @@ public class FileTransferHandler implements Runnable {
         DownloadMode mode = DownloadMode.fromToken(token);
         long docIdToLog = 0;
 
-        if (ticket.getMimeType() != null && ticket.getMimeType().startsWith("PEER:")) {
-            logger.info("Proxy Descarga P2P. Token: {} | Target: {}", token, ticket.getMimeType());
-            String[] parts = ticket.getMimeType().split(":");
-            String peerHost = parts[1];
-            int peerPort = Integer.parseInt(parts[2]);
-            long remoteDocId = Long.parseLong(parts[3]);
-            
-            String realUsername = ticket.getTargetUsername() != null ? ticket.getTargetUsername() : "UsuarioDesconocido";
-            ejecutarProxyDescarga(peerHost, peerPort, remoteDocId, getFormatString(mode), out, realUsername);
-            
-            logManager.registrarAccion(null, ticket.getOwnerUserId(), "DOWNLOAD_COMPLETE", "SUCCESS", "Descarga proxy P2P finalizada");
-            broadcastManager.broadcast(router.handleListLogs());
-            return;
-        }
-
         switch (mode) {
             case ORIGINAL:
                 logger.info("Enviando ARCHIVO ORIGINAL. Token: {}", token);
@@ -120,7 +108,7 @@ public class FileTransferHandler implements Runnable {
 
         logManager.registrarAccion(docIdToLog > 0 ? docIdToLog : null, ticket.getOwnerUserId(),
                 "DOWNLOAD_COMPLETE", "SUCCESS", "Descarga finalizada en modo: " + mode.name());
-        broadcastManager.broadcast(router.handleListLogs());
+        broadcastManager.broadcast(listLogsHandler.handle(null, null));
     }
 
     /**
@@ -139,12 +127,22 @@ public class FileTransferHandler implements Runnable {
                 ticket.getMimeType(), ticket.getOwnerUserId(), ticket.getOwnerIp(), docType);
 
         if (exito) {
-            broadcastManager.broadcast(router.handleListDocuments());
-            broadcastManager.broadcast(router.handleListMessages());
-            broadcastManager.broadcast(router.handleListLogs());
+            broadcastManager.broadcast(listDocumentsHandler.handle(null, null));
+            broadcastManager.broadcast(listLogsHandler.handle(null, null));
         }
 
-        String status = exito ? "{\"status\":\"UPLOAD_SUCCESS\"}\n" : "{\"status\":\"UPLOAD_FAILED\"}\n";
+        String status;
+        if (exito) {
+            status = String.format("{\"status\":\"UPLOAD_SUCCESS\",\"payload\":{\"filename\":\"%s\",\"size\":%d,\"extension\":\"%s\",\"mimeType\":\"%s\",\"username\":\"%s\"}}\n",
+                    ticket.getFilename() != null ? ticket.getFilename() : "",
+                    ticket.getSizeBytes(),
+                    ticket.getExtension() != null ? ticket.getExtension() : "",
+                    ticket.getMimeType() != null ? ticket.getMimeType() : "",
+                    ticket.getOwnerUsername() != null ? ticket.getOwnerUsername() : "");
+        } else {
+            status = "{\"status\":\"UPLOAD_FAILED\"}\n";
+        }
+        
         out.write(status.getBytes(StandardCharsets.UTF_8));
         out.flush();
     }
@@ -157,54 +155,5 @@ public class FileTransferHandler implements Runnable {
         }
     }
 
-    private String getFormatString(DownloadMode mode) {
-        switch(mode) {
-            case ORIGINAL: return "ORG";
-            case ENCRYPTED: return "ENC";
-            case HASH: return "HSH";
-            default: return "";
-        }
-    }
 
-    private void ejecutarProxyDescarga(String peerHost, int peerPort, long remoteDocId, String format, OutputStream clientOut, String downloaderUsername) throws Exception {
-        try (Socket controlSocket = new Socket(peerHost, peerPort)) {
-            String req = "{\"action\":\"DOWNLOAD_INIT\", \"payload\":{\"document_id\":" + remoteDocId + ", \"format\":\"" + format + "\", \"username\":\"" + downloaderUsername + "\"}}\n";
-            controlSocket.getOutputStream().write(req.getBytes(StandardCharsets.UTF_8));
-            controlSocket.getOutputStream().flush();
-            String remoteToken = null;
-            String res;
-            while ((res = LineReader.readLine(controlSocket.getInputStream())) != null) {
-                com.fasterxml.jackson.databind.JsonNode root = new com.fasterxml.jackson.databind.ObjectMapper().readTree(res);
-                String action = root.has("action") ? root.get("action").asText() : "";
-                
-                if ("DOWNLOAD_INIT_ACK".equals(action)) {
-                    if (root.has("payload") && root.get("payload").has("message")) {
-                        remoteToken = root.get("payload").get("message").asText();
-                    }
-                    break;
-                } else if ("ERROR_ACK".equals(action)) {
-                    logger.error("Error devuelto por peer remoto: {}", root.path("payload").path("reason").asText());
-                    break;
-                }
-                // Si es LIST_LOGS_ACK, LIST_CLIENTS_ACK, u otro broadcast, lo ignoramos
-            }
-            
-            if (remoteToken != null) {
-                try (Socket dataSocket = new Socket(peerHost, peerPort)) {
-                    dataSocket.getOutputStream().write((remoteToken + "\n").getBytes(StandardCharsets.UTF_8));
-                    dataSocket.getOutputStream().flush();
-                    
-                    InputStream peerIn = dataSocket.getInputStream();
-                    byte[] buffer = new byte[8192];
-                    int read;
-                    while ((read = peerIn.read(buffer)) != -1) {
-                        clientOut.write(buffer, 0, read);
-                    }
-                    clientOut.flush();
-                }
-            } else {
-                logger.error("Error en proxy P2P: No se obtuvo token del peer");
-            }
-        }
-    }
 }

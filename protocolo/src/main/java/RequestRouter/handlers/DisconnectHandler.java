@@ -12,9 +12,7 @@ import replication.ReplicationEvent;
 import replication.ReplicationManager;
 import topology.RoutingTable;
 
-import java.io.OutputStream;
-
-public class ConnectHandler implements ActionHandler {
+public class DisconnectHandler implements ActionHandler {
 
     private final UserManager userManager;
     private final LogManager logManager;
@@ -22,19 +20,15 @@ public class ConnectHandler implements ActionHandler {
     private final BroadcastManager broadcastManager;
     private final ActionHandler listClientsHandler;
 
-    // Dependencias de clúster obligatorias e inmutables
     private final RoutingTable routingTable;
     private final ReplicationManager replicationManager;
     private final String localNodeId;
 
-    // Mantiene el stream del cliente actual mapeado al hilo de ejecución de la solicitud
-    private final ThreadLocal<OutputStream> clientOut = new ThreadLocal<>();
-
-    public ConnectHandler(UserManager userManager, LogManager logManager,
-                          ResponseBuilder serializer, BroadcastManager broadcastManager,
-                          ActionHandler listClientsHandler, RoutingTable routingTable,
-                          ReplicationManager replicationManager,
-                          String localNodeId) {
+    public DisconnectHandler(UserManager userManager, LogManager logManager,
+                             ResponseBuilder serializer, BroadcastManager broadcastManager,
+                             ActionHandler listClientsHandler, RoutingTable routingTable,
+                             ReplicationManager replicationManager,
+                             String localNodeId) {
         this.userManager = userManager;
         this.logManager = logManager;
         this.serializer = serializer;
@@ -45,7 +39,6 @@ public class ConnectHandler implements ActionHandler {
         this.localNodeId = localNodeId;
     }
 
-
     @Override
     public String handle(JsonNode payload, String clientIp) throws Exception {
         if (payload == null || !payload.has(JsonSchema.PAYLOAD_USERNAME)) {
@@ -55,26 +48,26 @@ public class ConnectHandler implements ActionHandler {
         String username = payload.get(JsonSchema.PAYLOAD_USERNAME).asText();
         ClientAddress address = ClientAddress.parse(clientIp);
 
-        // 1. Persistencia y login en la base de datos local
-        long userId = userManager.conectarUsuario(username, address.getIp(), address.getPort());
+        // 1. Cerrar sesión en la base de datos local
+        userManager.cerrarSesionPorUsername(username);
+        long userId = userManager.obtenerIdUsuario(username);
 
         // 2. Registro en la bitácora interna de auditoría
-        logManager.registrarAccion(null, userId, "CONNECT", "SUCCESS",
-                "Usuario " + username + " conectado desde " + address);
+        logManager.registrarAccion(null, userId > 0 ? userId : -1, "DISCONNECT", "SUCCESS",
+                "Usuario " + username + " desconectado explícitamente desde " + address);
 
-        // ── 3. INTEGRACIÓN CON CLÚSTER P2P (Siempre activo) ───────────────────
+        // ── 3. INTEGRACIÓN CON CLÚSTER P2P ───────────────────
+        
+        // Desregistrar de la tabla de enrutamiento local
+        routingTable.unregisterClient(username);
 
-        // Registrar como cliente local en la tabla de enrutamiento en memoria
-        routingTable.registerLocalClient(username);
-
-
-        // Propagar de forma inmediata el evento de conexión a todos los peers del clúster
-        ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp());
+        // Propagar evento de desconexión a todos los peers del clúster
+        ReplicationEvent event = ReplicationEvent.clientDisconnected(localNodeId, username);
         replicationManager.propagate(event);
 
-        // Broadcast global a la red para refrescar las listas de clientes en las UI
+        // Broadcast global a la red para refrescar las listas de clientes en las UI locales
         broadcastManager.broadcast(listClientsHandler.handle(null, null));
 
-        return serializer.buildSuccessResponse(JsonSchema.ACTION_CONNECT, "Usuario ID: " + userId);
+        return serializer.buildSuccessResponse(JsonSchema.ACTION_DISCONNECT, "Usuario desconectado exitosamente.");
     }
 }

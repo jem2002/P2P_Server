@@ -50,9 +50,6 @@ public class ClientHandler implements Runnable {
             broadcastManager.addStream(out);
             logger.info("Atendiendo conexión de CONTROL desde {}", clientIp);
 
-            // Registrar el OutputStream actual en el router (para ConnectHandler → LocalClientRegistry)
-            router.setCurrentClientOutputStream(out);
-
             // 1. Procesar la primera línea que ya leímos en el Triage
             enviarRespuestaJson(primeraLinea, out, clientIp);
 
@@ -77,15 +74,12 @@ public class ClientHandler implements Runnable {
         } catch (Exception e) {
             logger.error("Conexión de CONTROL perdida con {}", clientIp);
         } finally {
-            router.notificarDesconexionFisica(clientIp, out);
             if (out != null) broadcastManager.removeStream(out);
             pool.release(connection);
         }
     }
 
     private void enviarRespuestaJson(String json, OutputStream out, String clientIp) throws Exception {
-        // Actualizar el OutputStream antes de routear (por si es CONNECT)
-        router.setCurrentClientOutputStream(out);
         String jsonResponse = router.routeRequest(json, clientIp);
         out.write((jsonResponse + "\n").getBytes(StandardCharsets.UTF_8));
         out.flush();

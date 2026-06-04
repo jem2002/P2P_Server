@@ -5,6 +5,8 @@ import DocumentService.DocumentManager;
 import EncryptionUtils.EncryptionUtils;
 import EncryptionUtils.IEncryptionUtils;
 import FileSystemStorage.LocalFileManager;
+import JsonSchema.JsonSchema;
+import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import RequestRouter.MainRouter;
@@ -24,9 +26,6 @@ import ch.qos.logback.classic.LoggerContext;
 import pool.ConnectionPoolManager;
 import ports.spi.*;
 import protocolSelector.ProtocolSelector;
-import delivery.Impl.LocalDeliveryStrategyPrivate;
-import replication.ReplicationEvent;
-import delivery.Impl.RemoteDeliveryStrategyPrivate;
 import java.util.ServiceLoader;
 
 // Imports del módulo Cluster P2P
@@ -99,27 +98,16 @@ public class ServerApplication {
             ReplicationManager replicator = new ReplicationManager(identity.getNodeId(), membership, peerPool);
             RoutingTable routingTable = new RoutingTable(identity.getNodeId());
 
-            LocalDeliveryStrategyPrivate localDeliveryStrategy = new LocalDeliveryStrategyPrivate();
-            RemoteDeliveryStrategyPrivate remoteDeliveryStrategy = new RemoteDeliveryStrategyPrivate(peerPool, routingTable);
 
             ClusterHealthService healthService = new ClusterHealthService(identity, membership, peerPool);
 
             // ── 4. CONSTRUCCIÓN DE MAINROUTER (INMUTABLE) ───────────────────────
             MainRouter router = new MainRouter(
                     userManager, documentManager, logManager, broadcastManager, transferManager, commentManager,
-                    routingTable, localDeliveryStrategy, replicator, remoteDeliveryStrategy,
+                    routingTable, replicator,
                     identity.getNodeId(), membership, healthService, identity
             );
 
-            // ── 5. CONFIGURACIÓN DEL ORQUESTADOR DE DESCONEXIONES ───────────────
-            orchestrators.DisconnectionOrchestrator disconnectionService = new orchestrators.DisconnectionOrchestrator(
-                    userManager, logManager, broadcastManager);
-            disconnectionService.setListSuppliers(
-                    () -> { try { return router.handleListClients(); } catch (Exception e) { return "{}"; } },
-                    () -> { try { return router.handleListLogs(); } catch (Exception e) { return "{}"; } }
-            );
-            disconnectionService.enableCluster(routingTable, localDeliveryStrategy, replicator, identity.getNodeId());
-            router.setDisconnectionService(disconnectionService);
 
             // ── 6. ARRANQUE DEL SERVIDOR DE RED (CLIENTES SOCKET) ───────────────
             int maxConnections = config.getMaxConnections();
@@ -128,7 +116,7 @@ public class ServerApplication {
 
             ProtocolSelector networkServer = new ProtocolSelector();
             networkServer.iniciarServidor(config.getProtocol(), config.getPort(), pool, threadPool, router,
-                    broadcastManager, transferManager, documentManager, logManager);
+                    broadcastManager, transferManager, documentManager, logManager, replicator);
 
             // ── 7. SUBSCRIPCIÓN DE EVENTOS DE RED Y REPLICACIÓN ──────────────────
             NodeConnector nodeConnector = new NodeConnector(peerPool, identity.getNodeId(), routingTable);
@@ -140,23 +128,15 @@ public class ServerApplication {
             ClusterNotifier clusterNotifier = new ClusterNotifier(broadcastManager::broadcast);
             eventBus.subscribe(clusterNotifier);
 
-            final MainRouter finalRouter = router;
             orchestrators.ReplicationEventApplier eventApplier = new orchestrators.ReplicationEventApplier(
-                    userManager, documentManager, broadcastManager, routingTable, identity.getNodeId(),
-                    () -> { try { return finalRouter.handleListClients(); } catch (Exception e) { return "{}"; } },
-                    () -> { try { return finalRouter.handleListDocuments(); } catch (Exception e) { return "{}"; } });
+                    userManager, documentManager, broadcastManager,
+                    router.getHandler(JsonSchema.ACTION_NEW_MESSAGE),
+                    router.getHandler(JsonSchema.ACTION_LIST_CLIENTS),
+                    router.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS));
             replicator.setEventHandler(eventApplier);
 
             // ── 8. CONFIGURACIÓN DE PEER MESSAGE HANDLER ────────────────────────
-            PeerMessageHandler peerHandler = new PeerMessageHandler(replicator, routingTable, localDeliveryStrategy);
-
-
-            documentManager.setOnLocalDocumentUploaded((docId, filename, sizeBytes, extension, mimeType, ownerUsername, ownerIp, docType) -> {
-                if (!docType.equals("MESSAGE") && !docType.startsWith("PRIVATE_TO:") && !"replicado".equals(ownerIp)) {
-                    replicator.propagate(ReplicationEvent.documentUploaded(
-                            identity.getNodeId(), docId, filename, sizeBytes, extension, mimeType, docType, ownerUsername, ownerIp, identity.getHost(), identity.getClientPort()));
-                }
-            });
+            PeerMessageHandler peerHandler = new PeerMessageHandler(replicator, routingTable);
 
             // ── 9. HILOS DE INFRAESTRUCTURA P2P (Gossip & Servidor entre Nodos) ─
             GossipProtocol gossip = new GossipProtocol(

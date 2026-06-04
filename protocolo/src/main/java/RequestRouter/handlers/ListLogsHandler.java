@@ -4,7 +4,7 @@ import JsonSchema.JsonSchema;
 import JsonSchema.LogEntry;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;

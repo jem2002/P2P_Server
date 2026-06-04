@@ -3,7 +3,7 @@ package RequestRouter.handlers;
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import DocumentService.DocumentManager;
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;

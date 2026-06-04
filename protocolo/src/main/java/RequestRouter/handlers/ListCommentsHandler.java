@@ -1,6 +1,6 @@
 package RequestRouter.handlers;
 
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class ListCommentsHandler implements ActionHandler {

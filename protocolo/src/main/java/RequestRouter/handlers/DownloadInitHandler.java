@@ -5,7 +5,7 @@ import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import DocumentService.DocumentManager;
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import RequestRouter.TransferManager;
 import ports.api.TransferTicket;
 import UserService.UserManager;
@@ -23,12 +23,12 @@ public class DownloadInitHandler implements ActionHandler {
     private final LogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ResponseBuilder serializer;
-    private final ListLogsHandler listLogsHandler;
+    private final ActionHandler listLogsHandler;
 
     public DownloadInitHandler(UserManager userManager, DocumentManager documentManager,
                                TransferManager transferManager, LogManager logManager,
                                BroadcastManager broadcastManager, ResponseBuilder serializer,
-                               ListLogsHandler listLogsHandler) {
+                               ActionHandler listLogsHandler) {
         this.userManager = userManager;
         this.documentManager = documentManager;
         this.transferManager = transferManager;

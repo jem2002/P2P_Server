@@ -19,9 +19,10 @@ public class TransferTicket {
     private final long ownerUserId;
     private final String ownerIp;
     private final String targetUsername;
+    private final String ownerUsername;
 
     public TransferTicket(String token, String filename, long sizeBytes, String extension,
-                          String mimeType, long ownerUserId, String ownerIp, String targetUsername) {
+                          String mimeType, long ownerUserId, String ownerIp, String targetUsername, String ownerUsername) {
         this.token = token;
         this.filename = filename;
         this.sizeBytes = sizeBytes;
@@ -30,11 +31,17 @@ public class TransferTicket {
         this.ownerUserId = ownerUserId;
         this.ownerIp = ownerIp;
         this.targetUsername = targetUsername;
+        this.ownerUsername = ownerUsername;
+    }
+
+    public TransferTicket(String token, String filename, long sizeBytes, String extension,
+                          String mimeType, long ownerUserId, String ownerIp, String targetUsername) {
+        this(token, filename, sizeBytes, extension, mimeType, ownerUserId, ownerIp, targetUsername, null);
     }
 
     public TransferTicket(String token, String filename, long sizeBytes, String extension,
                           String mimeType, long ownerUserId, String ownerIp) {
-        this(token, filename, sizeBytes, extension, mimeType, ownerUserId, ownerIp, null);
+        this(token, filename, sizeBytes, extension, mimeType, ownerUserId, ownerIp, null, null);
     }
 
     public String getToken() {
@@ -67,5 +74,9 @@ public class TransferTicket {
 
     public String getTargetUsername() {
         return targetUsername;
+    }
+
+    public String getOwnerUsername() {
+        return ownerUsername;
     }
 }

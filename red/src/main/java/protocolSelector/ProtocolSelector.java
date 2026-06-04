@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import pool.IConnectionPool;
 import tcpsocketserver.TCPSocketServer;
 import udpsocketserver.UDPSocketServer;
+import replication.ReplicationManager;
 
 public class ProtocolSelector {
     private static final Logger logger = LoggerFactory.getLogger(ProtocolSelector.class);
@@ -29,7 +30,7 @@ public class ProtocolSelector {
      */
     public void iniciarServidor(String protocol, int port, IConnectionPool pool,
             ThreadPoolManager threadPool, IRequestDispatcher router, IBroadcastManager broadcastManager,
-            ITransferDispatcher transferManager, DocumentManager documentManager, LogManager logManager) {
+            ITransferDispatcher transferManager, DocumentManager documentManager, LogManager logManager, ReplicationManager replicationManager) {
 
         boolean startTcp = "TCP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);
         boolean startUdp = "UDP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);

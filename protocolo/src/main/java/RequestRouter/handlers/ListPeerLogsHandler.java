@@ -2,7 +2,7 @@ package RequestRouter.handlers;
 
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import util.InterServerProtocol;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Maneja la acción LIST_PEER_LOGS: recolecta y retorna los logs de todos los
@@ -43,16 +42,16 @@ public class ListPeerLogsHandler implements ActionHandler {
     private final ResponseBuilder serializer;
     private final MembershipList membershipList;
     private final String localNodeId;
-    private final Supplier<String> localLogsSupplier;
+    private final ActionHandler listLogsHandler;
 
     public ListPeerLogsHandler(ResponseBuilder serializer,
                                 MembershipList membershipList,
                                 String localNodeId,
-                                Supplier<String> localLogsSupplier) {
+                               ActionHandler listLogsHandler) {
         this.serializer = serializer;
         this.membershipList = membershipList;
         this.localNodeId = localNodeId;
-        this.localLogsSupplier = localLogsSupplier;
+        this.listLogsHandler = listLogsHandler;
     }
 
     @Override
@@ -63,7 +62,7 @@ public class ListPeerLogsHandler implements ActionHandler {
         Map<String, Object> localEntry = new HashMap<>();
         localEntry.put("nodeId", localNodeId);
         localEntry.put("tipo", "LOCAL");
-        localEntry.put("logs", localLogsSupplier.get());
+        localEntry.put("logs", listLogsHandler.handle(null, clientIp));
         allLogs.add(localEntry);
 
         // 2. Solicitar logs a cada peer ALIVE

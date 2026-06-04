@@ -38,23 +38,6 @@ public final class InterServerProtocol {
         return root.toString();
     }
 
-    /**
-     * Construye un mensaje de enrutamiento (reenviar mensaje a cliente remoto).
-     */
-    public static String buildRouteMessage(String targetUsername, String originalJson, String fromUser, String rawContent, String clientIp) {
-        ObjectNode root = mapper.createObjectNode();
-        root.put("action", "PEER_ROUTE");
-
-        ObjectNode payload = mapper.createObjectNode();
-        payload.put("targetUsername", targetUsername);
-        payload.put("originalMessage", originalJson);
-        payload.put("fromUser", fromUser);
-        payload.put("rawContent", rawContent);
-        payload.put("clientIp", clientIp);
-
-        root.set("payload", payload);
-        return root.toString();
-    }
 
 
     /**
@@ -70,20 +53,5 @@ public final class InterServerProtocol {
         return root.toString();
     }
 
-    /**
-     * Construye una respuesta con los logs de este servidor.
-     *
-     * @param sourceNodeId NodeId del servidor que responde
-     * @param logsJson     String JSON de la lista de logs (formato LIST_LOGS)
-     */
-    public static String buildLogsResponse(String sourceNodeId, String logsJson) {
-        ObjectNode root = mapper.createObjectNode();
-        root.put("action", "PEER_LOGS_RESPONSE");
-        ObjectNode payload = mapper.createObjectNode();
-        payload.put("sourceNodeId", sourceNodeId);
-        payload.put("logsJson", logsJson);
-        root.set("payload", payload);
-        return root.toString();
-    }
 
 }

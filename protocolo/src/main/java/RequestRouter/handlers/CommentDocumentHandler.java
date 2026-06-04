@@ -3,7 +3,7 @@ package RequestRouter.handlers;
 import CommentService.CommentManager;
 import JsonSchema.Comment;
 import JsonSerializer.ResponseBuilder;
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

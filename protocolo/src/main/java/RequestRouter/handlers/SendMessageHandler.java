@@ -5,15 +5,11 @@ import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import DocumentService.DocumentManager;
-import RequestRouter.ActionHandler;
+import ports.api.ActionHandler;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
-import delivery.Impl.LocalDeliveryStrategyPrivate;
-import delivery.PrivateMessageDeliveryStrategy;
 import replication.ReplicationEvent;
 import replication.ReplicationManager;
-import delivery.Impl.RemoteDeliveryStrategyPrivate;
-import topology.RoutingTable;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -48,7 +44,8 @@ public class SendMessageHandler implements ActionHandler {
     private final LogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ResponseBuilder serializer;
-    private final ListLogsHandler listLogsHandler;
+    private final ActionHandler listLogsHandler;
+    private final ActionHandler listMessagesHandler;
 
     private final ReplicationManager replicationManager;
     private final String localNodeId;
@@ -56,9 +53,9 @@ public class SendMessageHandler implements ActionHandler {
     // Un solo constructor que exige TODO
     public SendMessageHandler(UserManager userManager, DocumentManager documentManager,
                               LogManager logManager, BroadcastManager broadcastManager,
-                              ResponseBuilder serializer, ListLogsHandler listLogsHandler,
-                              RoutingTable routingTable, LocalDeliveryStrategyPrivate localDeliveryStrategy,
-                              ReplicationManager replicationManager, RemoteDeliveryStrategyPrivate remoteDelivery,
+                              ResponseBuilder serializer, ActionHandler listLogsHandler,
+                              ActionHandler listMessagesHandler,
+                              ReplicationManager replicationManager,
                               String localNodeId) {
         this.userManager = userManager;
         this.documentManager = documentManager;
@@ -66,6 +63,7 @@ public class SendMessageHandler implements ActionHandler {
         this.broadcastManager = broadcastManager;
         this.serializer = serializer;
         this.listLogsHandler = listLogsHandler;
+        this.listMessagesHandler = listMessagesHandler;
         this.replicationManager = replicationManager;
         this.localNodeId = localNodeId;
     }
@@ -90,9 +88,8 @@ public class SendMessageHandler implements ActionHandler {
                 textStream, nombreArchivo, contentBytes.length, ".txt", "text/plain",
                 userId, clientIp, docType);
 
-        broadcastManager.broadcast(serializer.buildSuccessResponse(
-                JsonSchema.ACTION_NEW_MESSAGE,
-                "De " + fromUser + " → " + targetUsername + ": " + content));
+
+        broadcastManager.broadcast(listMessagesHandler.handle(null, null));
 
         replicationManager.propagate(
                     ReplicationEvent.newMessage(localNodeId, fromUser, targetUsername, content, clientIp));

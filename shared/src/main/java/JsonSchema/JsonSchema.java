@@ -12,9 +12,11 @@ public final class JsonSchema {
 
     // --- Acciones cliente ↔ servidor ---
     public static final String ACTION_CONNECT           = "CONNECT";
+    public static final String ACTION_DISCONNECT        = "DISCONNECT";
     public static final String ACTION_ERROR             = "ERROR";
     public static final String ACTION_UPLOAD_INIT       = "UPLOAD_INIT";
     public static final String ACTION_DOWNLOAD_INIT     = "DOWNLOAD_INIT";
+    public static final String ACTION_UPLOAD_CONFIRMATION = "UPLOAD_CONFIRMATION";
     public static final String ACTION_SEND_MESSAGE      = "SEND_MESSAGE";      // Cliente envía (broadcast o dirigido)
     public static final String ACTION_NEW_MESSAGE       = "NEW_MESSAGE";       // Servidor retransmite
     public static final String ACTION_LIST_CLIENTS      = "LIST_CLIENTS";      // Clientes locales + remotos
