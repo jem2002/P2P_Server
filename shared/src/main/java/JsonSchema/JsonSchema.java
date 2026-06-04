@@ -39,13 +39,6 @@ public final class JsonSchema {
     public static final String PAYLOAD_REASON           = "reason";
     public static final String PAYLOAD_TARGET_USERNAME  = "targetUsername";    // Destinatario específico (o null/"ALL")
 
-    // --- Acciones P2P Inter-Servidor (protocolo interno) ---
-    public static final String ACTION_PEER_HEARTBEAT    = "PEER_HEARTBEAT";
-    public static final String ACTION_PEER_SYNC         = "PEER_SYNC";
-    public static final String ACTION_PEER_REPLICATE    = "PEER_REPLICATE";
-    public static final String ACTION_PEER_ROUTE        = "PEER_ROUTE";        // Enrutar mensaje a cliente remoto
-    public static final String ACTION_PEER_HEALTH       = "PEER_HEALTH";
-    public static final String ACTION_PEER_LOGS_REQUEST = "PEER_LOGS_REQUEST"; // Solicitar logs a un peer
-    public static final String ACTION_PEER_LOGS_RESPONSE= "PEER_LOGS_RESPONSE";// Respuesta con logs del peer
-    public static final String ACTION_PEER_BROADCAST    = "PEER_BROADCAST";    // Retransmitir broadcast a clientes locales
+
+
 }

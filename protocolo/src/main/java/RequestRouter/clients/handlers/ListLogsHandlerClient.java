@@ -1,10 +1,10 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.JsonSchema;
 import JsonSchema.LogEntry;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
@@ -16,12 +16,12 @@ import java.util.ArrayList;
  * Maneja la acción LIST_LOGS: retorna la bitácora de auditoría.
  * También es reutilizado por otros handlers para broadcast de logs actualizado.
  */
-public class ListLogsHandler implements ActionHandler {
+public class ListLogsHandlerClient implements ClientActionHandler {
 
     private final LogManager logManager;
     private final ResponseBuilder serializer;
 
-    public ListLogsHandler(LogManager logManager, ResponseBuilder serializer) {
+    public ListLogsHandlerClient(LogManager logManager, ResponseBuilder serializer) {
         this.logManager = logManager;
         this.serializer = serializer;
     }

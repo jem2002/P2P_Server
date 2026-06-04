@@ -1,7 +1,7 @@
 package orchestrators;
 
 import DocumentService.DocumentManager;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import UserService.UserManager;
 import MessageParser.BroadcastManager;
 import replication.ReplicationEvent;
@@ -20,17 +20,17 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
     private final UserManager userManager;
     private final DocumentManager documentManager;
     private final BroadcastManager broadcastManager;
-    private final ActionHandler listMessagesHandler;
-    private final ActionHandler listClientsHandler;
-    private final ActionHandler listDocumentsHandler;
+    private final ClientActionHandler listMessagesHandler;
+    private final ClientActionHandler listClientsHandler;
+    private final ClientActionHandler listDocumentsHandler;
     private final topology.RoutingTable routingTable;
 
     public ReplicationEventApplier(UserManager userManager,
                                    DocumentManager documentManager,
                                    BroadcastManager broadcastManager,
-                                   ActionHandler listMessagesHandler,
-                                   ActionHandler listClientsHandler,
-                                   ActionHandler listDocumentsHandler,
+                                   ClientActionHandler listMessagesHandler,
+                                   ClientActionHandler listClientsHandler,
+                                   ClientActionHandler listDocumentsHandler,
                                    topology.RoutingTable routingTable) {
         this.userManager = userManager;
         this.documentManager = documentManager;

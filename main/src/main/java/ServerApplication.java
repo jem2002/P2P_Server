@@ -6,11 +6,11 @@ import EncryptionUtils.EncryptionUtils;
 import EncryptionUtils.IEncryptionUtils;
 import FileSystemStorage.LocalFileManager;
 import JsonSchema.JsonSchema;
-import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
-import RequestRouter.MainRouter;
-import RequestRouter.TransferManager;
+import RequestRouter.clients.ClientRouter;
+import DocumentService.TransferManager;
+import RequestRouter.files.FileRouter;
 import UserService.UserManager;
 import api.ServerAdminAPI;
 import config.NodeSetupWizard;
@@ -19,6 +19,7 @@ import console.InteractiveConsole;
 import events.Impl.NodeConnector;
 import events.Impl.NodeDisconnector;
 import executor.ThreadPoolManager;
+import handler.FileTransferHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
@@ -101,13 +102,19 @@ public class ServerApplication {
 
             ClusterHealthService healthService = new ClusterHealthService(identity, membership, peerPool);
 
-            // ── 4. CONSTRUCCIÓN DE MAINROUTER (INMUTABLE) ───────────────────────
-            MainRouter router = new MainRouter(
+            // ── 4. CONSTRUCCIÓN DE ROUTERS (INMUTABLE) ───────────────────────
+            ClientRouter clientRouter = new ClientRouter(
                     userManager, documentManager, logManager, broadcastManager, transferManager, commentManager,
                     routingTable, replicator,
                     identity.getNodeId(), membership, healthService, identity
             );
 
+            FileRouter fileRouter = new FileRouter(documentManager, logManager, broadcastManager,
+                    clientRouter.getHandler(JsonSchema.ACTION_LIST_LOGS),
+                    clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS),
+                    replicator,
+                    identity
+                    );
 
             // ── 6. ARRANQUE DEL SERVIDOR DE RED (CLIENTES SOCKET) ───────────────
             int maxConnections = config.getMaxConnections();
@@ -115,8 +122,8 @@ public class ServerApplication {
             ThreadPoolManager threadPool = new ThreadPoolManager(maxConnections);
 
             ProtocolSelector networkServer = new ProtocolSelector();
-            networkServer.iniciarServidor(config.getProtocol(), config.getPort(), pool, threadPool, router,
-                    broadcastManager, transferManager, documentManager, logManager, replicator);
+            networkServer.iniciarServidor(config.getProtocol(), config.getPort(), pool, threadPool, clientRouter,
+                    broadcastManager, transferManager, fileRouter);
 
             // ── 7. SUBSCRIPCIÓN DE EVENTOS DE RED Y REPLICACIÓN ──────────────────
             NodeConnector nodeConnector = new NodeConnector(peerPool, identity.getNodeId(), routingTable);
@@ -130,9 +137,9 @@ public class ServerApplication {
 
             orchestrators.ReplicationEventApplier eventApplier = new orchestrators.ReplicationEventApplier(
                     userManager, documentManager, broadcastManager,
-                    router.getHandler(JsonSchema.ACTION_NEW_MESSAGE),
-                    router.getHandler(JsonSchema.ACTION_LIST_CLIENTS),
-                    router.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS),
+                    clientRouter.getHandler(JsonSchema.ACTION_NEW_MESSAGE),
+                    clientRouter.getHandler(JsonSchema.ACTION_LIST_CLIENTS),
+                    clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS),
                     routingTable
                     );
             replicator.setEventHandler(eventApplier);

@@ -1,11 +1,11 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import DocumentService.DocumentManager;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import replication.ReplicationEvent;
@@ -36,7 +36,7 @@ import java.nio.charset.StandardCharsets;
  *   - "Los documentos/mensajes se podrán enviar a un cliente en especial o a todos."
  *   - "Cada servidor debe poseer una copia de los mensajes." (persistencia siempre activa)
  */
-public class SendMessageHandler implements ActionHandler {
+public class SendMessageHandlerClient implements ClientActionHandler {
 
     // Dependencias Base
     private final UserManager userManager;
@@ -44,19 +44,19 @@ public class SendMessageHandler implements ActionHandler {
     private final LogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ResponseBuilder serializer;
-    private final ActionHandler listLogsHandler;
-    private final ActionHandler listMessagesHandler;
+    private final ClientActionHandler listLogsHandler;
+    private final ClientActionHandler listMessagesHandler;
 
     private final ReplicationManager replicationManager;
     private final String localNodeId;
 
     // Un solo constructor que exige TODO
-    public SendMessageHandler(UserManager userManager, DocumentManager documentManager,
-                              LogManager logManager, BroadcastManager broadcastManager,
-                              ResponseBuilder serializer, ActionHandler listLogsHandler,
-                              ActionHandler listMessagesHandler,
-                              ReplicationManager replicationManager,
-                              String localNodeId) {
+    public SendMessageHandlerClient(UserManager userManager, DocumentManager documentManager,
+                                    LogManager logManager, BroadcastManager broadcastManager,
+                                    ResponseBuilder serializer, ClientActionHandler listLogsHandler,
+                                    ClientActionHandler listMessagesHandler,
+                                    ReplicationManager replicationManager,
+                                    String localNodeId) {
         this.userManager = userManager;
         this.documentManager = documentManager;
         this.logManager = logManager;

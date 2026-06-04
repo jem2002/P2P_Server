@@ -1,11 +1,11 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.ClientAddress;
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import replication.ReplicationEvent;
@@ -14,13 +14,13 @@ import topology.RoutingTable;
 
 import java.io.OutputStream;
 
-public class ConnectHandler implements ActionHandler {
+public class ConnectHandlerClient implements ClientActionHandler {
 
     private final UserManager userManager;
     private final LogManager logManager;
     private final ResponseBuilder serializer;
     private final BroadcastManager broadcastManager;
-    private final ActionHandler listClientsHandler;
+    private final ClientActionHandler listClientsHandler;
 
     // Dependencias de clúster obligatorias e inmutables
     private final RoutingTable routingTable;
@@ -30,11 +30,11 @@ public class ConnectHandler implements ActionHandler {
     // Mantiene el stream del cliente actual mapeado al hilo de ejecución de la solicitud
     private final ThreadLocal<OutputStream> clientOut = new ThreadLocal<>();
 
-    public ConnectHandler(UserManager userManager, LogManager logManager,
-                          ResponseBuilder serializer, BroadcastManager broadcastManager,
-                          ActionHandler listClientsHandler, RoutingTable routingTable,
-                          ReplicationManager replicationManager,
-                          String localNodeId) {
+    public ConnectHandlerClient(UserManager userManager, LogManager logManager,
+                                ResponseBuilder serializer, BroadcastManager broadcastManager,
+                                ClientActionHandler listClientsHandler, RoutingTable routingTable,
+                                ReplicationManager replicationManager,
+                                String localNodeId) {
         this.userManager = userManager;
         this.logManager = logManager;
         this.serializer = serializer;

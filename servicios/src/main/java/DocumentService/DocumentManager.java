@@ -203,7 +203,7 @@ public class DocumentManager {
         }
     }
 
-    public boolean procesarRecepcionDocumento(InputStream redStream, String nombre, long sizeBytes,
+    public Long procesarRecepcionDocumento(InputStream redStream, String nombre, long sizeBytes,
                                               String extension, String mimeType, long ownerUserId,
                                               String ownerIp, String docType) {
         Long docId = null;
@@ -236,7 +236,7 @@ public class DocumentManager {
                 onLocalDocumentUploaded.onUploaded(docId, nombre, sizeBytes, extension, mimeType, ownerUsername, ownerIp, docType);
             }
             
-            return true;
+            return docId;
 
         } catch (Exception e) {
             logger.error("Error crítico procesando el documento.", e);
@@ -249,7 +249,7 @@ public class DocumentManager {
                     // Evitar fallo en cascada al registrar el log de error
                 }
             }
-            return false;
+            return null;
         }
     }
 

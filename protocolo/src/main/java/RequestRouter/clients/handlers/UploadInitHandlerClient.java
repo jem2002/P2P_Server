@@ -1,11 +1,11 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
-import ports.api.ActionHandler;
-import RequestRouter.TransferManager;
+import ports.api.ClientActionHandler;
+import DocumentService.TransferManager;
 import ports.api.TransferTicket;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,18 +13,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * Maneja la acción UPLOAD_INIT: genera un ticket de transferencia para subida de archivos.
  */
-public class UploadInitHandler implements ActionHandler {
+public class UploadInitHandlerClient implements ClientActionHandler {
 
     private final UserManager userManager;
     private final TransferManager transferManager;
     private final LogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ResponseBuilder serializer;
-    private final ActionHandler listLogsHandler;
+    private final ClientActionHandler listLogsHandler;
 
-    public UploadInitHandler(UserManager userManager, TransferManager transferManager,
-                             LogManager logManager, BroadcastManager broadcastManager,
-                             ResponseBuilder serializer, ActionHandler listLogsHandler) {
+    public UploadInitHandlerClient(UserManager userManager, TransferManager transferManager,
+                                   LogManager logManager, BroadcastManager broadcastManager,
+                                   ResponseBuilder serializer, ClientActionHandler listLogsHandler) {
         this.userManager = userManager;
         this.transferManager = transferManager;
         this.logManager = logManager;
@@ -41,17 +41,11 @@ public class UploadInitHandler implements ActionHandler {
         String mimeType = payload.get("mimeType").asText();
         String username = payload.get("username").asText();
         
-        String targetUsername = null;
-        if (payload.has("targetUsername") && !payload.get("targetUsername").isNull()) {
-            String target = payload.get("targetUsername").asText().trim();
-            if (!target.isEmpty() && !target.equals("— Todos —")) {
-                targetUsername = target;
-            }
-        }
+        String targetUsername = payload.get("targetUsername").asText().trim();
 
         long userId = userManager.obtenerIdUsuario(username);
 
-        String token = java.util.UUID.randomUUID().toString();
+        String token = "UPL-" + java.util.UUID.randomUUID();
         TransferTicket ticket = new TransferTicket(token, filename, size, extension, mimeType, userId, clientIp, targetUsername, username);
         transferManager.registrarTicket(ticket);
 

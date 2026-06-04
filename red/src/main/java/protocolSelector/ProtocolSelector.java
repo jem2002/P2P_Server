@@ -2,7 +2,8 @@ package protocolSelector;
 
 import DocumentService.DocumentManager;
 import ports.api.IBroadcastManager;
-import ports.api.IRequestDispatcher;
+import ports.api.IClientRequestDispatcher;
+import ports.api.IFileRequestDispatcher;
 import ports.api.ITransferDispatcher;
 import LogService.LogManager;
 import executor.ThreadPoolManager;
@@ -26,11 +27,10 @@ public class ProtocolSelector {
      * @param port       Puerto a escuchar
      * @param pool       Gestor de conexiones de TCP
      * @param threadPool Gestor de concurrencia
-     * @param router     Router del protocolo JSON
      */
     public void iniciarServidor(String protocol, int port, IConnectionPool pool,
-            ThreadPoolManager threadPool, IRequestDispatcher router, IBroadcastManager broadcastManager,
-            ITransferDispatcher transferManager, DocumentManager documentManager, LogManager logManager, ReplicationManager replicationManager) {
+                                ThreadPoolManager threadPool, IClientRequestDispatcher clientRouter, IBroadcastManager broadcastManager,
+                                ITransferDispatcher transferManager, IFileRequestDispatcher fileRouter) {
 
         boolean startTcp = "TCP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);
         boolean startUdp = "UDP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);
@@ -42,14 +42,15 @@ public class ProtocolSelector {
 
         if (startTcp) {
             logger.info("Iniciando servicio en modo TCP...");
-            tcpServer = new TCPSocketServer(port, pool, threadPool, router, broadcastManager, transferManager,
-                    documentManager, logManager);
+            tcpServer = new TCPSocketServer(port, pool, threadPool, clientRouter, broadcastManager, transferManager,
+                    fileRouter
+                        );
             new Thread(tcpServer, "Thread-TCPServer").start();
         }
         
         if (startUdp) {
             logger.info("Iniciando servicio en modo UDP...");
-            udpServer = new UDPSocketServer(port, threadPool, router);
+            udpServer = new UDPSocketServer(port, threadPool, clientRouter);
             new Thread(udpServer, "Thread-UDPServer").start();
         }
     }

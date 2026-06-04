@@ -1,9 +1,9 @@
 package tcpsocketserver;
 
 import DocumentService.DocumentManager;
-import JsonSchema.JsonSchema;
 import ports.api.IBroadcastManager;
-import ports.api.IRequestDispatcher;
+import ports.api.IClientRequestDispatcher;
+import ports.api.IFileRequestDispatcher;
 import ports.api.ITransferDispatcher;
 import executor.ThreadPoolManager;
 import handler.ClientHandler;
@@ -35,24 +35,22 @@ public class TCPSocketServer implements Runnable {
     private final ThreadPoolManager threadPool;
     private volatile boolean running;
     private ServerSocket serverSocket;
-    private final IRequestDispatcher router;
+    private final IClientRequestDispatcher clientRouter;
+    private final IFileRequestDispatcher fileRouter;
     private final IBroadcastManager broadcastManager;
     private final ITransferDispatcher transferManager;
-    private final DocumentManager documentManager;
-    private final LogService.LogManager logManager;
 
-    public TCPSocketServer(int port, IConnectionPool pool, ThreadPoolManager threadPool, IRequestDispatcher router,
-                           IBroadcastManager broadcastManager, ITransferDispatcher transferManager, DocumentManager documentManager,
-                           LogService.LogManager logManager) {
+
+    public TCPSocketServer(int port, IConnectionPool pool, ThreadPoolManager threadPool, IClientRequestDispatcher clientRouter,
+                           IBroadcastManager broadcastManager, ITransferDispatcher transferManager, IFileRequestDispatcher fileRouter) {
         this.port = port;
         this.pool = pool;
         this.threadPool = threadPool;
-        this.router = router;
+        this.clientRouter = clientRouter;
+        this.fileRouter = fileRouter;
         this.running = true;
         this.broadcastManager = broadcastManager;
         this.transferManager = transferManager;
-        this.documentManager = documentManager;
-        this.logManager = logManager;
     }
 
     public void stopServer() {
@@ -140,7 +138,7 @@ public class TCPSocketServer implements Runnable {
         }
 
         pooledConnection.setSocket(clientSocket);
-        ClientHandler handler = new ClientHandler(pooledConnection, pool, router,
+        ClientHandler handler = new ClientHandler(pooledConnection, pool, clientRouter,
                 broadcastManager, primeraLinea);
         threadPool.execute(handler);
     }
@@ -153,7 +151,7 @@ public class TCPSocketServer implements Runnable {
                 clientSocket.getRemoteSocketAddress());
 
         FileTransferHandler fileHandler = new FileTransferHandler(clientSocket, token,
-                transferManager, documentManager, router.getHandler(JsonSchema.ACTION_LIST_LOGS), router.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS), broadcastManager, logManager);
+                transferManager, fileRouter);
         new Thread(fileHandler,
                 "FileTransfer-" + token.substring(0, Math.min(8, token.length()))).start();
     }

@@ -1,12 +1,12 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.DownloadDetails;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import DocumentService.DocumentManager;
-import ports.api.ActionHandler;
-import RequestRouter.TransferManager;
+import ports.api.ClientActionHandler;
+import DocumentService.TransferManager;
 import ports.api.TransferTicket;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Maneja la acción DOWNLOAD_INIT: genera un ticket de transferencia para descarga de archivos.
  * Soporta los modos: ORIGINAL (ORG), ENCRIPTADO (ENC), HASH (HSH), DESCIFRADO (default).
  */
-public class DownloadInitHandler implements ActionHandler {
+public class DownloadInitHandlerClient implements ClientActionHandler {
 
     private final UserManager userManager;
     private final DocumentManager documentManager;
@@ -23,12 +23,12 @@ public class DownloadInitHandler implements ActionHandler {
     private final LogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ResponseBuilder serializer;
-    private final ActionHandler listLogsHandler;
+    private final ClientActionHandler listLogsHandler;
 
-    public DownloadInitHandler(UserManager userManager, DocumentManager documentManager,
-                               TransferManager transferManager, LogManager logManager,
-                               BroadcastManager broadcastManager, ResponseBuilder serializer,
-                               ActionHandler listLogsHandler) {
+    public DownloadInitHandlerClient(UserManager userManager, DocumentManager documentManager,
+                                     TransferManager transferManager, LogManager logManager,
+                                     BroadcastManager broadcastManager, ResponseBuilder serializer,
+                                     ClientActionHandler listLogsHandler) {
         this.userManager = userManager;
         this.documentManager = documentManager;
         this.transferManager = transferManager;
@@ -79,7 +79,7 @@ public class DownloadInitHandler implements ActionHandler {
             ticketInfo = encryptedPath;
         }
 
-        String token = prefix + java.util.UUID.randomUUID().toString();
+        String token = prefix + java.util.UUID.randomUUID();
         TransferTicket ticket = new TransferTicket(token, detalles.getNombre(), size, "", ticketInfo, userId, clientIp, username);
         transferManager.registrarTicket(ticket);
 

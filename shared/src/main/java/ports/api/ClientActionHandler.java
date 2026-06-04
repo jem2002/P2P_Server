@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Principio aplicado: OCP — agregar una nueva acción = crear una nueva clase
  * que implemente esta interfaz, sin modificar MainRouter.
  */
-public interface ActionHandler {
+public interface ClientActionHandler {
 
     /**
      * Procesa una acción del protocolo y retorna la respuesta JSON serializada.

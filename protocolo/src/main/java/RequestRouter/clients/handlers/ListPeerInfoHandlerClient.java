@@ -1,8 +1,8 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import discovery.MemberEntry;
 import discovery.MembershipList;
@@ -24,17 +24,17 @@ import java.util.Map;
  *
  * Responde con la lista completa de nodos: ALIVE, SUSPECTED y DOWN.
  */
-public class ListPeerInfoHandler implements ActionHandler {
+public class ListPeerInfoHandlerClient implements ClientActionHandler {
 
     private final ResponseBuilder serializer;
     private final ClusterHealthService healthService;
     private final LocalNodeInfo localIdentity;
     private final MembershipList membershipList;
 
-    public ListPeerInfoHandler(ResponseBuilder serializer,
-                                ClusterHealthService healthService,
-                                LocalNodeInfo localIdentity,
-                                MembershipList membershipList) {
+    public ListPeerInfoHandlerClient(ResponseBuilder serializer,
+                                     ClusterHealthService healthService,
+                                     LocalNodeInfo localIdentity,
+                                     MembershipList membershipList) {
         this.serializer = serializer;
         this.healthService = healthService;
         this.localIdentity = localIdentity;

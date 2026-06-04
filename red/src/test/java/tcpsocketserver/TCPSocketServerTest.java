@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pool.IConnectionPool;
 import pool.PooledClientConnection;
 import ports.api.IBroadcastManager;
-import ports.api.IRequestDispatcher;
+import ports.api.IClientRequestDispatcher;
 import ports.api.ITransferDispatcher;
 import LogService.LogManager;
 
@@ -31,7 +31,7 @@ public class TCPSocketServerTest {
 
     @Mock private IConnectionPool pool;
     @Mock private ThreadPoolManager threadPool;
-    @Mock private IRequestDispatcher router;
+    @Mock private IClientRequestDispatcher router;
     @Mock private IBroadcastManager broadcastManager;
     @Mock private ITransferDispatcher transferManager;
     @Mock private DocumentManager documentManager;

@@ -1,9 +1,9 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import DocumentService.DocumentManager;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
@@ -12,12 +12,12 @@ import java.util.Map;
 /**
  * Maneja la acción LIST_MESSAGES: retorna la lista de mensajes disponibles.
  */
-public class ListMessagesHandler implements ActionHandler {
+public class ListMessagesHandlerClient implements ClientActionHandler {
 
     private final DocumentManager documentManager;
     private final ResponseBuilder serializer;
 
-    public ListMessagesHandler(DocumentManager documentManager, ResponseBuilder serializer) {
+    public ListMessagesHandlerClient(DocumentManager documentManager, ResponseBuilder serializer) {
         this.documentManager = documentManager;
         this.serializer = serializer;
     }

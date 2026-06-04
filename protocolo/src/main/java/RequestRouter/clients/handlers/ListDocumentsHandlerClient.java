@@ -1,10 +1,10 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.DocumentInfo;
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import DocumentService.DocumentManager;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
@@ -15,12 +15,12 @@ import java.util.ArrayList;
 /**
  * Maneja la acción LIST_DOCUMENTS: retorna la lista de archivos disponibles.
  */
-public class ListDocumentsHandler implements ActionHandler {
+public class ListDocumentsHandlerClient implements ClientActionHandler {
 
     private final DocumentManager documentManager;
     private final ResponseBuilder serializer;
 
-    public ListDocumentsHandler(DocumentManager documentManager, ResponseBuilder serializer) {
+    public ListDocumentsHandlerClient(DocumentManager documentManager, ResponseBuilder serializer) {
         this.documentManager = documentManager;
         this.serializer = serializer;
     }

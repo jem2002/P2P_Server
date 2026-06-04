@@ -1,22 +1,22 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import CommentService.CommentManager;
 import JsonSchema.Comment;
 import JsonSerializer.ResponseBuilder;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CommentDocumentHandler implements ActionHandler {
+public class CommentDocumentHandlerClient implements ClientActionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommentDocumentHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommentDocumentHandlerClient.class);
 
     private final CommentManager commentManager;
     private final ResponseBuilder serializer;
 
     // Ya no se inyecta el SentimentService aquí, se limpia el constructor
-    public CommentDocumentHandler(CommentManager commentManager, ResponseBuilder serializer) {
+    public CommentDocumentHandlerClient(CommentManager commentManager, ResponseBuilder serializer) {
         this.commentManager = commentManager;
         this.serializer = serializer;
     }

@@ -1,9 +1,9 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.ActiveClient;
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import topology.RoutingTable;
@@ -32,7 +32,7 @@ import java.util.*;
  * Requerimiento cumplido: "Cada servidor deberá actualizar la información de los
  * clientes disponibles, deben incluir los clientes y los clientes de otros servidores."
  */
-public class ListClientsHandler implements ActionHandler {
+public class ListClientsHandlerClient implements ClientActionHandler {
 
     private final UserManager userManager;
     private final ResponseBuilder serializer;
@@ -41,8 +41,8 @@ public class ListClientsHandler implements ActionHandler {
     private final RoutingTable routingTable;
     private final String localNodeId;
 
-    public ListClientsHandler(UserManager userManager, ResponseBuilder serializer,
-                              RoutingTable routingTable, String localNodeId) {
+    public ListClientsHandlerClient(UserManager userManager, ResponseBuilder serializer,
+                                    RoutingTable routingTable, String localNodeId) {
         this.userManager = userManager;
         this.serializer = serializer;
         this.routingTable = routingTable;

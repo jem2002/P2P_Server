@@ -1,7 +1,7 @@
 package handler;
 
 import ports.api.IBroadcastManager;
-import ports.api.IRequestDispatcher;
+import ports.api.IClientRequestDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pool.IConnectionPool;
@@ -25,11 +25,11 @@ public class ClientHandler implements Runnable {
 
     private final PooledClientConnection connection;
     private final IConnectionPool pool;
-    private final IRequestDispatcher router;
+    private final IClientRequestDispatcher router;
     private final IBroadcastManager broadcastManager;
     private final String primeraLinea;
 
-    public ClientHandler(PooledClientConnection connection, IConnectionPool pool, IRequestDispatcher router,
+    public ClientHandler(PooledClientConnection connection, IConnectionPool pool, IClientRequestDispatcher router,
                          IBroadcastManager broadcastManager, String primeraLinea) {
         this.connection = connection;
         this.pool = pool;
@@ -83,5 +83,6 @@ public class ClientHandler implements Runnable {
         String jsonResponse = router.routeRequest(json, clientIp);
         out.write((jsonResponse + "\n").getBytes(StandardCharsets.UTF_8));
         out.flush();
+
     }
 }

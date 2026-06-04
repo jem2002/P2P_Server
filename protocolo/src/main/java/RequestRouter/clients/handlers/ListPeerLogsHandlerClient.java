@@ -1,8 +1,8 @@
-package RequestRouter.handlers;
+package RequestRouter.clients.handlers;
 
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import ports.api.ActionHandler;
+import ports.api.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import util.InterServerProtocol;
@@ -33,21 +33,21 @@ import java.util.Map;
  * Requerimiento cumplido:
  *   - "Adicionar servicios para mostrar la información y los logs de otros servidores."
  */
-public class ListPeerLogsHandler implements ActionHandler {
+public class ListPeerLogsHandlerClient implements ClientActionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(ListPeerLogsHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ListPeerLogsHandlerClient.class);
     private static final int PEER_TIMEOUT_MS = 3000;
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private final ResponseBuilder serializer;
     private final MembershipList membershipList;
     private final String localNodeId;
-    private final ActionHandler listLogsHandler;
+    private final ClientActionHandler listLogsHandler;
 
-    public ListPeerLogsHandler(ResponseBuilder serializer,
-                                MembershipList membershipList,
-                                String localNodeId,
-                               ActionHandler listLogsHandler) {
+    public ListPeerLogsHandlerClient(ResponseBuilder serializer,
+                                     MembershipList membershipList,
+                                     String localNodeId,
+                                     ClientActionHandler listLogsHandler) {
         this.serializer = serializer;
         this.membershipList = membershipList;
         this.localNodeId = localNodeId;
