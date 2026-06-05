@@ -96,6 +96,19 @@ public class MySqlSessionDao implements ISessionRepository {
     }
 
     @Override
+    public void cerrarSesionesPorNodo(String nodeId) throws Exception {
+        String sql = "UPDATE client_connections SET is_active = FALSE, disconnected_at = NOW() WHERE node_id = ? AND is_active = TRUE";
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nodeId);
+            int limpiados = stmt.executeUpdate();
+            if (limpiados > 0) {
+                logger.info("Cerradas {} sesiones activas pertenecientes al nodo desconectado '{}'.", limpiados, nodeId);
+            }
+        }
+    }
+
+    @Override
     public void limpiarConexionesMuertas() {
         String sql = "UPDATE client_connections SET is_active = FALSE, disconnected_at = NOW() WHERE is_active = TRUE";
         try (Connection conn = dbManager.getConnection();

@@ -17,5 +17,7 @@ public interface ISessionRepository {
 
     void cerrarSesionPorUsername(String username) throws Exception;
 
+    void cerrarSesionesPorNodo(String nodeId) throws Exception;
+
     void limpiarConexionesMuertas();
 }

@@ -139,7 +139,7 @@ public class PeerMessageHandler {
                     File dir = new File("./storage/original");
                     if (!dir.exists()) dir.mkdirs();
                     for (int i = 0; i < count; i++) {
-                        receiveFile(dis, dir);
+                        receiveFile(dis, dir, false);
                     }
                     logger.info("Recibidos {} documentos originales.", count);
                 }
@@ -151,7 +151,7 @@ public class PeerMessageHandler {
                     File dir = new File("./storage/encrypted");
                     if (!dir.exists()) dir.mkdirs();
                     for (int i = 0; i < count; i++) {
-                        receiveFile(dis, dir);
+                        receiveFile(dis, dir, false);
                     }
                     logger.info("Recibidos {} documentos encriptados.", count);
                 }
@@ -163,7 +163,7 @@ public class PeerMessageHandler {
                     if (hasSql == 1) {
                         File dir = new File("./exports");
                         if (!dir.exists()) dir.mkdirs();
-                        File sqlFile = receiveFile(dis, dir);
+                        File sqlFile = receiveFile(dis, dir, true);
                         logger.info("Script SQL de respaldo recibido exitosamente.");
                         
                         logger.info("Importando base de datos a partir del script recibido...");
@@ -184,10 +184,23 @@ public class PeerMessageHandler {
         }, "SyncReceiver-" + sourceNodeId).start();
     }
 
-    private File receiveFile(java.io.DataInputStream dis, File targetDir) throws java.io.IOException {
+    private File receiveFile(java.io.DataInputStream dis, File targetDir, boolean overwrite) throws java.io.IOException {
         String fileName = dis.readUTF();
         long size = dis.readLong();
         File file = new File(targetDir, fileName);
+        
+        if (file.exists() && !overwrite) {
+            logger.info("El archivo '{}' ya existe. Omitiendo escritura en disco...", fileName);
+            byte[] buffer = new byte[8192];
+            long remaining = size;
+            while (remaining > 0) {
+                int read = dis.read(buffer, 0, (int) Math.min(buffer.length, remaining));
+                if (read == -1) break;
+                remaining -= read;
+            }
+            return file;
+        }
+
         try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {
             byte[] buffer = new byte[8192];
             long remaining = size;
@@ -197,6 +210,7 @@ public class PeerMessageHandler {
                 fos.write(buffer, 0, read);
                 remaining -= read;
             }
+            fos.getFD().sync(); // Fuerza a que el OS escriba físicamente el archivo en disco
         }
         return file;
     }

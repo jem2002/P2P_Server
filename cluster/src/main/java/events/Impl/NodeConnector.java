@@ -123,7 +123,9 @@ public class NodeConnector implements NetworkEventListener {
                         }
 
                         // Sección 3: Script SQL
+                        logger.info("Generando volcado de base de datos SQL... (esto puede tardar)");
                         File sql = databaseBackupManager.exportarDatosBaseDeDatos();
+                        logger.info("Volcado de base de datos generado. Enviando...");
                         dos.writeUTF("SECTION:SQL");
                         if (sql != null && sql.exists()) {
                             dos.writeInt(1);
@@ -131,6 +133,8 @@ public class NodeConnector implements NetworkEventListener {
                         } else {
                             dos.writeInt(0);
                         }
+                        
+                        dos.flush(); // Asegurar que todo se envíe de inmediato por la red
 
                         logger.info("Transferencia de archivos finalizada con éxito a '{}'.", node.getNodeId());
 

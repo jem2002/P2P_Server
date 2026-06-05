@@ -130,7 +130,7 @@ public class ServerApplication {
             NodeConnector nodeConnector = new NodeConnector(peerPool, identity.getNodeId(), documentManager, databaseBackupManager);
             eventBus.subscribe(nodeConnector);
 
-            NodeDisconnector nodeDisconnector = new NodeDisconnector(peerPool);
+            NodeDisconnector nodeDisconnector = new NodeDisconnector(peerPool, userManager);
             eventBus.subscribe(nodeDisconnector);
 
             ClusterNotifier clusterNotifier = new ClusterNotifier(broadcastManager::broadcast);

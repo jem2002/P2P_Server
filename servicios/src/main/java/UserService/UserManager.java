@@ -57,6 +57,15 @@ public class UserManager {
         }
     }
 
+    public void desconectarClientesPorNodo(String nodeId) {
+        try {
+            sessionRepository.cerrarSesionesPorNodo(nodeId);
+            logger.info("Estado actualizado: Sesiones cerradas en BD para todos los clientes del nodo: {}", nodeId);
+        } catch (Exception e) {
+            logger.error("Error al cerrar las sesiones del nodo desconectado: {}", nodeId, e);
+        }
+    }
+
     public List<ActiveClient> obtenerClientesActivos() {
         try {
             return userRepository.listarClientesActivos();
