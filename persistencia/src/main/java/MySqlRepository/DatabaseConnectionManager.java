@@ -3,26 +3,32 @@ package MySqlRepository;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
 /**
  * Gestor de conexiones a la base de datos MySQL mediante HikariCP.
+ * Incluye soporte para exportación completa del esquema y datos del sistema.
  */
 public class DatabaseConnectionManager implements IDatabaseConnectionManager {
 
     private final HikariDataSource dataSource;
+    private final Properties dbProperties;
 
     private DatabaseConnectionManager() {
         HikariConfig config = new HikariConfig();
-        Properties properties = loadProperties();
+        this.dbProperties = loadProperties();
 
-        config.setJdbcUrl(properties.getProperty("db.url"));
-        config.setUsername(properties.getProperty("db.user"));
-        config.setPassword(properties.getProperty("db.password"));
+        config.setJdbcUrl(dbProperties.getProperty("db.url"));
+        config.setUsername(dbProperties.getProperty("db.user"));
+        config.setPassword(dbProperties.getProperty("db.password"));
 
         config.setMaximumPoolSize(20);
         config.setMinimumIdle(5);
@@ -45,6 +51,7 @@ public class DatabaseConnectionManager implements IDatabaseConnectionManager {
         return InstanceHolder.INSTANCE;
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }

@@ -7,6 +7,7 @@ import ports.spi.IDocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -280,4 +281,39 @@ public class MySqlDocumentDao implements IDocumentRepository {
         }
         return documentos;
     }
+
+
+    @Override
+    public List<String> obtenerTodasRutasArchivosOriginales() throws Exception {
+        List<String> rutasOriginales = new ArrayList<>();
+        String sql = "SELECT original_path FROM documents WHERE original_path IS NOT NULL";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                rutasOriginales.add(rs.getString("original_path"));
+            }
+        }
+        return rutasOriginales;
+    }
+
+    @Override
+    public List<String> obtenerTodasRutasArchivosEncriptados() throws Exception {
+        List<String> rutasEncriptadas = new ArrayList<>();
+        String sql = "SELECT encrypted_path FROM encrypted_documents WHERE encrypted_path IS NOT NULL";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                rutasEncriptadas.add(rs.getString("encrypted_path"));
+            }
+        }
+        return rutasEncriptadas;
+    }
+
+
 }

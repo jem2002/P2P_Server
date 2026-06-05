@@ -39,4 +39,8 @@ public interface IDocumentRepository {
     /** Filtra archivos visibles para el usuario solicitante (broadcasts + sus privados). */
     List<DocumentInfo> listarDocumentosDisponibles(String requestingUsername) throws Exception;
 
+    List<String> obtenerTodasRutasArchivosEncriptados() throws Exception;
+
+    List<String> obtenerTodasRutasArchivosOriginales() throws Exception;
+
 }

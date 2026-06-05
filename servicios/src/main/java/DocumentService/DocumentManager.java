@@ -11,6 +11,7 @@ import ports.spi.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -248,6 +249,31 @@ public class DocumentManager {
                 }
             }
             return null;
+        }
+    }
+
+
+    public List<File> listarRutasOriginales() {
+        try {
+            return documentRepository.obtenerTodasRutasArchivosOriginales()
+                    .stream()
+                    .map(File::new)
+                    .toList(); // En Java 16+, o .collect(Collectors.toList()) en versiones anteriores
+        } catch (Exception e) {
+            logger.error("Error al obtener las rutas de archivos originales", e);
+            return List.of(); // Devuelve una lista vacía para evitar NullPointerException
+        }
+    }
+
+    public List<File> listarRutasEncriptadas() {
+        try {
+            return documentRepository.obtenerTodasRutasArchivosEncriptados()
+                    .stream()
+                    .map(File::new)
+                    .toList(); // En Java 16+, o .collect(Collectors.toList()) en versiones anteriores
+        } catch (Exception e) {
+            logger.error("Error al obtener las rutas de archivos originales", e);
+            return List.of(); // Devuelve una lista vacía para evitar NullPointerException
         }
     }
 

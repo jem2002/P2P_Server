@@ -2,6 +2,7 @@ import APIService.SentimentService;
 import CommentService.CommentManager;
 import CryptoService.CryptoManager;
 import DocumentService.DocumentManager;
+import DocumentService.DatabaseBackupManager;
 import EncryptionUtils.EncryptionUtils;
 import EncryptionUtils.IEncryptionUtils;
 import FileSystemStorage.LocalFileManager;
@@ -19,7 +20,6 @@ import console.InteractiveConsole;
 import events.Impl.NodeConnector;
 import events.Impl.NodeDisconnector;
 import executor.ThreadPoolManager;
-import handler.FileTransferHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
@@ -124,7 +124,10 @@ public class ServerApplication {
                     broadcastManager, transferManager, fileRouter);
 
             // ── 7. SUBSCRIPCIÓN DE EVENTOS DE RED Y REPLICACIÓN ──────────────────
-            NodeConnector nodeConnector = new NodeConnector(peerPool, identity.getNodeId());
+
+            DatabaseBackupManager databaseBackupManager = new DatabaseBackupManager();
+
+            NodeConnector nodeConnector = new NodeConnector(peerPool, identity.getNodeId(), documentManager, databaseBackupManager);
             eventBus.subscribe(nodeConnector);
 
             NodeDisconnector nodeDisconnector = new NodeDisconnector(peerPool);
@@ -142,7 +145,7 @@ public class ServerApplication {
             replicator.setEventHandler(eventApplier);
 
             // ── 8. CONFIGURACIÓN DE PEER MESSAGE HANDLER ────────────────────────
-            PeerMessageHandler peerHandler = new PeerMessageHandler(replicator);
+            PeerMessageHandler peerHandler = new PeerMessageHandler(replicator, databaseBackupManager);
 
             // ── 9. HILOS DE INFRAESTRUCTURA P2P (Gossip & Servidor entre Nodos) ─
             GossipProtocol gossip = new GossipProtocol(

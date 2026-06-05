@@ -1,5 +1,6 @@
 package communication;
 
+import DocumentService.DatabaseBackupManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import replication.ReplicationEvent;
 import replication.ReplicationManager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -36,23 +38,13 @@ public class PeerMessageHandler {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private final ReplicationManager replicationManager;
+    private final DatabaseBackupManager databaseBackupManager;
 
-
-    public interface RouteDeliveryListener {
-        void onDelivered(String targetUser, String fromUser, String rawContent, String clientIp);
-    }
-
-    /**
-     * Callback que se invoca cuando un PEER_ROUTE es entregado exitosamente al cliente local.
-     */
-    private volatile RouteDeliveryListener onRouteDelivered;
-
-    public PeerMessageHandler(ReplicationManager replicationManager) {
+    public PeerMessageHandler(ReplicationManager replicationManager, DatabaseBackupManager databaseBackupManager) {
         this.replicationManager = replicationManager;
+        this.databaseBackupManager = databaseBackupManager;
     }
-
-
-
+    
     /**
      * Gestiona una conexión peer entrante. Lee mensajes JSON línea por línea
      * hasta que la conexión se cierre.
@@ -125,7 +117,88 @@ public class PeerMessageHandler {
 
     @SuppressWarnings("unchecked")
     private void handleSync(JsonNode payload) {
+        if (payload == null || !payload.has("syncHost") || !payload.has("syncPort")) {
+            logger.warn("Payload de PEER_SYNC no contiene syncHost o syncPort");
+            return;
+        }
 
+        String syncHost = payload.get("syncHost").asText();
+        int syncPort = payload.get("syncPort").asInt();
+        String sourceNodeId = payload.has("sourceNodeId") ? payload.get("sourceNodeId").asText() : "unknown";
+
+        new Thread(() -> {
+            try (Socket socket = new Socket(syncHost, syncPort);
+                 java.io.DataInputStream dis = new java.io.DataInputStream(socket.getInputStream())) {
+
+                logger.info("Conectado al peer {} en {}:{} para recibir sincronización de archivos.", sourceNodeId, syncHost, syncPort);
+
+                // Sección 1: ORIGINALES
+                String sec1 = dis.readUTF();
+                if ("SECTION:ORIGINALES".equals(sec1)) {
+                    int count = dis.readInt();
+                    File dir = new File("./storage/original");
+                    if (!dir.exists()) dir.mkdirs();
+                    for (int i = 0; i < count; i++) {
+                        receiveFile(dis, dir);
+                    }
+                    logger.info("Recibidos {} documentos originales.", count);
+                }
+
+                // Sección 2: ENCRIPTADOS
+                String sec2 = dis.readUTF();
+                if ("SECTION:ENCRIPTADOS".equals(sec2)) {
+                    int count = dis.readInt();
+                    File dir = new File("./storage/encrypted");
+                    if (!dir.exists()) dir.mkdirs();
+                    for (int i = 0; i < count; i++) {
+                        receiveFile(dis, dir);
+                    }
+                    logger.info("Recibidos {} documentos encriptados.", count);
+                }
+
+                // Sección 3: SQL
+                String sec3 = dis.readUTF();
+                if ("SECTION:SQL".equals(sec3)) {
+                    int hasSql = dis.readInt();
+                    if (hasSql == 1) {
+                        File dir = new File("./exports");
+                        if (!dir.exists()) dir.mkdirs();
+                        File sqlFile = receiveFile(dis, dir);
+                        logger.info("Script SQL de respaldo recibido exitosamente.");
+                        
+                        logger.info("Importando base de datos a partir del script recibido...");
+                        try {
+                            databaseBackupManager.importarBaseDeDatos(sqlFile);
+                            logger.info("Base de datos importada exitosamente.");
+                        } catch (Exception e) {
+                            logger.error("Error crítico al importar la base de datos recibida: {}", e.getMessage(), e);
+                        }
+                    }
+                }
+
+                logger.info("Sincronización de archivos desde el peer {} completada.", sourceNodeId);
+
+            } catch (Exception e) {
+                logger.error("Error recibiendo archivos de sincronización desde {}:{}", syncHost, syncPort, e);
+            }
+        }, "SyncReceiver-" + sourceNodeId).start();
+    }
+
+    private File receiveFile(java.io.DataInputStream dis, File targetDir) throws java.io.IOException {
+        String fileName = dis.readUTF();
+        long size = dis.readLong();
+        File file = new File(targetDir, fileName);
+        try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {
+            byte[] buffer = new byte[8192];
+            long remaining = size;
+            while (remaining > 0) {
+                int read = dis.read(buffer, 0, (int) Math.min(buffer.length, remaining));
+                if (read == -1) break;
+                fos.write(buffer, 0, read);
+                remaining -= read;
+            }
+        }
+        return file;
     }
 
 
