@@ -137,7 +137,7 @@ public class ServerApplication {
             eventBus.subscribe(clusterNotifier);
 
             orchestrators.ReplicationEventApplier eventApplier = new orchestrators.ReplicationEventApplier(
-                    userManager, documentManager, broadcastManager,
+                    userManager, documentManager, commentManager, broadcastManager,
                     clientRouter.getHandler(JsonSchema.ACTION_NEW_MESSAGE),
                     clientRouter.getHandler(JsonSchema.ACTION_LIST_CLIENTS),
                     clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS)

@@ -7,6 +7,8 @@ import ports.api.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import replication.ReplicationEvent;
+import replication.ReplicationManager;
 
 public class CommentDocumentHandlerClient implements ClientActionHandler {
 
@@ -14,11 +16,15 @@ public class CommentDocumentHandlerClient implements ClientActionHandler {
 
     private final CommentManager commentManager;
     private final ResponseBuilder serializer;
+    private final ReplicationManager replicationManager;
+    private final String localNodeId;
 
     // Ya no se inyecta el SentimentService aquí, se limpia el constructor
-    public CommentDocumentHandlerClient(CommentManager commentManager, ResponseBuilder serializer) {
+    public CommentDocumentHandlerClient(CommentManager commentManager, ResponseBuilder serializer, ReplicationManager replicationManager,  String localNodeId) {
         this.commentManager = commentManager;
         this.serializer = serializer;
+        this.replicationManager = replicationManager;
+        this.localNodeId = localNodeId;
     }
 
     @Override
@@ -43,6 +49,8 @@ public class CommentDocumentHandlerClient implements ClientActionHandler {
             // 4. Formatear la respuesta de éxito
             String mensajeExito = String.format("Comentario registrado correctamente con ID: %d, Sentimiento: %s, Confianza: %s",
                     savedComment.getId(), savedComment.getSentiment().name(), savedComment.getConfidence().toString());
+
+            replicationManager.propagate(ReplicationEvent.newComment(localNodeId, documentId, username, content));
 
             return serializer.buildSuccessResponse("REGISTER_COMMENT", mensajeExito);
 

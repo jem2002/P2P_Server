@@ -1,5 +1,6 @@
 package orchestrators;
 
+import CommentService.CommentManager;
 import DocumentService.DocumentManager;
 import ports.api.ClientActionHandler;
 import UserService.UserManager;
@@ -23,15 +24,18 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
     private final ClientActionHandler listMessagesHandler;
     private final ClientActionHandler listClientsHandler;
     private final ClientActionHandler listDocumentsHandler;
+    private final CommentManager commentManager;
 
     public ReplicationEventApplier(UserManager userManager,
                                    DocumentManager documentManager,
+                                   CommentManager commentManager,
                                    BroadcastManager broadcastManager,
                                    ClientActionHandler listMessagesHandler,
                                    ClientActionHandler listClientsHandler,
                                    ClientActionHandler listDocumentsHandler) {
         this.userManager = userManager;
         this.documentManager = documentManager;
+        this.commentManager = commentManager;
         this.broadcastManager = broadcastManager;
         this.listMessagesHandler = listMessagesHandler;
         this.listClientsHandler = listClientsHandler;
@@ -54,9 +58,22 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
             case "DOCUMENT_UPLOADED":
                 handleDocumentUploaded(event);
                 break;
+            case "NEW_COMMENT":
+                handleNewComment(event);
+                break;
             default:
                 logger.debug("Evento de replicación no manejado: {}", type);
         }
+    }
+
+    private void handleNewComment(ReplicationEvent event){
+        Long id = event.getPayload().get("id").asLong();
+        String username = event.getPayload().get("username").asText();
+        String content = event.getPayload().get("content").asText();
+
+        commentManager.registrarComentario(id, username, content);
+
+        logger.info("Comentario registrado con ID: {} por el usuario: {}", id, username);
     }
 
     private void handleClientConnected(ReplicationEvent event) {

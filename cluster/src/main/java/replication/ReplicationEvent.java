@@ -47,13 +47,12 @@ public class ReplicationEvent {
         return create(sourceNodeId, "NEW_MESSAGE", payload);
     }
 
-    public static ReplicationEvent newPublicMessage(String sourceNodeId, String username, String content, String originalJson, String ip) {
+    public static ReplicationEvent newComment(String sourceNodeId, Long id, String username, String content) {
         ObjectNode payload = mapper.createObjectNode();
+        payload.put("id", id);
         payload.put("username", username);
         payload.put("content", content);
-        payload.put("originalJson", originalJson);
-        payload.put("ip", ip);
-        return create(sourceNodeId, "NEW_PUBLIC_MESSAGE", payload);
+        return create(sourceNodeId, "NEW_COMMENT", payload);
     }
 
     public static ReplicationEvent clientConnected(String sourceNodeId, String username, String ip, int port) {

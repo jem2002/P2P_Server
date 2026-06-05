@@ -94,7 +94,7 @@ public class ClientRouter implements IClientRequestDispatcher {
                         localNodeId));
 
         clientHandlers.put(JsonSchema.ACTION_COMMENT_DOCUMENT,
-                new CommentDocumentHandlerClient(commentManager, serializer));
+                new CommentDocumentHandlerClient(commentManager, serializer, replicationManager, localNodeId));
 
         clientHandlers.put(JsonSchema.ACTION_LIST_COMMENTS,
                 new ListCommentsHandlerClient(commentManager, serializer));
