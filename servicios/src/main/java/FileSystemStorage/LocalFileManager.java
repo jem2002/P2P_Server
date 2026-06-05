@@ -11,7 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 /**
- * Clase encargada de persistir los binarios en el disco físico.
+ * Clase encargada de persistir los binarios en el disco físico usando rutas relativas.
  */
 public class LocalFileManager {
     private static final Logger logger = LoggerFactory.getLogger(LocalFileManager.class);
@@ -51,9 +51,12 @@ public class LocalFileManager {
                 totalRead += read;
             }
         }
-        logger.debug("Archivo original guardado en: {}", targetLocation.toAbsolutePath());
 
-        return targetLocation.toAbsolutePath().toString();
+        // MODIFICACIÓN: Guardar como ruta relativa estándar (ej: storage/original/archivo.ext)
+        String relativePath = targetLocation.normalize().toString().replace("\\", "/");
+        logger.debug("Archivo original guardado en ruta relativa: {}", relativePath);
+
+        return relativePath;
     }
 
     public String guardarCifrado(InputStream inputStream, String extension) throws IOException {
@@ -61,9 +64,12 @@ public class LocalFileManager {
         Path targetLocation = encryptedDir.resolve(fileName);
 
         Files.copy(inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING);
-        logger.debug("Archivo cifrado guardado en: {}", targetLocation.toAbsolutePath());
 
-        return targetLocation.toAbsolutePath().toString();
+        // MODIFICACIÓN: Guardar como ruta relativa estándar
+        String relativePath = targetLocation.normalize().toString().replace("\\", "/");
+        logger.debug("Archivo cifrado guardado en ruta relativa: {}", relativePath);
+
+        return relativePath;
     }
 
     public InputStream leerArchivo(String filePath) throws FileNotFoundException {

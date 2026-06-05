@@ -19,10 +19,6 @@ import java.util.UUID;
 
 /**
  * Servicio de criptografía para cifrado/descifrado y hashing de archivos.
- *
- * Principios aplicados:
- *   - DIP: recibe IEncryptionUtils por constructor (antes creaba new EncryptionUtils() internamente).
- *   - Clean Code: eliminados imports duplicados, secretKey inicializada de forma segura.
  */
 public class CryptoManager {
 
@@ -31,10 +27,6 @@ public class CryptoManager {
     private final IEncryptionUtils cryptoUtils;
     private final SecretKey secretKey;
 
-    /**
-     * Constructor con inyección de dependencia.
-     * La llave se genera una sola vez al crear la instancia.
-     */
     public CryptoManager(IEncryptionUtils cryptoUtils) {
         this.cryptoUtils = cryptoUtils;
         try {
@@ -67,8 +59,11 @@ public class CryptoManager {
 
         String hashResult = cryptoUtils.bytesToHex(digest.digest());
 
-        logger.debug("Procesamiento exitoso. Hash: {}", hashResult);
-        return new CryptoResult(hashResult, finalEncryptedPath.toAbsolutePath().toString());
+        // MODIFICACIÓN: Retornar la ruta cifrada en formato relativo estándar
+        String relativeEncryptedPath = finalEncryptedPath.normalize().toString().replace("\\", "/");
+        logger.debug("Procesamiento exitoso. Hash: {}. Ruta relativa: {}", hashResult, relativeEncryptedPath);
+
+        return new CryptoResult(hashResult, relativeEncryptedPath);
     }
 
     public void desencriptarYEnviarAlSocket(String encryptedPath, OutputStream networkOut) throws Exception {
