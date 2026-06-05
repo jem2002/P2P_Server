@@ -2,6 +2,7 @@ package ports.spi;
 
 
 import JsonSchema.Comment;
+import JsonSchema.CommentInfo;
 
 import java.util.List;
 
@@ -18,6 +19,6 @@ public interface ICommentRepository {
      * * @param documentId El ID del documento padre.
      * @return Una lista de comentarios ordenados (usualmente por fecha de creación).
      */
-    List<Comment> listarComentariosPorDocumento(Long documentId);
+    List<CommentInfo> listarComentariosPorDocumento(Long documentId);
 
 }

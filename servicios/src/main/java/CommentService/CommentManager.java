@@ -3,6 +3,8 @@ package CommentService;
 import JsonSchema.Comment;
 import JsonSchema.ApiResponse;
 import APIService.SentimentService;
+import JsonSchema.CommentInfo;
+import UserService.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ports.spi.ICommentRepository;
@@ -15,21 +17,23 @@ public class CommentManager {
 
     private final ICommentRepository commentRepository;
     private final SentimentService sentimentService;
+    private final UserManager userManager;
 
     // Se inyecta tanto el repositorio como el servicio de sentimiento
-    public CommentManager(ICommentRepository commentRepository, SentimentService sentimentService){
+    public CommentManager(ICommentRepository commentRepository, SentimentService sentimentService, UserManager userManager){
         this.commentRepository = commentRepository;
         this.sentimentService = sentimentService;
+        this.userManager = userManager;
     }
 
     /**
      * Valida, analiza el sentimiento y registra un nuevo comentario.
      */
-    public Comment registrarComentario(Long documentId, Long userId, String content) {
-        logger.info("Iniciando flujo de negocio para registrar comentario del documento {} por el usuario {}", documentId, userId);
+    public Comment registrarComentario(Long documentId, String username, String content) {
+        logger.info("Iniciando flujo de negocio para registrar comentario del documento {} por el usuario {}", documentId, username);
 
         // 1. Validaciones iniciales de los datos de entrada
-        if (documentId == null || userId == null || content == null || content.trim().isEmpty()) {
+        if (documentId == null || username == null || content == null || content.trim().isEmpty()) {
             logger.error("Error de validación: Faltan campos obligatorios para procesar el comentario.");
             throw new IllegalArgumentException("Todos los campos (documentId, userId, content) son obligatorios.");
         }
@@ -65,6 +69,10 @@ public class CommentManager {
             throw new IllegalArgumentException("La confianza del análisis debe estar entre 0 y 100.");
         }
 
+
+        try{
+        long userId = userManager.obtenerIdUsuario(username);
+
         // 4. Construcción de la entidad Comment
         Comment nuevoComentario = new Comment();
         nuevoComentario.setDocumentId(documentId);
@@ -74,7 +82,7 @@ public class CommentManager {
         nuevoComentario.setConfidence(confidence);
 
         // 5. Delegar la persistencia al repositorio
-        try {
+
             Comment comentarioRegistrado = commentRepository.registrarComentario(nuevoComentario);
             logger.info("Comentario guardado exitosamente en BD con ID: {}", comentarioRegistrado.getId());
             return comentarioRegistrado;
@@ -87,7 +95,7 @@ public class CommentManager {
     /**
      * Obtiene la lista de comentarios para un documento validando su ID.
      */
-    public List<Comment> listarComentariosPorDocumento(Long documentId) {
+    public List<CommentInfo> listarComentariosPorDocumento(Long documentId) {
         logger.info("Solicitando lista de comentarios para el documento con ID: {}", documentId);
 
         if (documentId == null) {

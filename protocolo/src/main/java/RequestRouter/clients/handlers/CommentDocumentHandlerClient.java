@@ -26,7 +26,7 @@ public class CommentDocumentHandlerClient implements ClientActionHandler {
         logger.info("Handler recibió una solicitud para registrar un comentario.");
 
         // 1. Validar la estructura del payload JSON
-        if (!payload.hasNonNull("documentId") || !payload.hasNonNull("userId") || !payload.hasNonNull("content")) {
+        if (!payload.hasNonNull("documentId") || !payload.hasNonNull("username") || !payload.hasNonNull("content")) {
             logger.error("Error de formato: El payload no contiene los campos requeridos.");
             return serializer.buildErrorResponse("Faltan campos obligatorios en el JSON: documentId, userId, content");
         }
@@ -34,11 +34,11 @@ public class CommentDocumentHandlerClient implements ClientActionHandler {
         try {
             // 2. Extraer datos del JSON
             Long documentId = payload.get("documentId").asLong();
-            Long userId = payload.get("userId").asLong();
+            String username = payload.get("username").asText();
             String content = payload.get("content").asText();
 
             // 3. Delegar todo el flujo de negocio e integración al Manager
-            Comment savedComment = commentManager.registrarComentario(documentId, userId, content);
+            Comment savedComment = commentManager.registrarComentario(documentId, username, content);
 
             // 4. Formatear la respuesta de éxito
             String mensajeExito = String.format("Comentario registrado correctamente con ID: %d, Sentimiento: %s, Confianza: %s",

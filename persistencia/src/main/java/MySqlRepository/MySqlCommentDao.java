@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import JsonSchema.Comment;
+import JsonSchema.CommentInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ports.spi.ICommentRepository;
@@ -59,10 +60,13 @@ public class MySqlCommentDao implements ICommentRepository {
     }
 
     @Override
-    public List<Comment> listarComentariosPorDocumento(Long documentId) {
-        List<Comment> comentarios = new ArrayList<>();
-        String sql = "SELECT id, document_id, user_id, content, sentiment, confidence, created_at " +
-                "FROM comments WHERE document_id = ? ORDER BY created_at ASC";
+    public List<CommentInfo> listarComentariosPorDocumento(Long documentId) {
+        List<CommentInfo> comentarios = new ArrayList<>();
+        String sql = "SELECT c.id, c.document_id, c.user_id, u.username, c.content, c.sentiment, c.confidence, c.created_at " +
+                "FROM comments c " +
+                "INNER JOIN users u ON c.user_id = u.id " +
+                "WHERE c.document_id = ? " +
+                "ORDER BY c.created_at ASC";
 
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -71,25 +75,26 @@ public class MySqlCommentDao implements ICommentRepository {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Comment comment = new Comment();
-                    comment.setId(rs.getLong("id"));
-                    comment.setDocumentId(rs.getLong("document_id"));
-                    comment.setUserId(rs.getLong("user_id"));
-                    comment.setContent(rs.getString("content"));
+                    CommentInfo info = new CommentInfo();
+                    info.setId(rs.getLong("id"));
+                    info.setDocumentId(rs.getLong("document_id"));
+                    info.setUserId(rs.getLong("user_id"));
+                    info.setUsername(rs.getString("username"));
+                    info.setContent(rs.getString("content"));
 
-                    // Convertimos el String de la BD de vuelta a nuestro Enum
-                    comment.setSentiment(Comment.Sentiment.valueOf(rs.getString("sentiment")));
+                    // Convertimos el String de la BD al Enum definido en Comment
+                    info.setSentiment(Comment.Sentiment.valueOf(rs.getString("sentiment")));
 
                     // Recuperamos el DECIMAL exacto usando BigDecimal
-                    comment.setConfidence(rs.getBigDecimal("confidence"));
+                    info.setConfidence(rs.getBigDecimal("confidence"));
 
                     // Convertimos el Timestamp de SQL a LocalDateTime de Java
                     Timestamp ts = rs.getTimestamp("created_at");
                     if (ts != null) {
-                        comment.setCreatedAt(ts.toLocalDateTime());
+                        info.setCreatedAt(ts.toLocalDateTime());
                     }
 
-                    comentarios.add(comment);
+                    comentarios.add(info);
                 }
             }
 

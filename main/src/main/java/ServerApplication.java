@@ -83,7 +83,7 @@ public class ServerApplication {
 
             int apiPort = config.getSentimentApiPort();
             SentimentService sentimentService = new SentimentService(apiPort);
-            CommentManager commentManager = new CommentManager(commentRepo, sentimentService);
+            CommentManager commentManager = new CommentManager(commentRepo, sentimentService, userManager);
 
             // ── 3. INFRAESTRUCTURA DEL CLÚSTER P2P ──────────────────────────────
             LocalNodeInfo identity = new LocalNodeInfo(

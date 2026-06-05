@@ -24,6 +24,7 @@ public final class JsonSchema {
     public static final String ACTION_LIST_MESSAGES     = "LIST_MESSAGES";
     public static final String ACTION_LIST_LOGS         = "LIST_LOGS";
     public static final String ACTION_COMMENT_DOCUMENT   = "COMMENT_DOCUMENT";
+    public static final String ACTION_LIST_COMMENTS   = "LIST_COMMENTS";
 
     // --- Acciones de información de servidores peers ---
     public static final String ACTION_LIST_PEER_INFO    = "LIST_PEER_INFO";    // Info/estado de todos los peers
