@@ -19,10 +19,17 @@
     <dependencies>
         <dependency>
             <groupId>com.universidad.messaging.server</groupId>
-            <artifactId>protocolo</artifactId>
+            <artifactId>protocolo-api</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.universidad.messaging.server</groupId>
+            <artifactId>gestion-de-conexiones-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 </project>

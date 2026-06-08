@@ -1,11 +1,14 @@
 package handler;
 
-import ports.api.IBroadcastManager;
-import ports.api.IClientRequestDispatcher;
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IConnectionPool;
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IPooledClientConnection;
+
+
+import com.universidad.messaging.server.protocolo.api.broadcast.IBroadcastManager;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pool.IConnectionPool;
-import pool.PooledClientConnection;
+import utils.LineReader;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,13 +26,13 @@ public class ClientHandler implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
 
-    private final PooledClientConnection connection;
+    private final IPooledClientConnection connection;
     private final IConnectionPool pool;
     private final IClientRequestDispatcher router;
     private final IBroadcastManager broadcastManager;
     private final String primeraLinea;
 
-    public ClientHandler(PooledClientConnection connection, IConnectionPool pool, IClientRequestDispatcher router,
+    public ClientHandler(IPooledClientConnection connection, IConnectionPool pool, IClientRequestDispatcher router,
                          IBroadcastManager broadcastManager, String primeraLinea) {
         this.connection = connection;
         this.pool = pool;

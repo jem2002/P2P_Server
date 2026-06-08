@@ -1,5 +1,6 @@
 package MessageParser;
 
+import com.universidad.messaging.server.protocolo.api.broadcast.IBroadcastManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import ports.api.IBroadcastManager;
 
 
 

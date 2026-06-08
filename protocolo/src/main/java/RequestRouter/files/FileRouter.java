@@ -6,10 +6,11 @@ import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import RequestRouter.files.handlers.DownloadFileHandler;
 import RequestRouter.files.handlers.UploadFileHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.FileActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.IFileRequestDispatcher;
 import models.LocalNodeInfo;
-import ports.api.ClientActionHandler;
-import ports.api.FileActionHandler;
-import ports.api.IFileRequestDispatcher;
+
 import ports.api.TransferTicket;
 import replication.ReplicationManager;
 
@@ -27,7 +28,7 @@ public class FileRouter implements IFileRequestDispatcher {
      */
     public FileRouter(DocumentManager documentManager,
                       LogManager logManager, BroadcastManager broadcastManager,
-                      ClientActionHandler listLogsHandler, ClientActionHandler listDocumentsHandler,  ReplicationManager replicationManager,
+                      ClientActionHandler listLogsHandler, ClientActionHandler listDocumentsHandler, ReplicationManager replicationManager,
                       LocalNodeInfo localNodeInfo) {
 
 

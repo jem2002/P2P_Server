@@ -1,10 +1,10 @@
 package pool;
 
-import java.io.InputStream;
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IPooledClientConnection;import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class PooledClientConnection {
+public class PooledClientConnection implements IPooledClientConnection {
     private Socket socket;
     private InputStream inputStream;
     private OutputStream outputStream;

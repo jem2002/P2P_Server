@@ -1,18 +1,17 @@
 package protocolSelector;
 
-import DocumentService.DocumentManager;
-import ports.api.IBroadcastManager;
-import ports.api.IClientRequestDispatcher;
-import ports.api.IFileRequestDispatcher;
-import ports.api.ITransferDispatcher;
-import LogService.LogManager;
-import executor.ThreadPoolManager;
+import com.universidad.messaging.server.gestion.de.conexiones.api.executor.IThreadPoolManager;
+import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IClientHandlerFactory;
+import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IFileHandlerFactory;
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IConnectionPool;
+import com.universidad.messaging.server.protocolo.api.broadcast.IBroadcastManager;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.IFileRequestDispatcher;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.ITransferDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pool.IConnectionPool;
 import tcpsocketserver.TCPSocketServer;
 import udpsocketserver.UDPSocketServer;
-import replication.ReplicationManager;
 
 public class ProtocolSelector {
     private static final Logger logger = LoggerFactory.getLogger(ProtocolSelector.class);
@@ -29,8 +28,10 @@ public class ProtocolSelector {
      * @param threadPool Gestor de concurrencia
      */
     public void iniciarServidor(String protocol, int port, IConnectionPool pool,
-                                ThreadPoolManager threadPool, IClientRequestDispatcher clientRouter, IBroadcastManager broadcastManager,
-                                ITransferDispatcher transferManager, IFileRequestDispatcher fileRouter) {
+                                IThreadPoolManager threadPool, IClientRequestDispatcher clientRouter, IBroadcastManager broadcastManager,
+                                ITransferDispatcher transferManager, IFileRequestDispatcher fileRouter,
+                                IClientHandlerFactory clientHandlerFactory,
+                                IFileHandlerFactory fileHandlerFactory) {
 
         boolean startTcp = "TCP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);
         boolean startUdp = "UDP".equalsIgnoreCase(protocol) || "BOTH".equalsIgnoreCase(protocol);
@@ -43,7 +44,7 @@ public class ProtocolSelector {
         if (startTcp) {
             logger.info("Iniciando servicio en modo TCP...");
             tcpServer = new TCPSocketServer(port, pool, threadPool, clientRouter, broadcastManager, transferManager,
-                    fileRouter
+                    fileRouter, clientHandlerFactory, fileHandlerFactory
                         );
             new Thread(tcpServer, "Thread-TCPServer").start();
         }

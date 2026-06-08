@@ -9,7 +9,10 @@ import MessageParser.BroadcastManager;
 import MessageParser.JsonInputParser;
 import MessageParser.MessageWrapper;
 import RequestRouter.clients.handlers.*;
+import RequestRouter.files.TransferManager;
 import UserService.UserManager;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
 import models.LocalNodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +21,7 @@ import replication.ReplicationManager;
 import java.util.HashMap;
 import java.util.Map;
 
-import ports.api.IClientRequestDispatcher;
-import ports.api.ClientActionHandler;
+
 
 /**
  * Router principal del protocolo JSON.
@@ -49,7 +51,7 @@ public class ClientRouter implements IClientRequestDispatcher {
      * Constructor único con inyección completa y obligatoria de componentes locales y de red.
      */
     public ClientRouter(UserManager userManager, DocumentManager documentManager, LogManager logManager,
-                        BroadcastManager broadcastManager, DocumentService.TransferManager transferManager, CommentManager commentManager,
+                        BroadcastManager broadcastManager, TransferManager transferManager, CommentManager commentManager,
                         ReplicationManager replicationManager,
                         String localNodeId,
                         discovery.MembershipList membershipList, health.ClusterHealthService healthService,

@@ -4,7 +4,7 @@ import JsonSchema.JsonSchema;
 import JsonSchema.LogEntry;
 import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
-import ports.api.ClientActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;

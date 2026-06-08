@@ -3,7 +3,7 @@ package RequestRouter.clients.handlers;
 import JsonSchema.ActiveClient;
 import JsonSchema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import ports.api.ClientActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 

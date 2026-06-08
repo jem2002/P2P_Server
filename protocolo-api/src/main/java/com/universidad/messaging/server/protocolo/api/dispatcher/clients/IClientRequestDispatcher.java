@@ -1,4 +1,4 @@
-package ports.api;
+package com.universidad.messaging.server.protocolo.api.dispatcher.clients;
 
 /**
  * Interfaz para el enrutador principal de solicitudes (Dependency Inversion).

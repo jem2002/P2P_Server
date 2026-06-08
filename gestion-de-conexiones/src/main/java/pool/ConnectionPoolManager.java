@@ -1,13 +1,17 @@
 package pool;
 
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IPooledClientConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IConnectionPool;
+
+
 public class ConnectionPoolManager implements IConnectionPool {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionPoolManager.class);
-    private final ArrayBlockingQueue<PooledClientConnection> availableConnections;
+    private final ArrayBlockingQueue<IPooledClientConnection> availableConnections;
 
     public ConnectionPoolManager(int maxPoolSize) {
         this.availableConnections = new ArrayBlockingQueue<>(maxPoolSize);
@@ -19,8 +23,8 @@ public class ConnectionPoolManager implements IConnectionPool {
     }
 
     @Override
-    public PooledClientConnection acquire() {
-        PooledClientConnection connection = availableConnections.poll();
+    public IPooledClientConnection acquire() {
+        IPooledClientConnection connection = availableConnections.poll();
         if (connection == null) {
             logger.warn("¡Pool de conexiones agotado!");
         }
@@ -28,7 +32,7 @@ public class ConnectionPoolManager implements IConnectionPool {
     }
 
     @Override
-    public void release(PooledClientConnection connection) {
+    public void release(IPooledClientConnection connection) {
         if (connection != null) {
             connection.reset();
             availableConnections.offer(connection);

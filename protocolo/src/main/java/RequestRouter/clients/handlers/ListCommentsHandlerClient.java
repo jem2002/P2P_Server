@@ -5,7 +5,7 @@ import JsonSchema.CommentInfo;
 import JsonSerializer.ResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ports.api.ClientActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;

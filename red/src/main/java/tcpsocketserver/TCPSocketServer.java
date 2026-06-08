@@ -1,19 +1,20 @@
 package tcpsocketserver;
 
-import DocumentService.DocumentManager;
-import ports.api.IBroadcastManager;
-import ports.api.IClientRequestDispatcher;
-import ports.api.IFileRequestDispatcher;
-import ports.api.ITransferDispatcher;
-import executor.ThreadPoolManager;
-import handler.ClientHandler;
-import handler.FileTransferHandler;
-import handler.LineReader;
+import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IClientHandlerFactory;
+import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IFileHandlerFactory;
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IConnectionPool;
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IPooledClientConnection;
+import com.universidad.messaging.server.gestion.de.conexiones.api.executor.IThreadPoolManager;
+
+
+import com.universidad.messaging.server.protocolo.api.broadcast.IBroadcastManager;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.IFileRequestDispatcher;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.ITransferDispatcher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pool.IConnectionPool;
-import pool.PooledClientConnection;
-
+import utils.LineReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -32,17 +33,21 @@ public class TCPSocketServer implements Runnable {
 
     private final int port;
     private final IConnectionPool pool;
-    private final ThreadPoolManager threadPool;
+    private final IThreadPoolManager threadPool;
     private volatile boolean running;
     private ServerSocket serverSocket;
     private final IClientRequestDispatcher clientRouter;
     private final IFileRequestDispatcher fileRouter;
     private final IBroadcastManager broadcastManager;
     private final ITransferDispatcher transferManager;
+    private final IClientHandlerFactory clientHandlerFactory;
+    private final IFileHandlerFactory fileHandlerFactory;
 
 
-    public TCPSocketServer(int port, IConnectionPool pool, ThreadPoolManager threadPool, IClientRequestDispatcher clientRouter,
-                           IBroadcastManager broadcastManager, ITransferDispatcher transferManager, IFileRequestDispatcher fileRouter) {
+    public TCPSocketServer(int port, IConnectionPool pool, IThreadPoolManager threadPool, IClientRequestDispatcher clientRouter,
+                           IBroadcastManager broadcastManager, ITransferDispatcher transferManager, IFileRequestDispatcher fileRouter,
+                           IClientHandlerFactory clientHandlerFactory, IFileHandlerFactory fileHandlerFactory
+                           ) {
         this.port = port;
         this.pool = pool;
         this.threadPool = threadPool;
@@ -51,6 +56,8 @@ public class TCPSocketServer implements Runnable {
         this.running = true;
         this.broadcastManager = broadcastManager;
         this.transferManager = transferManager;
+        this.clientHandlerFactory = clientHandlerFactory;
+        this.fileHandlerFactory = fileHandlerFactory;
     }
 
     public void stopServer() {
@@ -122,7 +129,7 @@ public class TCPSocketServer implements Runnable {
     private void despacharConexionControl(Socket clientSocket, String primeraLinea) throws Exception {
         logger.info("Detectada conexión de CONTROL desde {}", clientSocket.getRemoteSocketAddress());
 
-        PooledClientConnection pooledConnection = pool.acquire();
+        IPooledClientConnection pooledConnection = pool.acquire();
         if (pooledConnection == null) {
             logger.warn("Rechazando conexión de control: Pool agotado.");
             // Cumplir requerimiento: "Informar al cliente que no puede aceptar la conexión"
@@ -138,8 +145,7 @@ public class TCPSocketServer implements Runnable {
         }
 
         pooledConnection.setSocket(clientSocket);
-        ClientHandler handler = new ClientHandler(pooledConnection, pool, clientRouter,
-                broadcastManager, primeraLinea);
+        Runnable handler = clientHandlerFactory.create(pooledConnection, pool, clientRouter, broadcastManager, primeraLinea);
         threadPool.execute(handler);
     }
 
@@ -150,8 +156,8 @@ public class TCPSocketServer implements Runnable {
         logger.info("Detectada conexión de ARCHIVO (Token: {}) desde {}", token,
                 clientSocket.getRemoteSocketAddress());
 
-        FileTransferHandler fileHandler = new FileTransferHandler(clientSocket, token,
-                transferManager, fileRouter);
+        Runnable fileHandler = fileHandlerFactory.create(clientSocket, token, transferManager, fileRouter);
+
         new Thread(fileHandler,
                 "FileTransfer-" + token.substring(0, Math.min(8, token.length()))).start();
     }

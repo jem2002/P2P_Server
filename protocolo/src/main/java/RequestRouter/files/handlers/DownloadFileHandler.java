@@ -4,8 +4,8 @@ import DocumentService.DocumentManager;
 import JsonSchema.DownloadMode;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
-import ports.api.ClientActionHandler;
-import ports.api.FileActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.FileActionHandler;
 import ports.api.TransferTicket;
 
 import java.io.InputStream;

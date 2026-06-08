@@ -19,6 +19,8 @@
         <module>protocolo</module>
         <module>main</module>
         <module>API_IA</module>
+        <module>gestion-de-conexiones-api</module>
+        <module>protocolo-api</module>
     </modules>
 
     <properties>

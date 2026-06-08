@@ -1,10 +1,10 @@
-package DocumentService;
+package RequestRouter.files;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ports.api.ITransferDispatcher;
 import ports.api.TransferTicket;
+    import com.universidad.messaging.server.protocolo.api.dispatcher.files.ITransferDispatcher;
 
 public class TransferManager implements ITransferDispatcher {
     // Usamos ConcurrentHashMap porque muchos hilos (clientes) podrían pedir tickets al mismo tiempo

@@ -1,4 +1,4 @@
-package ports.api;
+package com.universidad.messaging.server.protocolo.api.dispatcher.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

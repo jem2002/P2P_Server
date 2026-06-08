@@ -1,8 +1,7 @@
 package handler;
 
-import DocumentService.DocumentManager;
-import JsonSchema.DownloadMode;
-import RequestRouter.files.FileRouter;
+
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.ITransferDispatcher;
 import ports.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.IFileRequestDispatcher;
+
+
 
 /**
  * Handler para transferencias de archivos (subida y descarga).

@@ -10,16 +10,24 @@ import JsonSchema.JsonSchema;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import RequestRouter.clients.ClientRouter;
-import DocumentService.TransferManager;
+import RequestRouter.files.TransferManager;
 import RequestRouter.files.FileRouter;
 import UserService.UserManager;
 import api.ServerAdminAPI;
+import com.universidad.messaging.server.gestion.de.conexiones.api.executor.IThreadPoolManager;
+import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IClientHandlerFactory;
+import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IFileHandlerFactory;
+import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IConnectionPool;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
+import com.universidad.messaging.server.protocolo.api.dispatcher.files.IFileRequestDispatcher;
 import config.NodeSetupWizard;
 import config.ServerConfig;
 import console.InteractiveConsole;
 import events.Impl.NodeConnector;
 import events.Impl.NodeDisconnector;
 import executor.ThreadPoolManager;
+import handler.factory.ClientHandlerFactory;
+import handler.factory.FileHandlerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
@@ -101,13 +109,13 @@ public class ServerApplication {
             ClusterHealthService healthService = new ClusterHealthService(identity, membership, peerPool);
 
             // ── 4. CONSTRUCCIÓN DE ROUTERS (INMUTABLE) ───────────────────────
-            ClientRouter clientRouter = new ClientRouter(
+            IClientRequestDispatcher clientRouter = new ClientRouter(
                     userManager, documentManager, logManager, broadcastManager, transferManager, commentManager
                     , replicator,
                     identity.getNodeId(), membership, healthService, identity
             );
 
-            FileRouter fileRouter = new FileRouter(documentManager, logManager, broadcastManager,
+            IFileRequestDispatcher fileRouter = new FileRouter(documentManager, logManager, broadcastManager,
                     clientRouter.getHandler(JsonSchema.ACTION_LIST_LOGS),
                     clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS),
                     replicator,
@@ -116,12 +124,16 @@ public class ServerApplication {
 
             // ── 6. ARRANQUE DEL SERVIDOR DE RED (CLIENTES SOCKET) ───────────────
             int maxConnections = config.getMaxConnections();
-            ConnectionPoolManager pool = new ConnectionPoolManager(maxConnections);
-            ThreadPoolManager threadPool = new ThreadPoolManager(maxConnections);
+            IConnectionPool pool = new ConnectionPoolManager(maxConnections);
+            IThreadPoolManager threadPool = new ThreadPoolManager(maxConnections);
+
+            IClientHandlerFactory clientHandlerFactory = new ClientHandlerFactory();
+            IFileHandlerFactory fileHandlerFactory  = new FileHandlerFactory();
+
 
             ProtocolSelector networkServer = new ProtocolSelector();
             networkServer.iniciarServidor(config.getProtocol(), config.getPort(), pool, threadPool, clientRouter,
-                    broadcastManager, transferManager, fileRouter);
+                    broadcastManager, transferManager, fileRouter, clientHandlerFactory, fileHandlerFactory);
 
             // ── 7. SUBSCRIPCIÓN DE EVENTOS DE RED Y REPLICACIÓN ──────────────────
 

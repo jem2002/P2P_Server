@@ -1,5 +1,6 @@
 package executor;
 
+import com.universidad.messaging.server.gestion.de.conexiones.api.executor.IThreadPoolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class ThreadPoolManager {
+public class ThreadPoolManager implements IThreadPoolManager {
     private static final Logger logger = LoggerFactory.getLogger(ThreadPoolManager.class);
     private final ExecutorService threadPool;
 
@@ -17,6 +18,7 @@ public class ThreadPoolManager {
         logger.info("ThreadPoolManager inicializado con {} hilos.", maxThreads);
     }
 
+    @Override
     public void execute(Runnable task) {
         threadPool.execute(task);
     }

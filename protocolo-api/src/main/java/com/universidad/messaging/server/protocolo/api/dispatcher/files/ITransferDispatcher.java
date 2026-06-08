@@ -1,4 +1,6 @@
-package ports.api;
+package com.universidad.messaging.server.protocolo.api.dispatcher.files;
+
+import ports.api.TransferTicket;
 
 /**
  * Interfaz para el gestor de transferencias (Dependency Inversion).

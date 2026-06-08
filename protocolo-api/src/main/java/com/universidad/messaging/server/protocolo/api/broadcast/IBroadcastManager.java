@@ -1,7 +1,6 @@
-package ports.api;
+package com.universidad.messaging.server.protocolo.api.broadcast;
 
 import java.io.OutputStream;
-import java.util.function.Consumer;
 
 /**
  * Interfaz para el gestor de difusión de mensajes a múltiples clientes.

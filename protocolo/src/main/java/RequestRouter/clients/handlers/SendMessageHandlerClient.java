@@ -5,7 +5,7 @@ import JsonSerializer.ResponseBuilder;
 import LogService.LogManager;
 import MessageParser.BroadcastManager;
 import DocumentService.DocumentManager;
-import ports.api.ClientActionHandler;
+import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import replication.ReplicationEvent;
