@@ -14,6 +14,7 @@ public interface ICommentRepository {
      */
     Comment registrarComentario(Comment comment);
 
+    Comment replicarComentario(Comment comment);
     /**
      * Lista todos los comentarios asociados a un documento específico.
      * * @param documentId El ID del documento padre.

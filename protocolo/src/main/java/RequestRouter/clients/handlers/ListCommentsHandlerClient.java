@@ -56,7 +56,7 @@ public class ListCommentsHandlerClient implements ClientActionHandler {
 
                 // Convertimos el Enum y LocalDateTime a String para una representación JSON limpia
                 itemMap.put("sentiment", info.getSentiment() != null ? info.getSentiment().name() : null);
-                itemMap.put("confidence", info.getConfidence());
+                itemMap.put("confidence", info.getConfidence().toString());
                 itemMap.put("created_at", info.getCreatedAt() != null ? info.getCreatedAt().toString() : null);
 
                 items.add(itemMap);

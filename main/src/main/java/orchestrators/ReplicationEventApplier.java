@@ -10,6 +10,8 @@ import replication.ReplicationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+
 /**
  * Aplica eventos de replicación recibidos de otros nodos al dominio local.
  * Implementado en 'main' para tener acceso a todos los módulos y no violar dependencias.
@@ -68,10 +70,13 @@ public class ReplicationEventApplier implements ReplicationManager.ReplicationEv
 
     private void handleNewComment(ReplicationEvent event){
         Long id = event.getPayload().get("id").asLong();
+        Long documentId = event.getPayload().get("documentId").asLong();
         String username = event.getPayload().get("username").asText();
         String content = event.getPayload().get("content").asText();
+        String sentiment = event.getPayload().get("sentiment").asText();
+        BigDecimal confidence = event.getPayload().get("confidence").decimalValue();
 
-        commentManager.registrarComentario(id, username, content);
+        commentManager.replicarComentario(id, documentId, username, content, sentiment, confidence);
 
         logger.info("Comentario registrado con ID: {} por el usuario: {}", id, username);
     }

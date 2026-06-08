@@ -60,6 +60,40 @@ public class MySqlCommentDao implements ICommentRepository {
     }
 
     @Override
+    public Comment replicarComentario(Comment comment) {
+        // El query incluye explícitamente el campo 'id'
+        String sql = "INSERT INTO comments (id, document_id, user_id, content, sentiment, confidence) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) { // Notarás que ya no necesitamos pedir las llaves generadas
+
+            // Validamos preventivamente que no venga nulo para evitar un NullPointerException antes de tocar la BD
+            if (comment.getId() == null) {
+                throw new IllegalArgumentException("El ID del comentario no puede ser nulo para una réplica.");
+            }
+
+            pstmt.setLong(1, comment.getId());
+            pstmt.setLong(2, comment.getDocumentId());
+            pstmt.setLong(3, comment.getUserId());
+            pstmt.setString(4, comment.getContent());
+            pstmt.setString(5, comment.getSentiment().name());
+            pstmt.setBigDecimal(6, comment.getConfidence());
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                logger.warn("No se pudo replicar el comentario con ID {}. Ninguna fila afectada.", comment.getId());
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error al replicar el comentario con ID {} para el documento {}: ", comment.getId(), comment.getDocumentId(), e);
+            throw new RuntimeException("Error en base de datos al replicar el comentario", e);
+        }
+
+        return comment;
+    }
+
+    @Override
     public List<CommentInfo> listarComentariosPorDocumento(Long documentId) {
         List<CommentInfo> comentarios = new ArrayList<>();
         String sql = "SELECT c.id, c.document_id, c.user_id, u.username, c.content, c.sentiment, c.confidence, c.created_at " +

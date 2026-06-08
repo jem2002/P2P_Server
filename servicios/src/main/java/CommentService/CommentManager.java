@@ -92,10 +92,54 @@ public class CommentManager {
         }
     }
 
+
+    public Comment replicarComentario(Long id, Long documentId, String username, String content, String sentimentStr, BigDecimal confidence) {
+        logger.info("Procesando evento de réplica para el comentario ID: {}", id);
+
+        // 1. Validaciones estructurales de los datos del payload
+        if (id == null || documentId == null || username == null || content == null || sentimentStr == null || confidence == null) {
+            logger.error("Error de validación: El payload del evento contiene campos nulos.");
+            throw new IllegalArgumentException("Todos los campos del payload son obligatorios para la réplica.");
+        }
+
+        // 2. Parsear el String del evento al Enum interno de forma segura
+        Comment.Sentiment sentimentEnum;
+        try {
+            sentimentEnum = Comment.Sentiment.valueOf(sentimentStr.toUpperCase().trim());
+        } catch (IllegalArgumentException e) {
+            logger.error("Sentimiento inválido recibido en el evento: '{}'", sentimentStr);
+            throw new RuntimeException("No se puede replicar: Tipo de sentimiento desconocido en el payload.");
+        }
+
+        try {
+            // 3. Obtener el ID del usuario local basado en el username del evento
+            long userId = userManager.obtenerIdUsuario(username);
+
+            // 4. Construcción de la entidad con el ID histórico
+            Comment comentarioReplica = new Comment();
+            comentarioReplica.setId(id); // Forzamos el ID original
+            comentarioReplica.setDocumentId(documentId);
+            comentarioReplica.setUserId(userId);
+            comentarioReplica.setContent(content);
+            comentarioReplica.setSentiment(sentimentEnum);
+            comentarioReplica.setConfidence(confidence);
+
+            // 5. Persistir usando el método exclusivo de réplicas en el repositorio
+            Comment guardado = commentRepository.replicarComentario(comentarioReplica);
+            logger.debug("Comentario histórico {} guardado exitosamente.", guardado.getId());
+
+            return guardado;
+
+        } catch (Exception e) {
+            logger.error("Error crítico al intentar persistir la réplica del comentario ID: {}", id, e);
+            throw new RuntimeException("Error en el almacenamiento de la réplica en base de datos.", e);
+        }
+    }
+
     /**
      * Obtiene la lista de comentarios para un documento validando su ID.
      */
-    public List<CommentInfo> listarComentariosPorDocumento(Long documentId) {
+    public List<CommentInfo>  listarComentariosPorDocumento(Long documentId) {
         logger.info("Solicitando lista de comentarios para el documento con ID: {}", documentId);
 
         if (documentId == null) {

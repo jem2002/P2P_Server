@@ -1,9 +1,11 @@
 package replication;
 
+import JsonSchema.Comment;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -47,11 +49,14 @@ public class ReplicationEvent {
         return create(sourceNodeId, "NEW_MESSAGE", payload);
     }
 
-    public static ReplicationEvent newComment(String sourceNodeId, Long id, String username, String content) {
+    public static ReplicationEvent newComment(String sourceNodeId, Long id, Long documentId, String username, String content, String sentiment, BigDecimal confidence) {
         ObjectNode payload = mapper.createObjectNode();
         payload.put("id", id);
+        payload.put("documentId", documentId);
         payload.put("username", username);
         payload.put("content", content);
+        payload.put("sentiment", sentiment);
+        payload.put("confidence", confidence);
         return create(sourceNodeId, "NEW_COMMENT", payload);
     }
 
