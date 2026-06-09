@@ -1,4 +1,4 @@
-package api;
+package com.universidad.messaging.server.console;
 
 import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
 import com.universidad.messaging.server.shared.schema.userSchema.UserRecord;

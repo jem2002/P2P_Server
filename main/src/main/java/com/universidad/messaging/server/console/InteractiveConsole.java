@@ -1,6 +1,5 @@
-package console;
+package com.universidad.messaging.server.console;
 
-import api.ServerAdminAPI;
 import discovery.MemberEntry;
 import discovery.MembershipList;
 import health.ClusterHealthService;

@@ -1,4 +1,4 @@
-package config;
+package com.universidad.messaging.server.config;
 
 import java.util.Scanner;
 

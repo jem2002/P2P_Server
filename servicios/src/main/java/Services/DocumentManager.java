@@ -1,5 +1,8 @@
 package Services;
 
+import com.universidad.messaging.server.servicios.api.ICryptoManager;
+import com.universidad.messaging.server.servicios.api.ILocalFileManager;
+import com.universidad.messaging.server.servicios.api.ILogManager;
 import com.universidad.messaging.server.shared.schema.documentSchema.CryptoResult;
 import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
 import com.universidad.messaging.server.shared.schema.documentSchema.DownloadDetails;
@@ -32,16 +35,16 @@ public class DocumentManager implements IDocumentManager {
     private static final Logger logger = LoggerFactory.getLogger(DocumentManager.class);
     private static final String ENCRYPTED_STORAGE_DIR = "./storage/encrypted";
 
-    private final LocalFileManager fileManager;
-    private final CryptoManager cryptoManager;
+    private final ILocalFileManager fileManager;
+    private final ICryptoManager cryptoManager;
     private final IDocumentRepository documentRepository;
     private final IUserRepository userRepository;
-    private final LogManager logManager;
+    private final ILogManager logManager;
 
 
-    public DocumentManager(LocalFileManager fileManager, CryptoManager cryptoManager,
+    public DocumentManager(ILocalFileManager fileManager, ICryptoManager cryptoManager,
                            IDocumentRepository documentRepository, IUserRepository userRepository,
-                           LogManager logManager) {
+                           ILogManager logManager) {
         this.fileManager = fileManager;
         this.cryptoManager = cryptoManager;
         this.documentRepository = documentRepository;

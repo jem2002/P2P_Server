@@ -1,7 +1,13 @@
+package com.universidad.messaging.server;
+
 import APIService.SentimentService;
 import Services.CommentManager;
 import Services.CryptoManager;
 import Services.DocumentManager;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import service.EventDeduplicator;
 import service.DatabaseBackupManager;
 import com.universidad.messaging.server.shared.utils.EncryptionUtils.EncryptionUtils;
@@ -14,7 +20,7 @@ import RequestRouter.clients.ClientRouter;
 import RequestRouter.files.TransferManager;
 import RequestRouter.files.FileRouter;
 import Services.UserManager;
-import api.ServerAdminAPI;
+import com.universidad.messaging.server.console.ServerAdminAPI;
 import com.universidad.messaging.server.gestion.de.conexiones.api.executor.IThreadPoolManager;
 import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IClientHandlerFactory;
 import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IFileHandlerFactory;
@@ -22,9 +28,9 @@ import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IConnecti
 import com.universidad.messaging.server.persistencia.api.*;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
 import com.universidad.messaging.server.protocolo.api.dispatcher.files.IFileRequestDispatcher;
-import config.NodeSetupWizard;
-import config.ServerConfig;
-import console.InteractiveConsole;
+import com.universidad.messaging.server.config.NodeSetupWizard;
+import com.universidad.messaging.server.config.ServerConfig;
+import com.universidad.messaging.server.console.InteractiveConsole;
 import events.Impl.NodeConnector;
 import events.Impl.NodeDisconnector;
 import executor.ThreadPoolManager;
@@ -52,11 +58,23 @@ import service.ReplicationManager;
 
 import java.util.Arrays;
 
+@SpringBootApplication
 public class ServerApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerApplication.class);
 
     public static void main(String[] args) {
+        SpringApplication.run(ServerApplication.class, args);
+    }
+
+
+    @Bean
+    public CommandLineRunner startP2PServer() {
+        return args -> new Thread(ServerApplication::iniciarServidorP2P, "Thread-P2PStartup").start();
+    }
+
+    private static void iniciarServidorP2P() {
+
         configurarNivelesDeLog();
         logger.info("Arrancando Messaging Server en Modo Clúster Nativo...");
 
