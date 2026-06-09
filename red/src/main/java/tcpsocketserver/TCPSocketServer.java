@@ -14,7 +14,7 @@ import com.universidad.messaging.server.protocolo.api.dispatcher.files.ITransfer
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.LineReader;
+import com.universidad.messaging.server.shared.utils.files.LineReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;

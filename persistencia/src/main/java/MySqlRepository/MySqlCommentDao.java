@@ -9,11 +9,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import JsonSchema.Comment;
-import JsonSchema.CommentInfo;
+import com.universidad.messaging.server.shared.schema.commentSchema.Comment;
+import com.universidad.messaging.server.shared.schema.commentSchema.CommentInfo;
+import MySqlRepository.db.IDatabaseConnectionManager;
+import com.universidad.messaging.server.persistencia.api.ICommentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ports.spi.ICommentRepository;
 
 public class MySqlCommentDao implements ICommentRepository {
 

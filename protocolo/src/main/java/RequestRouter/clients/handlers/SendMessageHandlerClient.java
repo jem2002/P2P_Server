@@ -1,15 +1,15 @@
 package RequestRouter.clients.handlers;
 
-import JsonSchema.JsonSchema;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import LogService.LogManager;
 import MessageParser.BroadcastManager;
-import DocumentService.DocumentManager;
+import com.universidad.messaging.server.gestion.cluster.api.IReplicationManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
-import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
-import replication.ReplicationEvent;
-import replication.ReplicationManager;
+import com.universidad.messaging.server.servicios.api.IDocumentManager;
+import com.universidad.messaging.server.servicios.api.ILogManager;
+import com.universidad.messaging.server.servicios.api.IUserManager;
+import com.universidad.messaging.server.shared.events.ReplicationEvent;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -39,23 +39,23 @@ import java.nio.charset.StandardCharsets;
 public class SendMessageHandlerClient implements ClientActionHandler {
 
     // Dependencias Base
-    private final UserManager userManager;
-    private final DocumentManager documentManager;
-    private final LogManager logManager;
+    private final IUserManager userManager;
+    private final IDocumentManager documentManager;
+    private final ILogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ResponseBuilder serializer;
     private final ClientActionHandler listLogsHandler;
     private final ClientActionHandler listMessagesHandler;
 
-    private final ReplicationManager replicationManager;
+    private final IReplicationManager replicationManager;
     private final String localNodeId;
 
     // Un solo constructor que exige TODO
-    public SendMessageHandlerClient(UserManager userManager, DocumentManager documentManager,
-                                    LogManager logManager, BroadcastManager broadcastManager,
+    public SendMessageHandlerClient(IUserManager userManager, IDocumentManager documentManager,
+                                    ILogManager logManager, BroadcastManager broadcastManager,
                                     ResponseBuilder serializer, ClientActionHandler listLogsHandler,
                                     ClientActionHandler listMessagesHandler,
-                                    ReplicationManager replicationManager,
+                                    IReplicationManager replicationManager,
                                     String localNodeId) {
         this.userManager = userManager;
         this.documentManager = documentManager;

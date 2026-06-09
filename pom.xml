@@ -21,6 +21,9 @@
         <module>API_IA</module>
         <module>gestion-de-conexiones-api</module>
         <module>protocolo-api</module>
+        <module>servicios-api</module>
+        <module>persistencia-api</module>
+        <module>cluster-api</module>
     </modules>
 
     <properties>

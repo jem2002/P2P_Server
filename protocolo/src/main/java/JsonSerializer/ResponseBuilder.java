@@ -1,5 +1,5 @@
 package JsonSerializer;
-import JsonSchema.JsonSchema;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;

@@ -1,6 +1,6 @@
 package APIService;
 
-import JsonSchema.ApiResponse;
+import com.universidad.messaging.server.shared.api.ApiResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

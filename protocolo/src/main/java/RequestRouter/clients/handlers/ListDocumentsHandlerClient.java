@@ -1,11 +1,12 @@
 package RequestRouter.clients.handlers;
 
-import JsonSchema.DocumentInfo;
-import JsonSchema.JsonSchema;
+import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import DocumentService.DocumentManager;
+
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.universidad.messaging.server.servicios.api.IDocumentManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +18,10 @@ import java.util.ArrayList;
  */
 public class ListDocumentsHandlerClient implements ClientActionHandler {
 
-    private final DocumentManager documentManager;
+    private final IDocumentManager documentManager;
     private final ResponseBuilder serializer;
 
-    public ListDocumentsHandlerClient(DocumentManager documentManager, ResponseBuilder serializer) {
+    public ListDocumentsHandlerClient(IDocumentManager documentManager, ResponseBuilder serializer) {
         this.documentManager = documentManager;
         this.serializer = serializer;
     }

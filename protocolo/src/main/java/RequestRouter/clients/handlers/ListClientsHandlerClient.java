@@ -1,11 +1,12 @@
 package RequestRouter.clients.handlers;
 
-import JsonSchema.ActiveClient;
-import JsonSchema.JsonSchema;
+import com.universidad.messaging.server.shared.schema.userSchema.ActiveClient;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
-import UserService.UserManager;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import com.universidad.messaging.server.servicios.api.IUserManager;
 
 import java.util.*;
 
@@ -17,11 +18,11 @@ import java.util.*;
  */
 public class ListClientsHandlerClient implements ClientActionHandler {
 
-    private final UserManager userManager;
+    private final IUserManager userManager;
     private final ResponseBuilder serializer;
     private final String localNodeId;
 
-    public ListClientsHandlerClient(UserManager userManager, ResponseBuilder serializer, String localNodeId) {
+    public ListClientsHandlerClient(IUserManager userManager, ResponseBuilder serializer, String localNodeId) {
         this.userManager = userManager;
         this.serializer = serializer;
         this.localNodeId = localNodeId;

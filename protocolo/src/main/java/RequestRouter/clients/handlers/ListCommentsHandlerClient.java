@@ -1,8 +1,9 @@
 package RequestRouter.clients.handlers;
 
-import CommentService.CommentManager;
-import JsonSchema.CommentInfo;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
+import com.universidad.messaging.server.shared.schema.commentSchema.CommentInfo;
 import JsonSerializer.ResponseBuilder;
+import com.universidad.messaging.server.servicios.api.ICommentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
@@ -18,11 +19,11 @@ public class ListCommentsHandlerClient implements ClientActionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ListCommentsHandlerClient.class);
 
-    private final CommentManager commentManager;
+    private final ICommentManager commentManager;
     private final ResponseBuilder serializer;
 
     // Ya no se inyecta el SentimentService aquí, se limpia el constructor
-    public ListCommentsHandlerClient(CommentManager commentManager, ResponseBuilder serializer) {
+    public ListCommentsHandlerClient(ICommentManager commentManager, ResponseBuilder serializer) {
         this.commentManager = commentManager;
         this.serializer = serializer;
     }
@@ -63,7 +64,7 @@ public class ListCommentsHandlerClient implements ClientActionHandler {
             }
 
             // 5. Construir y retornar la respuesta estructurada de éxito empleando buildObjectListResponse
-            return serializer.buildObjectListResponse("LIST_COMMENTS", items, "comments");
+            return serializer.buildObjectListResponse(JsonSchema.ACTION_LIST_COMMENTS, items, "comments");
 
         } catch (IllegalArgumentException e) {
             logger.warn("Error de validación de negocio al listar comentarios: {}", e.getMessage());

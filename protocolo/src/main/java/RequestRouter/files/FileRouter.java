@@ -1,18 +1,17 @@
 package RequestRouter.files;
 
-import DocumentService.DocumentManager;
-import JsonSchema.FileAction;
-import LogService.LogManager;
+import com.universidad.messaging.server.shared.schema.documentSchema.FileAction;
 import MessageParser.BroadcastManager;
 import RequestRouter.files.handlers.DownloadFileHandler;
 import RequestRouter.files.handlers.UploadFileHandler;
+import com.universidad.messaging.server.gestion.cluster.api.IReplicationManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import com.universidad.messaging.server.protocolo.api.dispatcher.files.FileActionHandler;
 import com.universidad.messaging.server.protocolo.api.dispatcher.files.IFileRequestDispatcher;
-import models.LocalNodeInfo;
+import com.universidad.messaging.server.servicios.api.IDocumentManager;
+import com.universidad.messaging.server.servicios.api.ILogManager;
 
-import ports.api.TransferTicket;
-import replication.ReplicationManager;
+import com.universidad.messaging.server.shared.schema.documentSchema.TransferTicket;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,14 +25,15 @@ public class FileRouter implements IFileRequestDispatcher {
     /**
      * Inyectamos los handlers ya construidos.
      */
-    public FileRouter(DocumentManager documentManager,
-                      LogManager logManager, BroadcastManager broadcastManager,
-                      ClientActionHandler listLogsHandler, ClientActionHandler listDocumentsHandler, ReplicationManager replicationManager,
-                      LocalNodeInfo localNodeInfo) {
+    public FileRouter(IDocumentManager documentManager,
+                      ILogManager logManager, BroadcastManager broadcastManager,
+                      ClientActionHandler listLogsHandler, ClientActionHandler listDocumentsHandler, IReplicationManager replicationManager,
+                      String localNode, String localHost, int localPort) {
 
 
         fileHandlers.put(FileAction.DWN.name(), new DownloadFileHandler(documentManager, logManager, broadcastManager, listLogsHandler));
-        fileHandlers.put(FileAction.UPL.name(), new UploadFileHandler(documentManager, broadcastManager, listDocumentsHandler, listLogsHandler, replicationManager, localNodeInfo));
+        fileHandlers.put(FileAction.UPL.name(), new UploadFileHandler(documentManager, broadcastManager, listDocumentsHandler, listLogsHandler,
+                replicationManager, localNode, localHost, localPort));
     }
 
     @Override

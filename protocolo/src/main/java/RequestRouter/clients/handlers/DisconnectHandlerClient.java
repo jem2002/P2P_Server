@@ -1,31 +1,31 @@
 package RequestRouter.clients.handlers;
 
-import JsonSchema.ClientAddress;
-import JsonSchema.JsonSchema;
+import com.universidad.messaging.server.shared.schema.userSchema.ClientAddress;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import LogService.LogManager;
 import MessageParser.BroadcastManager;
+import com.universidad.messaging.server.gestion.cluster.api.IReplicationManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
-import UserService.UserManager;
 import com.fasterxml.jackson.databind.JsonNode;
-import replication.ReplicationEvent;
-import replication.ReplicationManager;
+import com.universidad.messaging.server.servicios.api.ILogManager;
+import com.universidad.messaging.server.servicios.api.IUserManager;
+import com.universidad.messaging.server.shared.events.ReplicationEvent;
 
 public class DisconnectHandlerClient implements ClientActionHandler {
 
-    private final UserManager userManager;
-    private final LogManager logManager;
+    private final IUserManager userManager;
+    private final ILogManager logManager;
     private final ResponseBuilder serializer;
     private final BroadcastManager broadcastManager;
     private final ClientActionHandler listClientsHandler;
 
-    private final ReplicationManager replicationManager;
+    private final IReplicationManager replicationManager;
     private final String localNodeId;
 
-    public DisconnectHandlerClient(UserManager userManager, LogManager logManager,
+    public DisconnectHandlerClient(IUserManager userManager, ILogManager logManager,
                                    ResponseBuilder serializer, BroadcastManager broadcastManager,
                                    ClientActionHandler listClientsHandler,
-                                   ReplicationManager replicationManager,
+                                   IReplicationManager replicationManager,
                                    String localNodeId) {
         this.userManager = userManager;
         this.logManager = logManager;

@@ -8,7 +8,7 @@ import com.universidad.messaging.server.protocolo.api.broadcast.IBroadcastManage
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.LineReader;
+import com.universidad.messaging.server.shared.utils.files.LineReader;
 
 import java.io.InputStream;
 import java.io.OutputStream;

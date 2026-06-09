@@ -1,14 +1,14 @@
 package RequestRouter.clients.handlers;
 
-import JsonSchema.DownloadDetails;
+import com.universidad.messaging.server.shared.schema.documentSchema.DownloadDetails;
 import JsonSerializer.ResponseBuilder;
-import LogService.LogManager;
 import MessageParser.BroadcastManager;
-import DocumentService.DocumentManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import RequestRouter.files.TransferManager;
-import ports.api.TransferTicket;
-import UserService.UserManager;
+import com.universidad.messaging.server.servicios.api.IDocumentManager;
+import com.universidad.messaging.server.servicios.api.ILogManager;
+import com.universidad.messaging.server.servicios.api.IUserManager;
+import com.universidad.messaging.server.shared.schema.documentSchema.TransferTicket;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -17,16 +17,16 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class DownloadInitHandlerClient implements ClientActionHandler {
 
-    private final UserManager userManager;
-    private final DocumentManager documentManager;
+    private final IUserManager userManager;
+    private final IDocumentManager documentManager;
     private final TransferManager transferManager;
-    private final LogManager logManager;
+    private final ILogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ResponseBuilder serializer;
     private final ClientActionHandler listLogsHandler;
 
-    public DownloadInitHandlerClient(UserManager userManager, DocumentManager documentManager,
-                                     TransferManager transferManager, LogManager logManager,
+    public DownloadInitHandlerClient(IUserManager userManager, IDocumentManager documentManager,
+                                     TransferManager transferManager, ILogManager logManager,
                                      BroadcastManager broadcastManager, ResponseBuilder serializer,
                                      ClientActionHandler listLogsHandler) {
         this.userManager = userManager;

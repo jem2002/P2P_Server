@@ -1,11 +1,11 @@
 package RequestRouter.clients.handlers;
 
-import JsonSchema.JsonSchema;
-import JsonSchema.LogEntry;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
+import com.universidad.messaging.server.shared.logs.LogEntry;
 import JsonSerializer.ResponseBuilder;
-import LogService.LogManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.universidad.messaging.server.servicios.api.ILogManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
  */
 public class ListLogsHandlerClient implements ClientActionHandler {
 
-    private final LogManager logManager;
+    private final ILogManager logManager;
     private final ResponseBuilder serializer;
 
-    public ListLogsHandlerClient(LogManager logManager, ResponseBuilder serializer) {
+    public ListLogsHandlerClient(ILogManager logManager, ResponseBuilder serializer) {
         this.logManager = logManager;
         this.serializer = serializer;
     }

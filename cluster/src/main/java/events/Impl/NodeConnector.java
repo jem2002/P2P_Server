@@ -1,7 +1,7 @@
 package events.Impl;
 
-import DocumentService.DocumentManager;
-import DocumentService.DatabaseBackupManager;
+import com.universidad.messaging.server.servicios.api.IDocumentManager;
+import service.DatabaseBackupManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import communication.PeerConnectionPool;
@@ -31,11 +31,11 @@ public class NodeConnector implements NetworkEventListener {
 
     private final PeerConnectionPool peerConnectionPool;
     private final String identityNodeId;
-    private final DocumentManager documentManager;
+    private final IDocumentManager documentManager;
     private final DatabaseBackupManager databaseBackupManager;
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public NodeConnector(PeerConnectionPool peerConnectionPool, String identityNodeId, DocumentManager documentManager, DatabaseBackupManager databaseBackupManager){
+    public NodeConnector(PeerConnectionPool peerConnectionPool, String identityNodeId, IDocumentManager documentManager, DatabaseBackupManager databaseBackupManager){
         this.peerConnectionPool = peerConnectionPool;
         this.identityNodeId = identityNodeId;
         this.documentManager = documentManager;

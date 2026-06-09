@@ -1,7 +1,8 @@
 package MySqlRepository;
 
-import JsonSchema.LogEntry;
-import ports.spi.IAuditLogRepository;
+import com.universidad.messaging.server.shared.logs.LogEntry;
+import MySqlRepository.db.IDatabaseConnectionManager;
+import com.universidad.messaging.server.persistencia.api.IAuditLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,18 +1,14 @@
 package RequestRouter.files.handlers;
 
-import DocumentService.DocumentManager;
-import JsonSerializer.ResponseBuilder;
 import MessageParser.BroadcastManager;
-import UserService.UserManager;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.universidad.messaging.server.gestion.cluster.api.IReplicationManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import com.universidad.messaging.server.protocolo.api.dispatcher.files.FileActionHandler;
-import models.LocalNodeInfo;
+import com.universidad.messaging.server.servicios.api.IDocumentManager;
 
 
-import ports.api.TransferTicket;
-import replication.ReplicationEvent;
-import replication.ReplicationManager;
+import com.universidad.messaging.server.shared.schema.documentSchema.TransferTicket;
+import com.universidad.messaging.server.shared.events.ReplicationEvent;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,28 +16,37 @@ import java.nio.charset.StandardCharsets;
 
 public class UploadFileHandler implements FileActionHandler {
 
-    private final ReplicationManager replicationManager;
-    private final LocalNodeInfo localNodeInfo;
+    private final IReplicationManager replicationManager;
 
-    private final DocumentManager documentManager;
+    private final IDocumentManager documentManager;
     private final BroadcastManager broadcastManager;
 
     private final ClientActionHandler listDocumentsHandler;
     private final ClientActionHandler listLogsHandler;
 
-    public UploadFileHandler(DocumentManager documentManager,
+    private final String localNodeId;
+    private final String localHost;
+    private final int localPort;
+
+
+    public UploadFileHandler(IDocumentManager documentManager,
                                    BroadcastManager broadcastManager,
                                    ClientActionHandler listDocumentsHandler,
                                    ClientActionHandler listLogsHandler,
-                                   ReplicationManager replicationManager,
-                                   LocalNodeInfo localNodeInfo
+                                   IReplicationManager replicationManager,
+                                   String localNodeId,
+                                   String localHost,
+                                   int localPort
                                    ) {
         this.documentManager = documentManager;
         this.broadcastManager = broadcastManager;
         this.listDocumentsHandler = listDocumentsHandler;
         this.listLogsHandler = listLogsHandler;
         this.replicationManager = replicationManager;
-        this. localNodeInfo = localNodeInfo;
+        this.localNodeId = localNodeId;
+        this.localHost = localHost;
+        this.localPort = localPort;
+
     }
 
     @Override
@@ -68,7 +73,7 @@ public class UploadFileHandler implements FileActionHandler {
 
             replicationManager.propagate(
                     ReplicationEvent.documentUploaded(
-                            localNodeInfo.getNodeId(),
+                            localNodeId,
                             docId, // docId (0 if not known)
                             ticket.getFilename(),
                             ticket.getSizeBytes(),
@@ -76,8 +81,8 @@ public class UploadFileHandler implements FileActionHandler {
                             ticket.getMimeType(),
                             docType, // default docType
                             ticket.getOwnerUsername(),
-                            localNodeInfo.getHost(), // host
-                            localNodeInfo.getClientPort() // clientPort
+                            localHost, // host
+                            localPort // clientPort
                     )
             );
 

@@ -1,6 +1,7 @@
 package MySqlRepository;
 
-import ports.spi.ISessionRepository;
+import MySqlRepository.db.IDatabaseConnectionManager;
+import com.universidad.messaging.server.persistencia.api.ISessionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

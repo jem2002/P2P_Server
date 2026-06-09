@@ -1,22 +1,21 @@
 package RequestRouter.clients;
 
-import CommentService.CommentManager;
-import JsonSchema.JsonSchema;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
 import JsonSerializer.ResponseBuilder;
-import LogService.LogManager;
-import DocumentService.DocumentManager;
 import MessageParser.BroadcastManager;
 import MessageParser.JsonInputParser;
 import MessageParser.MessageWrapper;
 import RequestRouter.clients.handlers.*;
 import RequestRouter.files.TransferManager;
-import UserService.UserManager;
+import com.universidad.messaging.server.gestion.cluster.api.IReplicationManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
-import models.LocalNodeInfo;
+import com.universidad.messaging.server.servicios.api.ICommentManager;
+import com.universidad.messaging.server.servicios.api.IDocumentManager;
+import com.universidad.messaging.server.servicios.api.ILogManager;
+import com.universidad.messaging.server.servicios.api.IUserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import replication.ReplicationManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,12 +49,10 @@ public class ClientRouter implements IClientRequestDispatcher {
     /**
      * Constructor único con inyección completa y obligatoria de componentes locales y de red.
      */
-    public ClientRouter(UserManager userManager, DocumentManager documentManager, LogManager logManager,
-                        BroadcastManager broadcastManager, TransferManager transferManager, CommentManager commentManager,
-                        ReplicationManager replicationManager,
-                        String localNodeId,
-                        discovery.MembershipList membershipList, health.ClusterHealthService healthService,
-                        LocalNodeInfo localIdentity) {
+    public ClientRouter(IUserManager userManager, IDocumentManager documentManager, ILogManager logManager,
+                        BroadcastManager broadcastManager, TransferManager transferManager, ICommentManager commentManager,
+                        IReplicationManager replicationManager,
+                        String localNodeId) {
 
         this.parser = new JsonInputParser();
         this.serializer = new ResponseBuilder();

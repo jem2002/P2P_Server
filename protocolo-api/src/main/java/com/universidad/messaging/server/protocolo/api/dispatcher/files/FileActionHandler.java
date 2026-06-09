@@ -1,6 +1,6 @@
 package com.universidad.messaging.server.protocolo.api.dispatcher.files;
 
-import ports.api.TransferTicket;
+import com.universidad.messaging.server.shared.schema.documentSchema.TransferTicket;
 
 import java.io.InputStream;
 import java.io.OutputStream;

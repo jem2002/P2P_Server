@@ -1,15 +1,13 @@
 package MySqlRepository;
 
-import JsonSchema.DocumentFullInfo;
-import JsonSchema.DocumentInfo;
-import JsonSchema.DownloadDetails;
-import ports.spi.IDocumentRepository;
+import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
+import com.universidad.messaging.server.shared.schema.documentSchema.DownloadDetails;
+import MySqlRepository.db.IDatabaseConnectionManager;
+import com.universidad.messaging.server.persistencia.api.IDocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

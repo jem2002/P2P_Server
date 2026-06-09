@@ -1,25 +1,25 @@
 package RequestRouter.files.handlers;
 
-import DocumentService.DocumentManager;
-import JsonSchema.DownloadMode;
-import LogService.LogManager;
+import com.universidad.messaging.server.shared.schema.documentSchema.DownloadMode;
 import MessageParser.BroadcastManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
 import com.universidad.messaging.server.protocolo.api.dispatcher.files.FileActionHandler;
-import ports.api.TransferTicket;
+import com.universidad.messaging.server.servicios.api.IDocumentManager;
+import com.universidad.messaging.server.servicios.api.ILogManager;
+import com.universidad.messaging.server.shared.schema.documentSchema.TransferTicket;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class DownloadFileHandler implements FileActionHandler {
 
-    private final DocumentManager documentManager;
-    private final LogManager logManager;
+    private final IDocumentManager documentManager;
+    private final ILogManager logManager;
     private final BroadcastManager broadcastManager;
     private final ClientActionHandler listLogsHandler;
 
-    public DownloadFileHandler(DocumentManager documentManager,
-                                     LogManager logManager, BroadcastManager broadcastManager,
+    public DownloadFileHandler(IDocumentManager documentManager,
+                                     ILogManager logManager, BroadcastManager broadcastManager,
                                ClientActionHandler listLogsHandler) {
         this.documentManager = documentManager;
         this.logManager = logManager;

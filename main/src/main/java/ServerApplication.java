@@ -1,23 +1,25 @@
 import APIService.SentimentService;
-import CommentService.CommentManager;
-import CryptoService.CryptoManager;
-import DocumentService.DocumentManager;
-import DocumentService.DatabaseBackupManager;
-import EncryptionUtils.EncryptionUtils;
-import EncryptionUtils.IEncryptionUtils;
-import FileSystemStorage.LocalFileManager;
-import JsonSchema.JsonSchema;
-import LogService.LogManager;
+import Services.CommentManager;
+import Services.CryptoManager;
+import Services.DocumentManager;
+import service.EventDeduplicator;
+import service.DatabaseBackupManager;
+import com.universidad.messaging.server.shared.utils.EncryptionUtils.EncryptionUtils;
+import com.universidad.messaging.server.shared.utils.EncryptionUtils.IEncryptionUtils;
+import Services.LocalFileManager;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
+import Services.LogManager;
 import MessageParser.BroadcastManager;
 import RequestRouter.clients.ClientRouter;
 import RequestRouter.files.TransferManager;
 import RequestRouter.files.FileRouter;
-import UserService.UserManager;
+import Services.UserManager;
 import api.ServerAdminAPI;
 import com.universidad.messaging.server.gestion.de.conexiones.api.executor.IThreadPoolManager;
 import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IClientHandlerFactory;
 import com.universidad.messaging.server.gestion.de.conexiones.api.handler.IFileHandlerFactory;
 import com.universidad.messaging.server.gestion.de.conexiones.api.pool.IConnectionPool;
+import com.universidad.messaging.server.persistencia.api.*;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.IClientRequestDispatcher;
 import com.universidad.messaging.server.protocolo.api.dispatcher.files.IFileRequestDispatcher;
 import config.NodeSetupWizard;
@@ -33,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import pool.ConnectionPoolManager;
-import ports.spi.*;
 import protocolSelector.ProtocolSelector;
 import java.util.ServiceLoader;
 
@@ -47,7 +48,7 @@ import events.Impl.ClusterNotifier;
 import events.NetworkEventBus;
 import health.ClusterHealthService;
 import models.LocalNodeInfo;
-import replication.ReplicationManager;
+import service.ReplicationManager;
 
 import java.util.Arrays;
 
@@ -103,7 +104,10 @@ public class ServerApplication {
             MembershipList membership = new MembershipList();
             PeerConnectionPool peerPool = new PeerConnectionPool();
 
-            ReplicationManager replicator = new ReplicationManager(identity.getNodeId(), membership, peerPool);
+            EventDeduplicator eventDeduplicator = new EventDeduplicator(10000);
+
+
+            ReplicationManager replicator = new ReplicationManager(identity.getNodeId(), membership, peerPool, eventDeduplicator);
 
 
             ClusterHealthService healthService = new ClusterHealthService(identity, membership, peerPool);
@@ -112,14 +116,15 @@ public class ServerApplication {
             IClientRequestDispatcher clientRouter = new ClientRouter(
                     userManager, documentManager, logManager, broadcastManager, transferManager, commentManager
                     , replicator,
-                    identity.getNodeId(), membership, healthService, identity
-            );
+                    identity.getNodeId());
 
             IFileRequestDispatcher fileRouter = new FileRouter(documentManager, logManager, broadcastManager,
                     clientRouter.getHandler(JsonSchema.ACTION_LIST_LOGS),
                     clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS),
                     replicator,
-                    identity
+                    identity.getNodeId(),
+                    identity.getHost(),
+                    identity.getClientPort()
                     );
 
             // ── 6. ARRANQUE DEL SERVIDOR DE RED (CLIENTES SOCKET) ───────────────
@@ -148,16 +153,18 @@ public class ServerApplication {
             ClusterNotifier clusterNotifier = new ClusterNotifier(broadcastManager::broadcast);
             eventBus.subscribe(clusterNotifier);
 
-            orchestrators.ReplicationEventApplier eventApplier = new orchestrators.ReplicationEventApplier(
+
+            replication.ReplicationEventApplier replicationEventApplier = new replication.ReplicationEventApplier(
                     userManager, documentManager, commentManager, broadcastManager,
                     clientRouter.getHandler(JsonSchema.ACTION_NEW_MESSAGE),
                     clientRouter.getHandler(JsonSchema.ACTION_LIST_CLIENTS),
-                    clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS)
+                    clientRouter.getHandler(JsonSchema.ACTION_LIST_DOCUMENTS),
+                    eventDeduplicator
                     );
-            replicator.setEventHandler(eventApplier);
+
 
             // ── 8. CONFIGURACIÓN DE PEER MESSAGE HANDLER ────────────────────────
-            PeerMessageHandler peerHandler = new PeerMessageHandler(replicator, databaseBackupManager);
+            PeerMessageHandler peerHandler = new PeerMessageHandler(replicationEventApplier, databaseBackupManager);
 
             // ── 9. HILOS DE INFRAESTRUCTURA P2P (Gossip & Servidor entre Nodos) ─
             GossipProtocol gossip = new GossipProtocol(

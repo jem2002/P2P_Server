@@ -2,7 +2,7 @@ package handler;
 
 
 import com.universidad.messaging.server.protocolo.api.dispatcher.files.ITransferDispatcher;
-import ports.api.*;
+import com.universidad.messaging.server.shared.schema.documentSchema.TransferTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

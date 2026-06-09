@@ -1,12 +1,12 @@
 package communication;
 
-import DocumentService.DatabaseBackupManager;
+import replication.ReplicationEventApplier;
+import service.DatabaseBackupManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import replication.ReplicationEvent;
-import replication.ReplicationManager;
+import com.universidad.messaging.server.shared.events.ReplicationEvent;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -14,8 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Handler para mensajes entrantes de servidores peer.
@@ -37,11 +35,11 @@ public class PeerMessageHandler {
     private static final Logger logger = LoggerFactory.getLogger(PeerMessageHandler.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private final ReplicationManager replicationManager;
+    private final ReplicationEventApplier replicationEventApplier;
     private final DatabaseBackupManager databaseBackupManager;
 
-    public PeerMessageHandler(ReplicationManager replicationManager, DatabaseBackupManager databaseBackupManager) {
-        this.replicationManager = replicationManager;
+    public PeerMessageHandler(ReplicationEventApplier replicationEventApplier, DatabaseBackupManager databaseBackupManager) {
+        this.replicationEventApplier = replicationEventApplier;
         this.databaseBackupManager = databaseBackupManager;
     }
     
@@ -109,7 +107,8 @@ public class PeerMessageHandler {
         if (payload == null) return;
         try {
             ReplicationEvent event = ReplicationEvent.fromJson(payload.toString());
-            replicationManager.handleIncoming(event);
+            replicationEventApplier.route(event);
+
         } catch (Exception e) {
             logger.error("Error procesando evento de replicación", e);
         }

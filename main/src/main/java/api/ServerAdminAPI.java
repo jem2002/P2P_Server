@@ -1,9 +1,9 @@
 package api;
 
-import JsonSchema.DocumentInfo;
-import JsonSchema.UserRecord;
-import ports.spi.IDocumentRepository;
-import ports.spi.IUserRepository;
+import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
+import com.universidad.messaging.server.shared.schema.userSchema.UserRecord;
+import com.universidad.messaging.server.persistencia.api.IDocumentRepository;
+import com.universidad.messaging.server.persistencia.api.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

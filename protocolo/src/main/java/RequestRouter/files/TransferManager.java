@@ -3,7 +3,7 @@ package RequestRouter.files;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ports.api.TransferTicket;
+import com.universidad.messaging.server.shared.schema.documentSchema.TransferTicket;
     import com.universidad.messaging.server.protocolo.api.dispatcher.files.ITransferDispatcher;
 
 public class TransferManager implements ITransferDispatcher {

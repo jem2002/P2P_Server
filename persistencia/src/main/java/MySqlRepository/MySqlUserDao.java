@@ -1,9 +1,9 @@
 package MySqlRepository;
 
-import JsonSchema.ActiveClient;
-import JsonSchema.ClientConnectionRecord;
-import JsonSchema.UserRecord;
-import ports.spi.IUserRepository;
+import com.universidad.messaging.server.shared.schema.userSchema.ActiveClient;
+import com.universidad.messaging.server.shared.schema.userSchema.UserRecord;
+import MySqlRepository.db.IDatabaseConnectionManager;
+import com.universidad.messaging.server.persistencia.api.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

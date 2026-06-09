@@ -1,26 +1,27 @@
 package RequestRouter.clients.handlers;
 
-import CommentService.CommentManager;
-import JsonSchema.Comment;
+import com.universidad.messaging.server.shared.schema.JsonSchema;
+import com.universidad.messaging.server.shared.schema.commentSchema.Comment;
 import JsonSerializer.ResponseBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.universidad.messaging.server.gestion.cluster.api.IReplicationManager;
 import com.universidad.messaging.server.protocolo.api.dispatcher.clients.ClientActionHandler;
+import com.universidad.messaging.server.servicios.api.ICommentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import replication.ReplicationEvent;
-import replication.ReplicationManager;
+import com.universidad.messaging.server.shared.events.ReplicationEvent;
 
 public class CommentDocumentHandlerClient implements ClientActionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CommentDocumentHandlerClient.class);
 
-    private final CommentManager commentManager;
+    private final ICommentManager commentManager;
     private final ResponseBuilder serializer;
-    private final ReplicationManager replicationManager;
+    private final IReplicationManager replicationManager;
     private final String localNodeId;
 
     // Ya no se inyecta el SentimentService aquí, se limpia el constructor
-    public CommentDocumentHandlerClient(CommentManager commentManager, ResponseBuilder serializer, ReplicationManager replicationManager,  String localNodeId) {
+    public CommentDocumentHandlerClient(ICommentManager commentManager, ResponseBuilder serializer, IReplicationManager replicationManager,  String localNodeId) {
         this.commentManager = commentManager;
         this.serializer = serializer;
         this.replicationManager = replicationManager;
@@ -52,7 +53,7 @@ public class CommentDocumentHandlerClient implements ClientActionHandler {
 
             replicationManager.propagate(ReplicationEvent.newComment(localNodeId, savedComment.getId(), documentId, username, content, savedComment.getSentiment().name(), savedComment.getConfidence()));
 
-            return serializer.buildSuccessResponse("REGISTER_COMMENT", mensajeExito);
+            return serializer.buildSuccessResponse(JsonSchema.ACTION_COMMENT_DOCUMENT, mensajeExito);
 
         } catch (IllegalArgumentException e) {
             // Captura errores de validación controlados (campos vacíos, rangos incorrectos)

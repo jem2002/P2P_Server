@@ -1,6 +1,6 @@
 package events.Impl;
 
-import UserService.UserManager;
+import com.universidad.messaging.server.servicios.api.IUserManager;
 import communication.PeerConnectionPool;
 import events.NetworkEventListener;
 import models.RemoteNodeInfo;
@@ -13,9 +13,9 @@ public class NodeDisconnector implements NetworkEventListener {
 
 
     private final PeerConnectionPool peerConnectionPool;
-    private final UserManager userManager;
+    private final IUserManager userManager;
 
-    public NodeDisconnector(PeerConnectionPool peerConnectionPool, UserManager userManager) {
+    public NodeDisconnector(PeerConnectionPool peerConnectionPool, IUserManager userManager) {
         this.peerConnectionPool = peerConnectionPool;
         this.userManager = userManager;
     }
