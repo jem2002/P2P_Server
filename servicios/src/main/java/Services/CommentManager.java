@@ -55,7 +55,8 @@ public class CommentManager implements ICommentManager {
         // 3. Mapear y validar los resultados del análisis
         Comment.Sentiment sentimentEnum;
         try {
-            sentimentEnum = Comment.Sentiment.valueOf(sentimentAnalysis.getSentiment().toUpperCase());
+            String sentStr = sentimentAnalysis.getSentiment().toUpperCase().replace(" ", "_");
+            sentimentEnum = Comment.Sentiment.valueOf(sentStr);
         } catch (IllegalArgumentException e) {
             logger.error("Sentimiento desconocido recibido del servicio: {}", sentimentAnalysis.getSentiment());
             throw new RuntimeException("El análisis devolvió un tipo de sentimiento inválido.");
@@ -105,7 +106,7 @@ public class CommentManager implements ICommentManager {
         // 2. Parsear el String del evento al Enum interno de forma segura
         Comment.Sentiment sentimentEnum;
         try {
-            sentimentEnum = Comment.Sentiment.valueOf(sentimentStr.toUpperCase().trim());
+            sentimentEnum = Comment.Sentiment.valueOf(sentimentStr.toUpperCase().trim().replace(" ", "_"));
         } catch (IllegalArgumentException e) {
             logger.error("Sentimiento inválido recibido en el evento: '{}'", sentimentStr);
             throw new RuntimeException("No se puede replicar: Tipo de sentimiento desconocido en el payload.");

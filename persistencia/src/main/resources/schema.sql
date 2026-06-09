@@ -161,7 +161,7 @@ CREATE TABLE comments (
                           document_id     BIGINT        NOT NULL,
                           user_id         BIGINT        NOT NULL,
                           content         TEXT          NOT NULL,
-                          sentiment       ENUM('POSITIVO', 'NEGATIVO') NOT NULL,
+                          sentiment       ENUM('POSITIVO', 'NEGATIVO', 'NO_CALIFICABLE') NOT NULL,
                           confidence      DECIMAL(7,4)  NOT NULL,                        -- DECIMAL(7,4) permite hasta 100.0000
                           created_at      DATETIME      DEFAULT CURRENT_TIMESTAMP,
 

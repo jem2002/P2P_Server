@@ -38,6 +38,13 @@ public class SentimentApi {
             app.post("/analizar", ctx -> {
                 ResenaRequest resena = ctx.bodyAsClass(ResenaRequest.class);
                 float[] secuenciaPad = procesarTexto(resena.texto());
+
+                // Si procesarTexto devuelve null, encontramos una palabra desconocida o texto vacío
+                if (secuenciaPad == null) {
+                    ctx.json(new RespuestaSentimiento("exitoso", "No calificable", 0.0));
+                    return; // Terminamos la ejecución aquí
+                }
+
                 double prediccionProb = predecir(secuenciaPad);
 
                 String etiqueta;
@@ -52,7 +59,7 @@ public class SentimentApi {
                 }
 
                 double confianzaPorcentaje = Math.round((confianza * 100) * 100.0) / 100.0;
-                ctx.json(new RespuestaSentimiento("exito", etiqueta, confianzaPorcentaje));
+                ctx.json(new RespuestaSentimiento("exitoso", etiqueta, confianzaPorcentaje));
             });
             logger.info("SentimentApi inicializada correctamente en el puerto {}", port);
         } catch (Exception e) {
@@ -74,7 +81,13 @@ public class SentimentApi {
     }
 
     private static float[] procesarTexto(String texto) {
-        String limpio = texto.toLowerCase().replaceAll("[^a-z0-9áéíóúñ ]", "");
+        // Se añade .trim() para evitar que espacios en blanco al inicio generen strings vacíos
+        String limpio = texto.toLowerCase().replaceAll("[^a-z0-9áéíóúñ ]", "").trim();
+        
+        if (limpio.isEmpty()) {
+            return null;
+        }
+
         String[] palabras = limpio.split("\\s+");
         float[] secuenciaPad = new float[MAX_LEN];
 
@@ -83,7 +96,13 @@ public class SentimentApi {
 
         for (int i = inicioSecuencia; i < palabras.length; i++) {
             Integer id = wordIndex.get(palabras[i]);
-            secuenciaPad[posicionDestino++] = (id != null) ? id.floatValue() : 0.0f;
+            
+            // Si la palabra no existe en el diccionario, invalidamos todo el texto
+            if (id == null) {
+                return null;
+            }
+            
+            secuenciaPad[posicionDestino++] = id.floatValue();
         }
         return secuenciaPad;
     }
@@ -94,7 +113,7 @@ public class SentimentApi {
 
         try (OnnxTensor inputTensor = OnnxTensor.createTensor(env, inputData);
              OrtSession.Result results = session.run(Collections.singletonMap("input_text", inputTensor))) {
-            float[][] output = (float[][] ) results.get(0).getValue();
+            float[][] output = (float[][]) results.get(0).getValue();
             return output[0][0];
         }
     }

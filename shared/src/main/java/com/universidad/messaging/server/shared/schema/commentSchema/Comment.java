@@ -15,7 +15,8 @@ public class Comment {
     // Enum interno (o en archivo separado) para el sentimiento
     public enum Sentiment {
         POSITIVO,
-        NEGATIVO
+        NEGATIVO,
+        NO_CALIFICABLE
     }
 
 
