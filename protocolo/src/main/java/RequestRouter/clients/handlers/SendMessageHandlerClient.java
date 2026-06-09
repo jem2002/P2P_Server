@@ -104,9 +104,8 @@ public class SendMessageHandlerClient implements ClientActionHandler {
         String logUpdate = listLogsHandler.handle(null, clientIp);
         broadcastManager.broadcast(logUpdate);
 
-
         return serializer.buildSuccessResponse(
                 JsonSchema.ACTION_SEND_MESSAGE,
-                "De " + fromUser + " → " + targetUsername + ": " + content);
+                "De " + fromUser + " → " + ("ALL".equals(targetUsername) ? "Todos" : targetUsername) + ": " + content);
     }
 }

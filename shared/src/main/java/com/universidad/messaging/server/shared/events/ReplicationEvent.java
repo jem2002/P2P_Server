@@ -50,11 +50,12 @@ public class ReplicationEvent {
         return create(sourceNodeId, ReplicationSchema.NEW_COMMENT, payload);
     }
 
-    public static ReplicationEvent clientConnected(String sourceNodeId, String username, String ip, int port) {
+    public static ReplicationEvent clientConnected(String sourceNodeId, String username, String ip, int port, String protocol) {
         ObjectNode payload = mapper.createObjectNode();
         payload.put("username", username);
         payload.put("ip", ip);
         payload.put("port", port);
+        payload.put("protocol", protocol);
         return create(sourceNodeId, ReplicationSchema.NEW_CLIENT_CONNECTED, payload);
     }
 

@@ -92,11 +92,15 @@ public class ClientRouter implements IClientRequestDispatcher {
                         ,replicationManager,
                         localNodeId));
 
-        clientHandlers.put(JsonSchema.ACTION_COMMENT_DOCUMENT,
-                new CommentDocumentHandlerClient(commentManager, serializer, replicationManager, localNodeId));
-
         clientHandlers.put(JsonSchema.ACTION_LIST_COMMENTS,
                 new ListCommentsHandlerClient(commentManager, serializer));
+
+        clientHandlers.put(JsonSchema.ACTION_COMMENT_DOCUMENT,
+                new CommentDocumentHandlerClient(commentManager, serializer, replicationManager, localNodeId,
+                        broadcastManager,
+                        clientHandlers.get(JsonSchema.ACTION_LIST_COMMENTS)));
+
+
 
         logger.info("MainRouter: Arquitectura federada inicializada correctamente para el nodo '{}'", localNodeId);
     }

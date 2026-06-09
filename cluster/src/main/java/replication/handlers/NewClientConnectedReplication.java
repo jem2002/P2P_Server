@@ -28,9 +28,11 @@ public class NewClientConnectedReplication implements IReplicationEventHandler {
         String sourceNode = event.getSourceNodeId();
         String clientIp = event.getPayload().has("ip") ? event.getPayload().get("ip").asText() : "unknown";
         int clientPort =  event.getPayload().has("port") ? event.getPayload().get("port").asInt() : 0;
+        String protocol = event.getPayload().get("protocol").asText();
+
 
         try {
-            userManager.conectarUsuario(username, clientIp, clientPort, sourceNode);
+            userManager.conectarUsuario(username, clientIp, clientPort, sourceNode, protocol);
         } catch (Exception e) {
             logger.error("Error registrando usuario conectado {}", username, e);
         }

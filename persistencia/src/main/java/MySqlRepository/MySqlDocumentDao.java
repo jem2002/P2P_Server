@@ -165,13 +165,13 @@ public class MySqlDocumentDao implements IDocumentRepository {
                   "WHERE d.doc_type = 'MESSAGE' " +
                   "   OR d.doc_type = CONCAT('PRIVATE_TO:', ?) " +
                   "   OR (d.doc_type LIKE 'PRIVATE_TO:%' AND u.username = ?) " +
-                  "ORDER BY d.id DESC";
+                  "ORDER BY d.created_at ASC";
         } else {
             sql = "SELECT d.id, d.name, d.size_bytes, d.extension, d.original_path, u.username, u.ip_address " +
                   "FROM documents d " +
                   "JOIN users u ON d.owner_user_id = u.id " +
                   "WHERE d.doc_type = 'MESSAGE' OR d.doc_type LIKE 'PRIVATE_TO:%' " +
-                  "ORDER BY d.id DESC";
+                  "ORDER BY d.created_at ASC";
         }
 
         try (Connection conn = dbManager.getConnection();

@@ -1,5 +1,8 @@
 package RequestRouter.clients.handlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.universidad.messaging.server.protocolo.api.broadcast.IBroadcastManager;
 import com.universidad.messaging.server.shared.schema.JsonSchema;
 import com.universidad.messaging.server.shared.schema.commentSchema.Comment;
 import JsonSerializer.ResponseBuilder;
@@ -19,13 +22,20 @@ public class CommentDocumentHandlerClient implements ClientActionHandler {
     private final ResponseBuilder serializer;
     private final IReplicationManager replicationManager;
     private final String localNodeId;
+    private final IBroadcastManager broadcastManager;
+    private final ClientActionHandler listCommentsHandler;
 
     // Ya no se inyecta el SentimentService aquí, se limpia el constructor
-    public CommentDocumentHandlerClient(ICommentManager commentManager, ResponseBuilder serializer, IReplicationManager replicationManager,  String localNodeId) {
+    public CommentDocumentHandlerClient(ICommentManager commentManager, ResponseBuilder serializer, IReplicationManager replicationManager,  String localNodeId,
+                                        IBroadcastManager broadcastManager, ClientActionHandler listCommentsHandler
+                                        ) {
         this.commentManager = commentManager;
         this.serializer = serializer;
         this.replicationManager = replicationManager;
         this.localNodeId = localNodeId;
+        this.broadcastManager = broadcastManager;
+        this.listCommentsHandler = listCommentsHandler;
+
     }
 
     @Override
@@ -52,6 +62,13 @@ public class CommentDocumentHandlerClient implements ClientActionHandler {
                     savedComment.getId(), savedComment.getSentiment().name(), savedComment.getConfidence().toString());
 
             replicationManager.propagate(ReplicationEvent.newComment(localNodeId, savedComment.getId(), documentId, username, content, savedComment.getSentiment().name(), savedComment.getConfidence()));
+
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("document_id", documentId);
+
+            broadcastManager.broadcast(listCommentsHandler.handle(node, null));
+
 
             return serializer.buildSuccessResponse(JsonSchema.ACTION_COMMENT_DOCUMENT, mensajeExito);
 

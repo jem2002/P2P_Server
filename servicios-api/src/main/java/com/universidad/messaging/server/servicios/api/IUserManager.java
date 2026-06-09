@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IUserManager {
 
-    long conectarUsuario(String username, String ipAddress, int port, String nodeId) throws Exception;
+    long conectarUsuario(String username, String ipAddress, int port, String nodeId, String protocol) throws Exception;
 
     long obtenerORegistrarUsuario(String username, String ipAddress) throws Exception;
 

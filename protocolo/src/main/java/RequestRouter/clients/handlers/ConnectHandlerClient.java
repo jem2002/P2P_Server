@@ -52,17 +52,19 @@ public class ConnectHandlerClient implements ClientActionHandler {
         }
 
         String username = payload.get(JsonSchema.PAYLOAD_USERNAME).asText();
+        String protocol = payload.get("protocol").asText();
+
         ClientAddress address = ClientAddress.parse(clientIp);
 
         // 1. Persistencia y login en la base de datos local
-        long userId = userManager.conectarUsuario(username, address.getIp(), address.getPort(), localNodeId);
+        long userId = userManager.conectarUsuario(username, address.getIp(), address.getPort(), localNodeId, protocol);
 
         // 2. Registro en la bitácora interna de auditoría
         logManager.registrarAccion(null, userId, "CONNECT", "SUCCESS",
                 "Usuario " + username + " conectado desde " + address);
 
         // Propagar de forma inmediata el evento de conexión a todos los peers del clúster
-        ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp(), address.getPort());
+        ReplicationEvent event = ReplicationEvent.clientConnected(localNodeId, username, address.getIp(), address.getPort(), protocol);
         replicationManager.propagate(event);
 
         // Broadcast global a la red para refrescar las listas de clientes en las UI
