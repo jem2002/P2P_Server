@@ -51,15 +51,16 @@ public class NodeSetupWizard {
             System.out.println(CYAN + "Configurando primer nodo..." + RESET);
             String host = ask(scanner, "Dirección IP / Host (server.host)", defaultHost);
 
-            config.overrideProperty("server.host",      host);
-            config.overrideProperty("server.port",      "8081");
-            config.overrideProperty("cluster.nodeId",   "node-1");
-            config.overrideProperty("cluster.port",     "9090");
-            config.overrideProperty("cluster.seedNodes","");
+            System.setProperty("server.host",      host);
+            System.setProperty("server.port",      "8080"); // Puerto HTTP Spring
+            System.setProperty("socket.port",      "8081"); // Puerto Socket P2P
+            System.setProperty("cluster.nodeId",   "node-1");
+            System.setProperty("cluster.port",     "9090");
+            System.setProperty("cluster.seedNodes","");
 
             System.out.println();
             System.out.println(GREEN + "✔  Configuración de nodo primario aplicada:" + RESET);
-            printSummary(host, "8081", "node-1", "9090", "(ninguno — este es el primer nodo)");
+            printSummary(host, "8080 (HTTP) / 8081 (Socket)", "node-1", "9090", "(ninguno — este es el primer nodo)");
 
         } else {
             // ── Nodo adicional: pedir cada parámetro ──────────────────────
@@ -69,20 +70,22 @@ public class NodeSetupWizard {
             System.out.println();
 
             String host        = ask(scanner, "Dirección IP / Host (server.host)", defaultHost);
-            String serverPort  = ask(scanner, "Puerto de clientes  (server.port)",   String.valueOf(config.getPort()));
+            String httpPort    = ask(scanner, "Puerto HTTP API (server.port)", "8080");
+            String socketPort  = ask(scanner, "Puerto de sockets (socket.port)", "8081");
             String nodeId      = ask(scanner, "ID único del nodo   (cluster.nodeId)", config.getNodeId());
             String clusterPort = ask(scanner, "Puerto del cluster  (cluster.port)",   String.valueOf(config.getClusterPort()));
             String seedNodes   = askSeeds(scanner, config);
 
-            config.overrideProperty("server.host",       host);
-            config.overrideProperty("server.port",       serverPort);
-            config.overrideProperty("cluster.nodeId",    nodeId);
-            config.overrideProperty("cluster.port",      clusterPort);
-            config.overrideProperty("cluster.seedNodes", seedNodes);
+            System.setProperty("server.host",       host);
+            System.setProperty("server.port",       httpPort); // Para Spring Boot
+            System.setProperty("socket.port",       socketPort); // Para ServerConfig
+            System.setProperty("cluster.nodeId",    nodeId);
+            System.setProperty("cluster.port",      clusterPort);
+            System.setProperty("cluster.seedNodes", seedNodes);
 
             System.out.println();
             System.out.println(GREEN + "✔  Configuración aplicada:" + RESET);
-            printSummary(host, serverPort, nodeId, clusterPort,
+            printSummary(host, httpPort + " (HTTP) / " + socketPort + " (Socket)", nodeId, clusterPort,
                     seedNodes.isEmpty() ? "(ninguno)" : seedNodes);
         }
 

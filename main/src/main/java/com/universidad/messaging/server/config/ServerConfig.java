@@ -26,35 +26,28 @@ public class ServerConfig {
         }
     }
 
-    public int getPort() { return Integer.parseInt(properties.getProperty("server.port", "8080")); }
-    public String getProtocol() { return properties.getProperty("server.protocol", "TCP"); }
-    public int getMaxConnections() { return Integer.parseInt(properties.getProperty("server.maxConnections", "100")); }
-    public String getHost() { return properties.getProperty("server.host", "localhost"); }
+    public int getPort() { return Integer.parseInt(System.getProperty("socket.port", properties.getProperty("server.port", "8081"))); }
+    public String getProtocol() { return System.getProperty("server.protocol", properties.getProperty("server.protocol", "TCP")); }
+    public int getMaxConnections() { return Integer.parseInt(System.getProperty("server.maxConnections", properties.getProperty("server.maxConnections", "100"))); }
+    public String getHost() { return System.getProperty("server.host", properties.getProperty("server.host", "localhost")); }
 
-
-    public String getNodeId() { return properties.getProperty("cluster.nodeId", "auto"); }
-    public int getClusterPort() { return Integer.parseInt(properties.getProperty("cluster.port", "9090")); }
-    public long getHeartbeatIntervalMs() { return Long.parseLong(properties.getProperty("cluster.heartbeatIntervalMs", "2000")); }
-    public long getFailureTimeoutMs() { return Long.parseLong(properties.getProperty("cluster.failureTimeoutMs", "10000")); }
+    public String getNodeId() { return System.getProperty("cluster.nodeId", properties.getProperty("cluster.nodeId", "auto")); }
+    public int getClusterPort() { return Integer.parseInt(System.getProperty("cluster.port", properties.getProperty("cluster.port", "9090"))); }
+    public long getHeartbeatIntervalMs() { return Long.parseLong(System.getProperty("cluster.heartbeatIntervalMs", properties.getProperty("cluster.heartbeatIntervalMs", "2000"))); }
+    public long getFailureTimeoutMs() { return Long.parseLong(System.getProperty("cluster.failureTimeoutMs", properties.getProperty("cluster.failureTimeoutMs", "10000"))); }
 
     /**
      * Retorna la lista de seed nodes como array de Strings ("host:port").
      */
     public String[] getSeedNodes() {
-        String seeds = properties.getProperty("cluster.seedNodes", "");
+        String seeds = System.getProperty("cluster.seedNodes", properties.getProperty("cluster.seedNodes", ""));
         if (seeds.isEmpty()) return new String[0];
         return seeds.split(",");
     }
 
-    public int getSentimentApiPort() { return Integer.parseInt(properties.getProperty("sentiment.api.port","9000"));}
+    public int getSentimentApiPort() { return Integer.parseInt(System.getProperty("sentiment.api.port", properties.getProperty("sentiment.api.port","9000")));}
 
-
-    /**
-     * Sobreescribe una propiedad en memoria (sin tocar el archivo en disco).
-     * Usado por {@link NodeSetupWizard} para inyectar los valores ingresados
-     * en terminal antes de que la aplicación arranque.
-     */
     public void overrideProperty(String key, String value) {
-        properties.setProperty(key, value);
+        System.setProperty(key, value);
     }
 }

@@ -64,6 +64,11 @@ public class ServerApplication {
     private static final Logger logger = LoggerFactory.getLogger(ServerApplication.class);
 
     public static void main(String[] args) {
+        // 1. Ejecutar el Wizard interactivo ANTES de que arranque Spring Boot (Tomcat)
+        ServerConfig tempConfig = new ServerConfig();
+        NodeSetupWizard.run(tempConfig);
+
+        // 2. Ahora sí, arrancar Spring Boot (usará los System.properties inyectados por el Wizard)
         SpringApplication.run(ServerApplication.class, args);
     }
 
@@ -79,8 +84,6 @@ public class ServerApplication {
         logger.info("Arrancando Messaging Server en Modo Clúster Nativo...");
 
         try {
-            NodeSetupWizard.run(config);
-
             logger.info("╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════");
             logger.info("║ server.host = {}", config.getHost());
             logger.info("║ server.port = {}", config.getPort());
