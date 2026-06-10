@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class CommentManager implements ICommentManager {
@@ -74,6 +78,9 @@ public class CommentManager implements ICommentManager {
         try{
         long userId = userManager.obtenerIdUsuario(username);
 
+        ZoneId zonaColombia = ZoneId.of("America/Bogota");
+        ZonedDateTime horaColombia = ZonedDateTime.now(zonaColombia);
+        LocalDateTime createdAt = horaColombia.toLocalDateTime();
         // 4. Construcción de la entidad Comment
         Comment nuevoComentario = new Comment();
         nuevoComentario.setDocumentId(documentId);
@@ -81,6 +88,7 @@ public class CommentManager implements ICommentManager {
         nuevoComentario.setContent(content);
         nuevoComentario.setSentiment(sentimentEnum);
         nuevoComentario.setConfidence(confidence);
+        nuevoComentario.setCreatedAt(createdAt);
 
         // 5. Delegar la persistencia al repositorio
 
@@ -94,7 +102,7 @@ public class CommentManager implements ICommentManager {
     }
 
 
-    public Comment replicarComentario(Long id, Long documentId, String username, String content, String sentimentStr, BigDecimal confidence) {
+    public Comment replicarComentario(Long id, Long documentId, String username, String content, String sentimentStr, BigDecimal confidence, LocalDateTime createdAt) {
         logger.info("Procesando evento de réplica para el comentario ID: {}", id);
 
         // 1. Validaciones estructurales de los datos del payload
@@ -124,6 +132,7 @@ public class CommentManager implements ICommentManager {
             comentarioReplica.setContent(content);
             comentarioReplica.setSentiment(sentimentEnum);
             comentarioReplica.setConfidence(confidence);
+            comentarioReplica.setCreatedAt(createdAt);
 
             // 5. Persistir usando el método exclusivo de réplicas en el repositorio
             Comment guardado = commentRepository.replicarComentario(comentarioReplica);

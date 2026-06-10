@@ -23,7 +23,7 @@ public class DatabaseInitializer {
 
             // Obtener conexión del pool (usa el usuario messaging_app del config.properties)
             try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
-                SqlScriptRunner.runScript(conn, "schema.sql");
+                //SqlScriptRunner.runScript(conn, "schema.sql");
             }
 
             logger.info("Base de datos lista: Tablas creadas/actualizadas con éxito.");

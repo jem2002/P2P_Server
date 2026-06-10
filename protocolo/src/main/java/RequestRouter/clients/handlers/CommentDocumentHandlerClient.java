@@ -61,7 +61,8 @@ public class CommentDocumentHandlerClient implements ClientActionHandler {
             String mensajeExito = String.format("Comentario registrado correctamente con ID: %d, Sentimiento: %s, Confianza: %s",
                     savedComment.getId(), savedComment.getSentiment().name(), savedComment.getConfidence().toString());
 
-            replicationManager.propagate(ReplicationEvent.newComment(localNodeId, savedComment.getId(), documentId, username, content, savedComment.getSentiment().name(), savedComment.getConfidence()));
+            replicationManager.propagate(ReplicationEvent.newComment(localNodeId, savedComment.getId(), documentId, username, content,
+                    savedComment.getSentiment().name(), savedComment.getConfidence(), savedComment.getCreatedAt().toString()));
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

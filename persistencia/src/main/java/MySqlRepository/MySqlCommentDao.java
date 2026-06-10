@@ -6,9 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.universidad.messaging.server.shared.api.dto.CommentDTO;
 import com.universidad.messaging.server.shared.schema.commentSchema.Comment;
 import com.universidad.messaging.server.shared.schema.commentSchema.CommentInfo;
 import MySqlRepository.db.IDatabaseConnectionManager;
@@ -27,21 +29,22 @@ public class MySqlCommentDao implements ICommentRepository {
 
     @Override
     public Comment registrarComentario(Comment comment) {
-        String sql = "INSERT INTO comments (document_id, user_id, content, sentiment, confidence) VALUES (?, ?, ?, ?, ?)";
+        // 1. Añadimos 'created_at' y el '?' correspondiente
+        String sql = "INSERT INTO comments (document_id, user_id, content, sentiment, confidence, created_at) VALUES (?, ?, ?, ?, ?, ?)";
 
-        // El try-with-resources asegura que el Connection y el PreparedStatement se cierren solos
         try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setLong(1, comment.getDocumentId());
             pstmt.setLong(2, comment.getUserId());
             pstmt.setString(3, comment.getContent());
-            pstmt.setString(4, comment.getSentiment().name()); // Guarda el Enum como String ('POSITIVO' o 'NEGATIVO')
+            pstmt.setString(4, comment.getSentiment().name());
             pstmt.setBigDecimal(5, comment.getConfidence());
+            // 2. Pasamos el LocalDateTime que ya viene en el objeto
+            pstmt.setObject(6, comment.getCreatedAt());
 
             int affectedRows = pstmt.executeUpdate();
 
-            // Si se insertó correctamente, recuperamos el ID autogenerado
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -62,13 +65,12 @@ public class MySqlCommentDao implements ICommentRepository {
 
     @Override
     public Comment replicarComentario(Comment comment) {
-        // El query incluye explícitamente el campo 'id'
-        String sql = "INSERT INTO comments (id, document_id, user_id, content, sentiment, confidence) VALUES (?, ?, ?, ?, ?, ?)";
+        // 1. Añadimos 'created_at' y el '?' correspondiente
+        String sql = "INSERT INTO comments (id, document_id, user_id, content, sentiment, confidence, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) { // Notarás que ya no necesitamos pedir las llaves generadas
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            // Validamos preventivamente que no venga nulo para evitar un NullPointerException antes de tocar la BD
             if (comment.getId() == null) {
                 throw new IllegalArgumentException("El ID del comentario no puede ser nulo para una réplica.");
             }
@@ -79,6 +81,8 @@ public class MySqlCommentDao implements ICommentRepository {
             pstmt.setString(4, comment.getContent());
             pstmt.setString(5, comment.getSentiment().name());
             pstmt.setBigDecimal(6, comment.getConfidence());
+            // 2. Pasamos el LocalDateTime que ya viene en el objeto
+            pstmt.setObject(7, comment.getCreatedAt());
 
             int affectedRows = pstmt.executeUpdate();
 
@@ -93,7 +97,6 @@ public class MySqlCommentDao implements ICommentRepository {
 
         return comment;
     }
-
     @Override
     public List<CommentInfo> listarComentariosPorDocumento(Long documentId) {
         List<CommentInfo> comentarios = new ArrayList<>();
@@ -140,4 +143,110 @@ public class MySqlCommentDao implements ICommentRepository {
 
         return comentarios;
     }
+
+
+    public List<CommentDTO> buscarComentarios(
+            String username,
+            String documentName,
+            String sentiment,
+            String fromDate,
+            String toDate,
+            String sortBy,
+            String sortDir
+    ) throws SQLException {
+
+        StringBuilder sql = new StringBuilder("""
+            SELECT d.name      AS document_name,
+                   u.username,
+                   c.content,
+                   c.sentiment,
+                   c.confidence,
+                   c.created_at
+            FROM comments c
+            INNER JOIN users     u ON u.id = c.user_id
+            INNER JOIN documents d ON d.id = c.document_id
+            WHERE 1=1
+            """);
+
+        List<Object> params = new ArrayList<>();
+
+        if (username != null && !username.isBlank()) {
+            sql.append(" AND LOWER(u.username) = LOWER(?) ");
+            params.add(username.trim());
+        }
+
+        if (documentName != null && !documentName.isBlank()) {
+            sql.append(" AND LOWER(d.name) LIKE LOWER(?) ");
+            params.add("%" + documentName.trim() + "%");
+        }
+
+        if (sentiment != null && !sentiment.isBlank()) {
+            switch (sentiment.toUpperCase()) {
+                case "POSITIVO", "NEGATIVO", "NO_CALIFICABLE"
+                        -> sql.append(" AND c.sentiment = ? ");
+                default -> throw new IllegalArgumentException(
+                        "sentiment inválido: usa 'POSITIVO', 'NEGATIVO' o 'NO_CALIFICABLE'");
+            }
+            params.add(sentiment.toUpperCase().trim());
+        }
+
+        if (fromDate != null && !fromDate.isBlank()) {
+            sql.append(" AND c.created_at >= ? ");
+            params.add(Timestamp.valueOf(LocalDate.parse(fromDate).atStartOfDay()));
+        }
+
+        if (toDate != null && !toDate.isBlank()) {
+            sql.append(" AND c.created_at <= ? ");
+            params.add(Timestamp.valueOf(LocalDate.parse(toDate).atTime(23, 59, 59)));
+        }
+
+        String column = switch (sortBy != null ? sortBy : "created_at") {
+            case "username"                 -> "u.username";
+            case "documentName",
+                 "document_name"           -> "d.name";
+            case "sentiment"               -> "c.sentiment";
+            case "confidence"              -> "c.confidence";
+            case "createdAt", "created_at" -> "c.created_at";
+            default                        -> "c.created_at";
+        };
+        String direction = "asc".equalsIgnoreCase(sortDir) ? "ASC" : "DESC";
+
+        sql.append(" ORDER BY ").append(column).append(" ").append(direction);
+
+        List<CommentDTO> result = new ArrayList<>();
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                setParam(stmt, i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new CommentDTO(
+                            rs.getString("document_name"),
+                            rs.getString("username"),
+                            rs.getString("content"),
+                            rs.getString("sentiment"),
+                            rs.getString("confidence"),
+                            rs.getString("created_at")
+                    ));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private void setParam(PreparedStatement stmt, int index, Object value)
+            throws SQLException {
+        switch (value) {
+            case String s    -> stmt.setString(index, s);
+            case Integer n   -> stmt.setInt(index, n);
+            case Timestamp t -> stmt.setTimestamp(index, t);
+            default          -> stmt.setObject(index, value);
+        }
+    }
+
 }
