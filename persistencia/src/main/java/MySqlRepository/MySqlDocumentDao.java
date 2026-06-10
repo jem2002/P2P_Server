@@ -343,23 +343,20 @@ public class MySqlDocumentDao implements IDocumentRepository {
             String keyword,
             String fromDate,
             String toDate,
-            int    page,
-            int    size,
             String sortBy,
             String sortDir
     ) throws SQLException {
 
-        // ── 1. SQL dinámico ───────────────────────────────────────────────
         StringBuilder sql = new StringBuilder("""
-                SELECT d.name,
-                       d.original_path,
-                       d.doc_type,
-                       d.created_at,
-                       u.username AS owner
-                FROM documents d
-                INNER JOIN users u ON u.id = d.owner_user_id
-                WHERE (d.doc_type = 'MESSAGE' OR d.doc_type LIKE 'PRIVATE\\_TO:%')
-                """);
+            SELECT d.name,
+                   d.original_path,
+                   d.doc_type,
+                   d.created_at,
+                   u.username AS owner
+            FROM documents d
+            INNER JOIN users u ON u.id = d.owner_user_id
+            WHERE (d.doc_type = 'MESSAGE' OR d.doc_type LIKE 'PRIVATE\\_TO:%')
+            """);
 
         List<Object> params = new ArrayList<>();
 
@@ -368,7 +365,6 @@ public class MySqlDocumentDao implements IDocumentRepository {
             params.add(owner.trim());
         }
 
-        // target implica buscar exactamente "PRIVATE_TO:targetUsername"
         if (target != null && !target.isBlank()) {
             sql.append(" AND d.doc_type = ? ");
             params.add("PRIVATE_TO:" + target.trim());
@@ -383,9 +379,6 @@ public class MySqlDocumentDao implements IDocumentRepository {
             }
         }
 
-        // keyword filtra sobre el CONTENIDO leído, no en SQL
-        // (el filtro fino se aplica en Java después de leer el archivo)
-
         if (fromDate != null && !fromDate.isBlank()) {
             sql.append(" AND d.created_at >= ? ");
             params.add(Timestamp.valueOf(LocalDate.parse(fromDate).atStartOfDay()));
@@ -396,26 +389,16 @@ public class MySqlDocumentDao implements IDocumentRepository {
             params.add(Timestamp.valueOf(LocalDate.parse(toDate).atTime(23, 59, 59)));
         }
 
-        // ── 2. Orden y paginación ─────────────────────────────────────────
         String column = switch (sortBy != null ? sortBy : "created_at") {
-            case "owner",      "u.username"   -> "u.username";
-            case "createdAt",  "created_at"   -> "d.created_at";
-            case "name"                        -> "d.name";
-            default                            -> "d.created_at";
+            case "owner",     "u.username"  -> "u.username";
+            case "createdAt", "created_at"  -> "d.created_at";
+            case "name"                     -> "d.name";
+            default                         -> "d.created_at";
         };
         String direction = "asc".equalsIgnoreCase(sortDir) ? "ASC" : "DESC";
 
         sql.append(" ORDER BY ").append(column).append(" ").append(direction);
 
-        // Si hay keyword, traemos todo y filtramos en Java → sin LIMIT todavía
-        // Si no hay keyword, paginamos directo en SQL (más eficiente)
-        if (keyword == null || keyword.isBlank()) {
-            sql.append(" LIMIT ? OFFSET ? ");
-            params.add(size);
-            params.add(page * size);
-        }
-
-        // ── 3. Ejecutar ───────────────────────────────────────────────────
         List<MessageDTO> result = new ArrayList<>();
 
         try (Connection conn = dbManager.getConnection();
@@ -428,39 +411,28 @@ public class MySqlDocumentDao implements IDocumentRepository {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
 
-                    String docType  = rs.getString("doc_type");
-                    String path     = rs.getString("original_path");
-                    String content  = leerContenidoMensaje(path);
+                    String docType = rs.getString("doc_type");
+                    String path    = rs.getString("original_path");
+                    String content = leerContenidoMensaje(path);
 
-                    // ── keyword: filtro sobre contenido real del archivo ──
                     if (keyword != null && !keyword.isBlank()) {
                         if (!content.toLowerCase().contains(keyword.toLowerCase())) {
-                            continue;   // no coincide → saltar fila
+                            continue;
                         }
                     }
 
-                    // Extrae target desde "PRIVATE_TO:username", null si público
                     String targetOut = docType.startsWith("PRIVATE_TO:")
                             ? docType.substring("PRIVATE_TO:".length())
                             : "Todos";
 
                     result.add(new MessageDTO(
-                            content,                        // contenido real del archivo
+                            content,
                             rs.getString("owner"),
-                            targetOut,                      // null = mensaje público
+                            targetOut,
                             rs.getString("created_at")
                     ));
                 }
             }
-        }
-
-        // ── 4. Paginación manual si se usó keyword ────────────────────────
-        if (keyword != null && !keyword.isBlank()) {
-            int from = page * size;
-            int to   = Math.min(from + size, result.size());
-            return (from >= result.size())
-                    ? List.of()
-                    : result.subList(from, to);
         }
 
         return result;

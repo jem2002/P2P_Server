@@ -34,8 +34,6 @@ public class MessagesRestController {
             @RequestParam(name = "keyword",    required = false)            String keyword,
             @RequestParam(name = "fromDate",   required = false)            String fromDate,
             @RequestParam(name = "toDate",     required = false)            String toDate,
-            @RequestParam(name = "page",       defaultValue = "0")          int    page,
-            @RequestParam(name = "size",       defaultValue = "20")         int    size,
             @RequestParam(name = "sortBy",     defaultValue = "created_at") String sortBy,
             @RequestParam(name = "sortDir",    defaultValue = "desc")       String sortDir
     ) {
@@ -43,7 +41,7 @@ public class MessagesRestController {
             List<MessageDTO> mensajes = documentRepository.buscarMensajes(
                     owner, target, type, keyword,
                     fromDate, toDate,
-                    page, size, sortBy, sortDir
+                    sortBy, sortDir
             );
             return ResponseEntity.ok(mensajes);
 

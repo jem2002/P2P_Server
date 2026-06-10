@@ -51,8 +51,6 @@ public interface IDocumentRepository {
             String keyword,
             String fromDate,
             String toDate,
-            int    page,
-            int    size,
             String sortBy,
             String sortDir
     ) throws SQLException;
