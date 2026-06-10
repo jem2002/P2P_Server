@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import java.util.List;
-
 @RequestMapping("/api/documents")
 @RestController
 public class DocumentRestController {
