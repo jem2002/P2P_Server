@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import replication.IReplicationEventHandler;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class NewCommentReplication implements IReplicationEventHandler {
 
@@ -26,8 +27,9 @@ public class NewCommentReplication implements IReplicationEventHandler {
         String content = event.getPayload().get("content").asText();
         String sentiment = event.getPayload().get("sentiment").asText();
         BigDecimal confidence = event.getPayload().get("confidence").decimalValue();
+        LocalDateTime createdAt = LocalDateTime.parse(event.getPayload().get("createdAt").toString());
 
-        commentManager.replicarComentario(id, documentId, username, content, sentiment, confidence);
+        commentManager.replicarComentario(id, documentId, username, content, sentiment, confidence, createdAt);
 
         logger.info("Comentario registrado con ID: {} por el usuario: {}", id, username);
 

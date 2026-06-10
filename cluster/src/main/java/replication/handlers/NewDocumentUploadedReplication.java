@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import replication.IReplicationEventHandler;
 
+import java.time.LocalDateTime;
+
 public class NewDocumentUploadedReplication implements IReplicationEventHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(NewDocumentUploadedReplication.class);

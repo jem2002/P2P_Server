@@ -1,7 +1,7 @@
 package com.universidad.messaging.server.api;
 
-import com.universidad.messaging.server.api.dto.NodeInfoDTO;
 import com.universidad.messaging.server.config.ServerConfig;
+import com.universidad.messaging.server.shared.api.dto.NodeInfoDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

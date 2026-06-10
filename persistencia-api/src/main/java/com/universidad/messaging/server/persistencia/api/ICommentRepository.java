@@ -1,9 +1,11 @@
 package com.universidad.messaging.server.persistencia.api;
 
 
+import com.universidad.messaging.server.shared.api.dto.CommentDTO;
 import com.universidad.messaging.server.shared.schema.commentSchema.Comment;
 import com.universidad.messaging.server.shared.schema.commentSchema.CommentInfo;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ICommentRepository {
@@ -21,5 +23,16 @@ public interface ICommentRepository {
      * @return Una lista de comentarios ordenados (usualmente por fecha de creación).
      */
     List<CommentInfo> listarComentariosPorDocumento(Long documentId);
+
+
+    List<CommentDTO> buscarComentarios(
+            String username,
+            String documentName,
+            String sentiment,
+            String fromDate,
+            String toDate,
+            String sortBy,
+            String sortDir
+    ) throws SQLException;
 
 }

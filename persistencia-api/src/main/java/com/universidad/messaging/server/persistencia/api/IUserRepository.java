@@ -1,5 +1,6 @@
 package com.universidad.messaging.server.persistencia.api;
 
+import com.universidad.messaging.server.shared.api.dto.ConnectionDTO;
 import com.universidad.messaging.server.shared.schema.userSchema.ActiveClient;
 import com.universidad.messaging.server.shared.schema.userSchema.UserRecord;
 
@@ -23,5 +24,17 @@ public interface IUserRepository {
     List<ActiveClient> listarClientesActivos() throws Exception;
 
     List<UserRecord> listarUsuariosRegistrados() throws SQLException;
+
+    List<ConnectionDTO> buscarConexiones(
+            String  username,
+            String  ipAddress,
+            String  nodeId,
+            String  protocol,
+            Boolean isActive,
+            String  fromDate,
+            String  toDate,
+            String  sortBy,
+            String  sortDir
+    ) throws SQLException;
 
 }
