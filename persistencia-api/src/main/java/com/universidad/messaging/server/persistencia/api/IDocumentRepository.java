@@ -67,4 +67,9 @@ public interface IDocumentRepository {
     ) throws SQLException;
 
 
+    int contarMensajesRegistrados() throws SQLException;
+
+    int contarDocumentosRegistrados() throws SQLException;
+
+
 }

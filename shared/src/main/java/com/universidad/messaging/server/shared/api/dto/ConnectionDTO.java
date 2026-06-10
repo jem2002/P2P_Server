@@ -5,8 +5,8 @@ public record ConnectionDTO(
         String  ipAddress,
         String  nodeId,
         int     port,
+        String  protocol,
         String  connectedAt,
         String  disconnectedAt,
-        String  protocol,
         boolean isActive
 ) {}

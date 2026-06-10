@@ -1,10 +1,12 @@
 package com.universidad.messaging.server.persistencia.api;
 
 import com.universidad.messaging.server.shared.api.dto.ConnectionDTO;
+import com.universidad.messaging.server.shared.api.dto.UserDTO;
 import com.universidad.messaging.server.shared.schema.userSchema.ActiveClient;
 import com.universidad.messaging.server.shared.schema.userSchema.UserRecord;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -25,16 +27,15 @@ public interface IUserRepository {
 
     List<UserRecord> listarUsuariosRegistrados() throws SQLException;
 
-    List<ConnectionDTO> buscarConexiones(
-            String  username,
-            String  ipAddress,
-            String  nodeId,
-            String  protocol,
-            Boolean isActive,
-            String  fromDate,
-            String  toDate,
-            String  sortBy,
-            String  sortDir
-    ) throws SQLException;
+
+    int contarUsuariosRegistrados() throws SQLException;
+
+
+    List<UserDTO> buscarUsuarios(String username, LocalDate fromDate, LocalDate toDate) throws SQLException;
+
+    /**
+     * Busca en el historial de conexiones aplicando filtros dinámicos devolviendo ConnectionDTO.
+     */
+    List<ConnectionDTO> buscarConexiones(String username, String nodeId, String protocol, Boolean isActive, LocalDate fromDate, LocalDate toDate) throws SQLException;
 
 }

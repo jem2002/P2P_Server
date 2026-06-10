@@ -1,6 +1,7 @@
 package MySqlRepository;
 
 import com.universidad.messaging.server.shared.api.dto.ConnectionDTO;
+import com.universidad.messaging.server.shared.api.dto.UserDTO;
 import com.universidad.messaging.server.shared.schema.userSchema.ActiveClient;
 import com.universidad.messaging.server.shared.schema.userSchema.UserRecord;
 import MySqlRepository.db.IDatabaseConnectionManager;
@@ -143,119 +144,9 @@ public class MySqlUserDao implements IUserRepository {
         }
         return usuarios;
     }
-    public List<ConnectionDTO> buscarConexiones(
-            String username,
-            String ipAddress,
-            String nodeId,
-            String protocol,
-            Boolean isActive,
-            String fromDate,
-            String toDate,
-            String sortBy,
-            String sortDir
-    ) throws SQLException {
 
-        StringBuilder sql = new StringBuilder("""
-            SELECT u.username,
-                   cc.ip_address,
-                   cc.node_id,
-                   cc.port,
-                   cc.connected_at,
-                   cc.disconnected_at,
-                   cc.protocol,
-                   cc.is_active
-            FROM client_connections cc
-            INNER JOIN users u ON u.id = cc.user_id
-            WHERE 1=1
-            """);
 
-        List<Object> params = new ArrayList<>();
 
-        if (username != null && !username.isBlank()) {
-            sql.append(" AND LOWER(u.username) = LOWER(?) ");
-            params.add(username.trim());
-        }
-
-        if (ipAddress != null && !ipAddress.isBlank()) {
-            sql.append(" AND cc.ip_address = ? ");
-            params.add(ipAddress.trim());
-        }
-
-        if (nodeId != null && !nodeId.isBlank()) {
-            sql.append(" AND LOWER(cc.node_id) LIKE LOWER(?) ");
-            params.add("%" + nodeId.trim() + "%");
-        }
-
-        if (protocol != null && !protocol.isBlank()) {
-            switch (protocol.toUpperCase()) {
-                case "TCP", "UDP" -> sql.append(" AND cc.protocol = ? ");
-                default           -> throw new IllegalArgumentException(
-                        "protocol inválido: usa 'TCP' o 'UDP'");
-            }
-            params.add(protocol.toUpperCase().trim());
-        }
-
-        // isActive es Boolean (no primitivo) para distinguir null = sin filtro
-        if (isActive != null) {
-            sql.append(" AND cc.is_active = ? ");
-            params.add(isActive);
-        }
-
-        if (fromDate != null && !fromDate.isBlank()) {
-            sql.append(" AND cc.connected_at >= ? ");
-            params.add(Timestamp.valueOf(LocalDate.parse(fromDate).atStartOfDay()));
-        }
-
-        if (toDate != null && !toDate.isBlank()) {
-            sql.append(" AND cc.connected_at <= ? ");
-            params.add(Timestamp.valueOf(LocalDate.parse(toDate).atTime(23, 59, 59)));
-        }
-
-        String column = switch (sortBy != null ? sortBy : "connected_at") {
-            case "username"                     -> "u.username";
-            case "ipAddress",  "ip_address"     -> "cc.ip_address";
-            case "nodeId",     "node_id"        -> "cc.node_id";
-            case "protocol"                     -> "cc.protocol";
-            case "isActive",   "is_active"      -> "cc.is_active";
-            case "connectedAt","connected_at"   -> "cc.connected_at";
-            case "disconnectedAt",
-                 "disconnected_at"             -> "cc.disconnected_at";
-            default                             -> "cc.connected_at";
-        };
-        String direction = "asc".equalsIgnoreCase(sortDir) ? "ASC" : "DESC";
-
-        sql.append(" ORDER BY ").append(column).append(" ").append(direction);
-
-        List<ConnectionDTO> result = new ArrayList<>();
-
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-
-            for (int i = 0; i < params.size(); i++) {
-                setParam(stmt, i + 1, params.get(i));
-            }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-
-                    Timestamp disconnectedAt = rs.getTimestamp("disconnected_at");
-
-                    result.add(new ConnectionDTO(
-                            rs.getString("username"),
-                            rs.getString("ip_address"),
-                            rs.getString("node_id"),
-                            rs.getInt("port"),
-                            rs.getString("connected_at"),
-                            disconnectedAt != null ? disconnectedAt.toString() : null,
-                            rs.getString("protocol"),
-                            rs.getBoolean("is_active")
-                    ));
-                }
-            }
-        }
-
-        return result;
-    }
 
 
     private void setParam(PreparedStatement stmt, int index, Object value)
@@ -267,6 +158,135 @@ public class MySqlUserDao implements IUserRepository {
             default          -> stmt.setObject(index, value);
         }
     }
+
+
+    @Override
+    public int contarUsuariosRegistrados() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public List<UserDTO> buscarUsuarios(String username, LocalDate fromDate, LocalDate toDate) throws SQLException {
+        List<UserDTO> usuarios = new ArrayList<>();
+        // Nota: Asumimos que si la tabla users no tiene node_id de forma directa, se puede cruzar o dejar vacío.
+        // Aquí añadí un LEFT JOIN simulado con la última conexión para mapear el 'nodeId' que exige tu UserDTO.
+        StringBuilder sql = new StringBuilder(
+                "SELECT u.username, " +
+                        "      (SELECT c.node_id FROM client_connections c WHERE c.user_id = u.id ORDER BY c.connected_at DESC LIMIT 1) as node_id, " +
+                        "      u.created_at " +
+                        "FROM users u WHERE 1=1"
+        );
+        List<Object> params = new ArrayList<>();
+
+        if (username != null && !username.isBlank()) {
+            sql.append(" AND u.username LIKE ?");
+            params.add("%" + username + "%");
+        }
+        if (fromDate != null) {
+            sql.append(" AND u.created_at >= ?");
+            params.add(Date.valueOf(fromDate));
+        }
+        if (toDate != null) {
+            sql.append(" AND u.created_at <= ?");
+            params.add(Date.valueOf(toDate));
+        }
+
+        sql.append(" ORDER BY u.created_at DESC");
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                setParam(stmt, i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    usuarios.add(new UserDTO(
+                            rs.getString("username"),
+                            rs.getString("node_id"), // Mapeado dinámicamente desde la subquery
+                            rs.getString("created_at")
+                    ));
+                }
+            }
+        }
+        return usuarios;
+    }
+
+    @Override
+    public List<ConnectionDTO> buscarConexiones(String username, String nodeId, String protocol, Boolean isActive, LocalDate fromDate, LocalDate toDate) throws SQLException {
+        List<ConnectionDTO> conexiones = new ArrayList<>();
+        // Query adaptada para seleccionar todas las columnas requeridas por tu nuevo ConnectionDTO
+        StringBuilder sql = new StringBuilder(
+                "SELECT u.username, c.ip_address, c.node_id, c.port, c.protocol, c.connected_at, c.disconnected_at, c.is_active " +
+                        "FROM client_connections c " +
+                        "JOIN users u ON c.user_id = u.id " +
+                        "WHERE 1=1"
+        );
+        List<Object> params = new ArrayList<>();
+
+        if (username != null && !username.isBlank()) {
+            sql.append(" AND u.username = ?");
+            params.add(username);
+        }
+        if (nodeId != null && !nodeId.isBlank()) {
+            sql.append(" AND c.node_id = ?");
+            params.add(nodeId);
+        }
+        if (protocol != null && !protocol.isBlank()) {
+            sql.append(" AND c.protocol = ?");
+            params.add(protocol);
+        }
+        if (isActive != null) {
+            sql.append(" AND c.is_active = ?");
+            params.add(isActive);
+        }
+        if (fromDate != null) {
+            sql.append(" AND c.connected_at >= ?");
+            params.add(Date.valueOf(fromDate));
+        }
+        if (toDate != null) {
+            sql.append(" AND c.connected_at <= ?");
+            params.add(Date.valueOf(toDate));
+        }
+
+        sql.append(" ORDER BY c.connected_at DESC");
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                setParam(stmt, i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    conexiones.add(new ConnectionDTO(
+                            rs.getString("username"),
+                            rs.getString("ip_address"),
+                            rs.getString("node_id"),
+                            rs.getInt("port"),              // Nuevo mapeo int primitivo
+                            rs.getString("protocol"),
+                            rs.getString("connected_at"),
+                            rs.getString("disconnected_at"),// Nuevo mapeo String
+                            rs.getBoolean("is_active")      // boolean primitivo
+                    ));
+                }
+            }
+        }
+        return conexiones;
+    }
+
 
 
 }

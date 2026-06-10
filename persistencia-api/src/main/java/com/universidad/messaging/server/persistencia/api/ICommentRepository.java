@@ -35,4 +35,6 @@ public interface ICommentRepository {
             String sortDir
     ) throws SQLException;
 
+    int contarComentariosRegistrados();
+
 }

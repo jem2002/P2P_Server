@@ -9,7 +9,8 @@ public record NodeInfoDTO(
         // Info del Clúster P2P
         String nodeId,
         int clusterPort,
-        long heartbeatIntervalMs,
-        long failureTimeoutMs,
-        String[] seedNodes
+        int totalRegisteredUsers,
+        int totalMessages,
+        int totalDocuments,
+        int totalComments
 ) {}

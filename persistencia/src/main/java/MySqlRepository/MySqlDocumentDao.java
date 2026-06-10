@@ -551,6 +551,37 @@ public class MySqlDocumentDao implements IDocumentRepository {
     }
 
 
+    @Override
+    public int contarMensajesRegistrados() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM documents WHERE doc_type = 'MESSAGE' OR doc_type LIKE 'PRIVATE_TO:%'";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int contarDocumentosRegistrados() throws SQLException {
+        // Excluye los mensajes utilizando la misma lógica invertida de tus filtros de búsqueda
+        String sql = "SELECT COUNT(*) FROM documents WHERE doc_type NOT LIKE 'PRIVATE_TO:%' AND doc_type != 'MESSAGE'";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
 
 
 }

@@ -249,4 +249,22 @@ public class MySqlCommentDao implements ICommentRepository {
         }
     }
 
+    @Override
+    public int contarComentariosRegistrados() {
+        String sql = "SELECT COUNT(*) FROM comments";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            logger.error("Error al contar los comentarios registrados: ", e);
+            throw new RuntimeException("Error en base de datos al contar los comentarios", e);
+        }
+        return 0;
+    }
+
 }
