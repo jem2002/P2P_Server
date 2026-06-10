@@ -1,5 +1,6 @@
 package com.universidad.messaging.server.persistencia.api;
 
+import com.universidad.messaging.server.shared.api.dto.DocumentDTO;
 import com.universidad.messaging.server.shared.api.dto.MessageDTO;
 import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
 import com.universidad.messaging.server.shared.schema.documentSchema.DownloadDetails;
@@ -54,5 +55,16 @@ public interface IDocumentRepository {
             String sortBy,
             String sortDir
     ) throws SQLException;
+
+    List<DocumentDTO> buscarDocumentos(
+            String owner,
+            String extension,
+            String keyword,
+            String fromDate,
+            String toDate,
+            String sortBy,
+            String sortDir
+    ) throws SQLException;
+
 
 }

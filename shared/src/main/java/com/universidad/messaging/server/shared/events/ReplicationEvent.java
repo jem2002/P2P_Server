@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.universidad.messaging.server.shared.schema.ReplicationSchema;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -39,7 +40,7 @@ public class ReplicationEvent {
         return create(sourceNodeId, ReplicationSchema.NEW_MESSAGE, payload);
     }
 
-    public static ReplicationEvent newComment(String sourceNodeId, Long id, Long documentId, String username, String content, String sentiment, BigDecimal confidence) {
+    public static ReplicationEvent newComment(String sourceNodeId, Long id, Long documentId, String username, String content, String sentiment, BigDecimal confidence, String createdAt) {
         ObjectNode payload = mapper.createObjectNode();
         payload.put("id", id);
         payload.put("documentId", documentId);
@@ -47,6 +48,7 @@ public class ReplicationEvent {
         payload.put("content", content);
         payload.put("sentiment", sentiment);
         payload.put("confidence", confidence);
+        payload.put("createdAt", createdAt);
         return create(sourceNodeId, ReplicationSchema.NEW_COMMENT, payload);
     }
 

@@ -1,5 +1,6 @@
 package MySqlRepository;
 
+import com.universidad.messaging.server.shared.api.dto.DocumentDTO;
 import com.universidad.messaging.server.shared.api.dto.MessageDTO;
 import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
 import com.universidad.messaging.server.shared.schema.documentSchema.DownloadDetails;
@@ -335,7 +336,7 @@ public class MySqlDocumentDao implements IDocumentRepository {
         return rutasEncriptadas;
     }
 
-
+    @Override
     public List<MessageDTO> buscarMensajes(
             String owner,
             String target,
@@ -460,6 +461,93 @@ public class MySqlDocumentDao implements IDocumentRepository {
             case Timestamp t -> stmt.setTimestamp(index, t);
             default          -> stmt.setObject(index, value);
         }
+    }
+
+
+    public List<DocumentDTO> buscarDocumentos(
+            String owner,
+            String extension,
+            String keyword,
+            String fromDate,
+            String toDate,
+            String sortBy,
+            String sortDir
+    ) throws SQLException {
+
+        StringBuilder sql = new StringBuilder("""
+            SELECT d.name,
+                   d.extension,
+                   d.size_bytes,
+                   d.created_at,
+                   u.username AS owner
+            FROM documents d
+            INNER JOIN users u ON u.id = d.owner_user_id
+            WHERE d.doc_type NOT LIKE 'PRIVATE\\_TO:%'
+              AND d.doc_type != 'MESSAGE'
+            """);
+
+        List<Object> params = new ArrayList<>();
+
+        if (owner != null && !owner.isBlank()) {
+            sql.append(" AND LOWER(u.username) = LOWER(?) ");
+            params.add(owner.trim());
+        }
+
+        if (extension != null && !extension.isBlank()) {
+            sql.append(" AND LOWER(d.extension) = LOWER(?) ");
+            params.add(extension.trim());
+        }
+
+        if (keyword != null && !keyword.isBlank()) {
+            sql.append(" AND LOWER(d.name) LIKE LOWER(?) ");
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        if (fromDate != null && !fromDate.isBlank()) {
+            sql.append(" AND d.created_at >= ? ");
+            params.add(Timestamp.valueOf(LocalDate.parse(fromDate).atStartOfDay()));
+        }
+
+        if (toDate != null && !toDate.isBlank()) {
+            sql.append(" AND d.created_at <= ? ");
+            params.add(Timestamp.valueOf(LocalDate.parse(toDate).atTime(23, 59, 59)));
+        }
+
+        String column = switch (sortBy != null ? sortBy : "created_at") {
+            case "owner",     "u.username"  -> "u.username";
+            case "createdAt", "created_at"  -> "d.created_at";
+            case "name"                     -> "d.name";
+            case "size",      "size_bytes"  -> "d.size_bytes";
+            case "extension"                -> "d.extension";
+            default                         -> "d.created_at";
+        };
+        String direction = "asc".equalsIgnoreCase(sortDir) ? "ASC" : "DESC";
+
+        sql.append(" ORDER BY ").append(column).append(" ").append(direction);
+
+        List<DocumentDTO> result = new ArrayList<>();
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                setParam(stmt, i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new DocumentDTO(
+                            rs.getString("name"),
+                            rs.getString("extension"),
+                            rs.getLong("size_bytes"),
+                            rs.getString("owner"),
+                            rs.getString("created_at")
+                    ));
+                }
+            }
+        }
+
+        return result;
     }
 
 
