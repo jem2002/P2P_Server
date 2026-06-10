@@ -1,4 +1,4 @@
-package com.universidad.messaging.server.api.dto;
+package com.universidad.messaging.server.shared.api.dto;
 
 public record NodeInfoDTO(
         // Info del Servidor Local

@@ -1,5 +1,6 @@
 package MySqlRepository;
 
+import com.universidad.messaging.server.shared.api.dto.MessageDTO;
 import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
 import com.universidad.messaging.server.shared.schema.documentSchema.DownloadDetails;
 import MySqlRepository.db.IDatabaseConnectionManager;
@@ -7,7 +8,15 @@ import com.universidad.messaging.server.persistencia.api.IDocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +40,22 @@ public class MySqlDocumentDao implements IDocumentRepository {
 
     @Override
     public long registrarDocumento(String name, long sizeBytes, String extension, String mimeType,
-            String docType, String originalPath, long ownerUserId, String ownerIp) throws Exception {
-        String sql = "INSERT INTO documents (name, size_bytes, extension, mime_type, doc_type, original_path, owner_user_id, owner_ip) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                                   String docType, String originalPath, long ownerUserId, String ownerIp) throws Exception {
+
+        // 1. Definir las columnas y asegurar que coincida el número de '?' (9 en total)
+        String sql = "INSERT INTO documents (name, size_bytes, extension, mime_type, doc_type, original_path, owner_user_id, owner_ip, created_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = dbManager.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            // 2. Obtener la fecha y hora actual específicamente para la zona horaria de Colombia
+            ZoneId zonaColombia = ZoneId.of("America/Bogota");
+            ZonedDateTime horaColombia = ZonedDateTime.now(zonaColombia);
+            // Convertir a Timestamp para que el driver de la base de datos lo entienda correctamente
+            Timestamp createdAt = Timestamp.from(horaColombia.toInstant());
+
+            // 3. Setear los parámetros en el PreparedStatement
             stmt.setString(1, name);
             stmt.setLong(2, sizeBytes);
             stmt.setString(3, extension);
@@ -44,6 +64,8 @@ public class MySqlDocumentDao implements IDocumentRepository {
             stmt.setString(6, originalPath);
             stmt.setLong(7, ownerUserId);
             stmt.setString(8, ownerIp);
+            stmt.setTimestamp(9, createdAt); // <-- Noveno parámetro añadido
+
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -312,6 +334,163 @@ public class MySqlDocumentDao implements IDocumentRepository {
         }
         return rutasEncriptadas;
     }
+
+
+    public List<MessageDTO> buscarMensajes(
+            String owner,
+            String target,
+            String type,
+            String keyword,
+            String fromDate,
+            String toDate,
+            int    page,
+            int    size,
+            String sortBy,
+            String sortDir
+    ) throws SQLException {
+
+        // ── 1. SQL dinámico ───────────────────────────────────────────────
+        StringBuilder sql = new StringBuilder("""
+                SELECT d.name,
+                       d.original_path,
+                       d.doc_type,
+                       d.created_at,
+                       u.username AS owner
+                FROM documents d
+                INNER JOIN users u ON u.id = d.owner_user_id
+                WHERE (d.doc_type = 'MESSAGE' OR d.doc_type LIKE 'PRIVATE\\_TO:%')
+                """);
+
+        List<Object> params = new ArrayList<>();
+
+        if (owner != null && !owner.isBlank()) {
+            sql.append(" AND LOWER(u.username) = LOWER(?) ");
+            params.add(owner.trim());
+        }
+
+        // target implica buscar exactamente "PRIVATE_TO:targetUsername"
+        if (target != null && !target.isBlank()) {
+            sql.append(" AND d.doc_type = ? ");
+            params.add("PRIVATE_TO:" + target.trim());
+        }
+
+        if (type != null && !type.isBlank()) {
+            switch (type.toLowerCase()) {
+                case "public"  -> sql.append(" AND d.doc_type = 'MESSAGE' ");
+                case "private" -> sql.append(" AND d.doc_type LIKE 'PRIVATE\\_TO:%' ");
+                default        -> throw new IllegalArgumentException(
+                        "type inválido: usa 'public' o 'private'");
+            }
+        }
+
+        // keyword filtra sobre el CONTENIDO leído, no en SQL
+        // (el filtro fino se aplica en Java después de leer el archivo)
+
+        if (fromDate != null && !fromDate.isBlank()) {
+            sql.append(" AND d.created_at >= ? ");
+            params.add(Timestamp.valueOf(LocalDate.parse(fromDate).atStartOfDay()));
+        }
+
+        if (toDate != null && !toDate.isBlank()) {
+            sql.append(" AND d.created_at <= ? ");
+            params.add(Timestamp.valueOf(LocalDate.parse(toDate).atTime(23, 59, 59)));
+        }
+
+        // ── 2. Orden y paginación ─────────────────────────────────────────
+        String column = switch (sortBy != null ? sortBy : "created_at") {
+            case "owner",      "u.username"   -> "u.username";
+            case "createdAt",  "created_at"   -> "d.created_at";
+            case "name"                        -> "d.name";
+            default                            -> "d.created_at";
+        };
+        String direction = "asc".equalsIgnoreCase(sortDir) ? "ASC" : "DESC";
+
+        sql.append(" ORDER BY ").append(column).append(" ").append(direction);
+
+        // Si hay keyword, traemos todo y filtramos en Java → sin LIMIT todavía
+        // Si no hay keyword, paginamos directo en SQL (más eficiente)
+        if (keyword == null || keyword.isBlank()) {
+            sql.append(" LIMIT ? OFFSET ? ");
+            params.add(size);
+            params.add(page * size);
+        }
+
+        // ── 3. Ejecutar ───────────────────────────────────────────────────
+        List<MessageDTO> result = new ArrayList<>();
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                setParam(stmt, i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+
+                    String docType  = rs.getString("doc_type");
+                    String path     = rs.getString("original_path");
+                    String content  = leerContenidoMensaje(path);
+
+                    // ── keyword: filtro sobre contenido real del archivo ──
+                    if (keyword != null && !keyword.isBlank()) {
+                        if (!content.toLowerCase().contains(keyword.toLowerCase())) {
+                            continue;   // no coincide → saltar fila
+                        }
+                    }
+
+                    // Extrae target desde "PRIVATE_TO:username", null si público
+                    String targetOut = docType.startsWith("PRIVATE_TO:")
+                            ? docType.substring("PRIVATE_TO:".length())
+                            : "Todos";
+
+                    result.add(new MessageDTO(
+                            content,                        // contenido real del archivo
+                            rs.getString("owner"),
+                            targetOut,                      // null = mensaje público
+                            rs.getString("created_at")
+                    ));
+                }
+            }
+        }
+
+        // ── 4. Paginación manual si se usó keyword ────────────────────────
+        if (keyword != null && !keyword.isBlank()) {
+            int from = page * size;
+            int to   = Math.min(from + size, result.size());
+            return (from >= result.size())
+                    ? List.of()
+                    : result.subList(from, to);
+        }
+
+        return result;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  HELPERS
+    // ─────────────────────────────────────────────────────────────────────
+
+    /** Lee el contenido del mensaje desde el filesystem */
+    private String leerContenidoMensaje(String pathStr) {
+        try {
+            return Files.readString(Paths.get(pathStr), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            return "ERROR AL LEER CONTENIDO";
+        }
+    }
+
+    /** Bind genérico para los tipos usados en los filtros */
+    private void setParam(PreparedStatement stmt, int index, Object value)
+            throws SQLException {
+        switch (value) {
+            case String s    -> stmt.setString(index, s);
+            case Integer n   -> stmt.setInt(index, n);
+            case Timestamp t -> stmt.setTimestamp(index, t);
+            default          -> stmt.setObject(index, value);
+        }
+    }
+
+
 
 
 }

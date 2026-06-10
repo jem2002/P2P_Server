@@ -1,8 +1,10 @@
 package com.universidad.messaging.server.persistencia.api;
 
+import com.universidad.messaging.server.shared.api.dto.MessageDTO;
 import com.universidad.messaging.server.shared.schema.documentSchema.DocumentInfo;
 import com.universidad.messaging.server.shared.schema.documentSchema.DownloadDetails;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -41,5 +43,18 @@ public interface IDocumentRepository {
     List<String> obtenerTodasRutasArchivosEncriptados() throws Exception;
 
     List<String> obtenerTodasRutasArchivosOriginales() throws Exception;
+
+    List<MessageDTO> buscarMensajes(
+            String owner,
+            String target,
+            String type,
+            String keyword,
+            String fromDate,
+            String toDate,
+            int    page,
+            int    size,
+            String sortBy,
+            String sortDir
+    ) throws SQLException;
 
 }

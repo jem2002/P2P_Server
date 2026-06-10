@@ -20,7 +20,7 @@ public class UserRestController {
 
     }
 
-    @GetMapping("listar-registrados")
+    @GetMapping("list")
     public ResponseEntity<?> listarRegistrados() {
         try {
             return ResponseEntity.ok(userRepository.listarUsuariosRegistrados());
