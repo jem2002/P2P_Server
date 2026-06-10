@@ -69,17 +69,16 @@ public class ServerApplication {
 
 
     @Bean
-    public CommandLineRunner startP2PServer() {
-        return args -> new Thread(ServerApplication::iniciarServidorP2P, "Thread-P2PStartup").start();
+    public CommandLineRunner startP2PServer(ServerConfig config) {
+        return args -> new Thread(() -> iniciarServidorP2P(config), "Thread-P2PStartup").start();
     }
 
-    private static void iniciarServidorP2P() {
+    private static void iniciarServidorP2P(ServerConfig config) {
 
         configurarNivelesDeLog();
         logger.info("Arrancando Messaging Server en Modo Clúster Nativo...");
 
         try {
-            ServerConfig config = new ServerConfig();
             NodeSetupWizard.run(config);
 
             logger.info("╔══ CONFIGURACIÓN EFECTIVA ══════════════════════════════");
@@ -115,8 +114,7 @@ public class ServerApplication {
             // ── 3. INFRAESTRUCTURA DEL CLÚSTER P2P ──────────────────────────────
             LocalNodeInfo identity = new LocalNodeInfo(
                     config.getNodeId(), config.getHost(),
-                    config.getPort(), config.getClusterPort(),
-                    config.getGatewayUrl());
+                    config.getPort(), config.getClusterPort());
 
             NetworkEventBus eventBus = new NetworkEventBus();
             MembershipList membership = new MembershipList();

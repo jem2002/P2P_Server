@@ -2,10 +2,13 @@ package com.universidad.messaging.server.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.util.Properties;
 
+
+@Component
 public class ServerConfig {
     private static final Logger logger = LoggerFactory.getLogger(ServerConfig.class);
     private final Properties properties;
@@ -28,8 +31,7 @@ public class ServerConfig {
     public int getMaxConnections() { return Integer.parseInt(properties.getProperty("server.maxConnections", "100")); }
     public String getHost() { return properties.getProperty("server.host", "localhost"); }
 
-    // --- Configuración del Cluster P2P ---
-    public boolean isClusterEnabled() { return Boolean.parseBoolean(properties.getProperty("cluster.enabled", "false")); }
+
     public String getNodeId() { return properties.getProperty("cluster.nodeId", "auto"); }
     public int getClusterPort() { return Integer.parseInt(properties.getProperty("cluster.port", "9090")); }
     public long getHeartbeatIntervalMs() { return Long.parseLong(properties.getProperty("cluster.heartbeatIntervalMs", "2000")); }
@@ -46,10 +48,6 @@ public class ServerConfig {
 
     public int getSentimentApiPort() { return Integer.parseInt(properties.getProperty("sentiment.api.port","9000"));}
 
-    /** URL del API Gateway de este nodo. Vacío si no está configurado. */
-    public String getGatewayUrl() {
-        return properties.getProperty("gateway.url", "");
-    }
 
     /**
      * Sobreescribe una propiedad en memoria (sin tocar el archivo en disco).
